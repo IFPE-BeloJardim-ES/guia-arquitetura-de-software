@@ -1,0 +1,35 @@
+project:
+  type: website
+  output-dir: _site
+  render:
+    - "index.qmd"
+    - "guia/**"
+    - "content/**"
+
+website:
+  title: "Guia Aberto de Arquitetura de Software"
+  favicon: ""
+  navbar:
+    left:
+      - href: index.qmd
+        text: Início
+      - text: Guia
+        menu:
+          - href: guia/contribuindo.qmd
+            text: Como contribuir
+          - href: guia/sobre.qmd
+            text: Sobre o projeto
+      - href: content/00-modelo/index.qmd
+        text: Tópicos
+  page-footer:
+    center: |
+      Conteúdo sob [CC BY-NC 4.0](LICENSE).
+
+format:
+  html:
+    theme: cosmo
+    lang: pt-BR
+    toc: true
+    toc-title: "Nesta página"
+    code-copy: true
+    code-overflow: wrap

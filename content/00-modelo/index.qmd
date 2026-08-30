@@ -1,0 +1,161 @@
+---
+title: "Tópico modelo"
+subtitle: "Estrutura e profundidade esperadas de uma contribuição"
+author:
+  - name: "Nome Completo do Autor"
+date: 2026-08-30
+date-modified: last-modified
+bibliography: referencias.bib
+citation:
+  type: webpage
+  container-title: "Guia Aberto de Arquitetura de Software"
+license: "CC BY-NC 4.0"
+keywords: ["palavra-chave", "keyword"]
+---
+
+::: {.meta-topico}
+<dl>
+<dt>Competências</dt>
+<dd>Avaliar quando um estilo arquitetural é adequado ao problema</dd>
+<dt>Pré-requisitos</dt>
+<dd>Nenhum</dd>
+<dt>Formatos</dt>
+<dd>
+[texto]{.formato} [notebook]{.formato} [áudio]{.formato} [gem]{.formato} [slides]{.formato}
+</dd>
+</dl>
+:::
+
+::: {.callout-note}
+## Como usar esta página
+Esta é a página modelo do projeto. A estrutura abaixo é obrigatória; o conteúdo é
+ilustrativo e deve ser substituído. Copie a pasta `content/00-modelo/` inteira,
+renomeie para `content/NN-seu-topico/` e substitua tudo — inclusive
+`metadata.yaml`, `referencias.bib`, etc.
+:::
+
+## Definição e contexto
+
+Abra definindo o conceito com precisão, em uma ou duas frases, antes de qualquer
+digressão histórica. O leitor que chegou aqui de uma busca precisa saber em dez
+segundos se está na página certa.
+
+Depois, situe o problema. Todo estilo arquitetural existe porque alguma
+dificuldade concreta apareceu antes dele: acoplamento excessivo, impossibilidade
+de evoluir partes independentes, custo de coordenação entre equipes. Nomeie essa
+dificuldade. Um texto que apresenta a solução sem apresentar o problema ensina a
+decorar, não a decidir.
+
+O critério de decomposição modular proposto por Parnas [@parnas1972modularization]
+é um bom exemplo de como uma decisão arquitetural nasce de um problema observado:
+a dificuldade de modificar sistemas cujos módulos foram divididos por etapas de
+processamento em vez de por informação escondida.
+
+::: {.callout-tip}
+## Sobre as citações
+Cite com `[@chave2023]`, que o Quarto converte em `[1]`, `[2]` automaticamente e
+usa para montar a lista de referências no fim da página. Nunca escreva `[1]` na
+mão: a numeração muda quando você insere uma citação nova, e o vínculo com a
+bibliografia se perde.
+
+Para citar uma seção específica de um livro longo, use
+`[@bass2021software, cap. 13]` — isso é obrigatório em livros de referência.
+:::
+
+## Estrutura e componentes
+
+Descreva as partes que compõem o estilo e como se relacionam. Esta seção precisa
+de **pelo menos um diagrama seu** — não uma imagem copiada de um livro.
+
+Diagramas podem ser feitos em Mermaid direto no texto, o que tem a vantagem de
+ficarem versionados como código:
+
+```{mermaid}
+%%| label: fig-estrutura
+%%| fig-cap: "Componentes do estilo e a direção das dependências permitidas."
+flowchart TD
+    A[Componente de interface] --> B[Componente de aplicação]
+    B --> C[Componente de domínio]
+    C --> D[(Armazenamento)]
+```
+
+Ao descrever a estrutura, seja explícito sobre **o que é proibido**, não apenas
+sobre o que é permitido. Um estilo arquitetural se define tanto pelas conexões que
+autoriza quanto pelas que veda — e é a violação dessas restrições que degrada a
+arquitetura ao longo do tempo [@bass2021software, cap. 1].
+
+## Exemplo aplicado
+
+Traga um caso concreto e conecte-o ao notebook. O texto explica o raciocínio; o
+notebook mostra o código rodando. Os dois precisam falar do mesmo exemplo — se o
+texto discute um sistema de pedidos e o notebook implementa uma calculadora, a
+contribuição volta na revisão.
+
+Um bom exemplo aplicado mostra três coisas:
+
+1. **A implementação correta** — o conceito funcionando
+2. **A violação** — o que acontece quando a restrição do estilo é quebrada
+3. **A consequência mensurável** — o custo dessa violação, em acoplamento,
+   tempo de build, dificuldade de teste ou desempenho
+
+::: {.callout-note}
+## Exemplo executável
+O notebook deste tópico está em
+[`notebook.ipynb`](notebook.ipynb) e pode ser aberto direto no
+[Google Colab](https://colab.research.google.com/).
+
+O notebook precisa rodar de ponta a ponta em ambiente limpo. Teste no Colab antes
+de abrir o PR — funcionar na sua máquina não é suficiente.
+:::
+
+## Trade-offs
+
+Esta é a seção que separa um texto útil de um resumo de Wikipédia. Nenhum estilo
+arquitetural é melhor que outro em abstrato: cada um favorece certos atributos de
+qualidade ao custo de outros [@richards2020fundamentals].
+
+Seja específico quanto à dimensão. "É mais escalável" não diz nada — escalável em
+quê? Número de requisições simultâneas? Número de desenvolvedores trabalhando em
+paralelo? Volume de dados?
+
+| Atributo | Efeito | Por quê |
+|---|---|---|
+| Modificabilidade | Favorecida | Mudança em uma camada não propaga, desde que a interface se mantenha |
+| Desempenho | Comprometido | Cada requisição atravessa todas as camadas, somando latência |
+| Testabilidade | Favorecida | Camadas podem ser substituídas por dublês em teste |
+| Simplicidade operacional | Comprometida | Mais partes para implantar e monitorar |
+
+## Quando usar e quando não usar
+
+Feche com critérios de decisão acionáveis, na forma de condições verificáveis, não
+de recomendações vagas.
+
+**Considere usar quando:**
+
+- A condição concreta que torna esse estilo adequado
+- Outra condição
+
+**Evite quando:**
+
+- A condição em que o custo supera o benefício
+- Outra condição
+
+**Sinais de que a escolha foi errada:**
+
+- Sintoma observável que indica desalinhamento entre estilo e problema
+
+## Referências
+
+As referências abaixo são geradas automaticamente a partir de `referencias.bib`.
+Não escreva esta lista à mão.
+
+::: {#refs}
+:::
+
+::: {.como-citar}
+**Como citar este tópico**
+
+Nome Completo do Autor. "Tópico modelo". *Guia Aberto de Arquitetura de Software*,
+2026. Disponível em: <https://ORG.github.io/REPO/content/00-modelo/>.
+Licenciado sob CC BY-NC 4.0.
+:::

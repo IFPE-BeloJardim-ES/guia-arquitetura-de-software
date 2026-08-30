@@ -1,0 +1,47 @@
+# Licença do conteúdo — Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)
+
+O conteúdo deste projeto (textos, slides, diagramas, áudio, vídeo e demais
+materiais educacionais em `content/`) está licenciado sob a licença
+Creative Commons Atribuição-NãoComercial 4.0 Internacional.
+
+## Você tem o direito de
+
+- **Compartilhar** — copiar e redistribuir o material em qualquer suporte ou formato
+- **Adaptar** — remixar, transformar e criar a partir do material
+
+## Sob as seguintes condições
+
+**Atribuição** — Você deve dar o crédito apropriado, fornecer um link para a
+licença e indicar se mudanças foram feitas. Você pode fazê-lo de qualquer forma
+razoável, mas não de maneira que sugira que o licenciante endossa você ou seu uso.
+
+**NãoComercial** — Você não pode usar o material para fins comerciais.
+
+### Como dar o crédito
+
+Formato mínimo aceitável:
+
+> "<TÍTULO DO TÓPICO>", por <AUTORES>, do Guia Aberto de Arquitetura de Software
+> (<URL DO PROJETO>), licenciado sob CC BY-NC 4.0. <Modificado / Sem modificações>.
+
+Para citação acadêmica, use o arquivo `CITATION.cff` na raiz do repositório ou o
+bloco de citação disponível em cada página do site.
+
+O crédito deve nomear os autores do tópico específico utilizado, e não apenas o
+projeto. A autoria individual está registrada no `metadata.yaml` de cada tópico e
+na página publicada correspondente.
+
+## Sem restrições adicionais
+
+Você não pode aplicar termos jurídicos ou medidas de caráter tecnológico que
+restrinjam legalmente outros de fazer algo que a licença permita.
+
+---
+
+Texto legal completo da licença:
+https://creativecommons.org/licenses/by-nc/4.0/legalcode.pt
+
+Resumo legível:
+https://creativecommons.org/licenses/by-nc/4.0/deed.pt
+
+Copyright (c) 2026 os respectivos autores de cada tópico.

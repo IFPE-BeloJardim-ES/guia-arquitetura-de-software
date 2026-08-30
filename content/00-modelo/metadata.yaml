@@ -1,0 +1,71 @@
+# Metadados do tópico — preencha tudo. O CI valida os campos obrigatórios.
+# Este arquivo também alimenta a indexação por ferramentas de IA.
+
+numero: "00"
+slug: "modelo"
+titulo: "Tópico modelo"
+subtitulo: "Estrutura e profundidade esperadas de uma contribuição"
+resumo: >-
+  Descreva o tópico em 2 ou 3 frases, como um abstract. Este texto aparece no
+  cartão da home e nos metadados Open Graph.
+
+autores:
+  - nome: "Nome Completo do Autor"
+    grupo: "Grupo 0" # opcional
+    github: "usuario-github" # opcional
+    orcid: ""          # opcional
+
+status: "modelo"        # rascunho | em-revisao | publicado | modelo
+data_criacao: "2026-08-30"
+ultima_revisao: "2026-08-30"
+revisado_por:
+  - "Nome do revisor par"
+  - "Nome do revisor de manutenção"
+
+# Estrutura pedagógica
+competencias:
+  - "Descreva em forma de verbo + objeto o que o leitor consegue fazer depois"
+  - "Ex: avaliar quando a decomposição em camadas prejudica desempenho"
+nivel_bloom: ["compreender", "analisar"]   # lembrar|compreender|aplicar|analisar|avaliar|criar
+pre_requisitos: []                          # slugs de outros tópicos
+topicos_relacionados: []
+palavras_chave: ["palavra-chave", "keyword em inglês"]
+
+# Formatos entregues — o CI verifica a existência do que está marcado como true
+formatos:
+  texto: true
+  notebook:
+    entregue: true
+    colab_url: "https://colab.research.google.com/..."
+  audio_notebooklm:
+    entregue: true
+    arquivo: "assets/audio-notebooklm.m4a"   # ou deixe vazio e use url
+    url: ""
+    duracao_min: 12
+    transcricao: "assets/audio-transcricao.md"
+  gem_gemini:
+    entregue: true
+    url: "https://gemini.google.com/gem/..."
+    instrucoes: |
+      Cole aqui as instruções exatas usadas para configurar a Gem, para que
+      qualquer pessoa possa recriá-la ou melhorá-la.
+
+      Ex: "Você é um tutor de Arquitetura de Software especializado em <tópico>.
+      Baseie todas as respostas exclusivamente no texto e nas referências
+      fornecidas. Cite sempre a referência no formato [n]. Se a pergunta não for
+      coberta pelo material, diga isso em vez de improvisar."
+  slides:
+    entregue: true
+    num_slides: 16
+  # opcionais
+  video:
+    entregue: false
+    url: ""
+  podcast:
+    entregue: false
+    url: ""
+  mcp:
+    entregue: false
+    url: ""
+
+licenca: "CC-BY-NC-4.0"

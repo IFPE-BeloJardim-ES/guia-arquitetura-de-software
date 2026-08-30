@@ -1,0 +1,45 @@
+---
+title: "Guia Aberto de Arquitetura de Software"
+subtitle: "Um guia colaborativo, em português, sobre como sistemas de software são estruturados — e por quê."
+toc: false
+number-sections: false
+author:
+  - name: "Prof. Matheus Barbosa"
+---
+
+Cada tópico deste guia é escrito por um autor identificado, revisado por pares e sustentado por referências acadêmicas que você pode conferir. Nenhum tópico entra no site sem texto autoral, exemplo que executa, material em áudio e bibliografia rastreável.
+
+O material é livre para uso [com crédito aos autores](guia/sobre.qmd#licenca-e-credito).
+
+::: {.callout-note}
+## Projeto em construção aberta
+Este guia está sendo escrito agora. Tópicos aparecem aqui conforme são
+concluídos e revisados. Para escrever um, comece pelo
+[guia de contribuição](guia/contribuindo.qmd).
+:::
+
+## Tópicos
+
+### [00 — Tópico modelo](content/00-modelo/index.qmd)
+
+Referência de estrutura e profundidade esperada. Copie esta pasta para começar um
+tópico novo.
+
+**Formatos:** texto · jupyter notebook · áudio · gem · slides
+
+## O que cada tópico entrega
+
+| Formato | O que é |
+|---|---|
+| **Texto autoral** | Explicação em formato científico, com trade-offs e critérios de decisão |
+| **Notebook** | Exemplo executável no Colab ou Jupyter que demonstra o conceito em código |
+| **Áudio** | Episódio gerado no NotebookLM a partir do próprio texto e das próprias fontes |
+| **Gem** | Tutor de IA configurado sobre o conteúdo do tópico, com link público |
+| **Slides** | Apresentação de 20 minutos, derivada do mesmo texto |
+| **Referências** | Bibliografia no padrão IEEE, com fontes originais e DOI |
+
+## Como este site é feito
+
+O conteúdo é escrito uma vez, em Markdown, e os formatos derivam da mesma fonte. As citações `[1]`, `[2]` são geradas a partir de arquivos BibTeX, então nunca saem de sincronia com a bibliografia.
+
+

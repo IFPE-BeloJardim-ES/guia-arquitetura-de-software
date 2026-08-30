@@ -1,0 +1,178 @@
+---
+title: "Guia de Contribuição"
+subtitle: "Como contribuir com o Guia Aberto de Arquitetura de Software"
+date: last-modified
+order: 1
+author:
+  - name: "Prof. Matheus Barbosa"
+---
+
+Este é o primeiro documento do projeto e o mais importante. Ele define o que conta como uma contribuição completa, como o material é organizado e como uma contribuição é revisada e aceita.
+
+## Por que este projeto existe
+
+Não existe hoje um guia aberto, completo e em português sobre estilos e práticas de Arquitetura de Software. O material disponível está espalhado entre livros, posts avulsos e slides.
+
+Este repositório reúne esse material em um único lugar, com padrão consistente, referências acadêmicas rastreáveis e formatos que podem ser reaproveitados por qualquer pessoa.
+
+## O modelo: fonte única, múltiplos formatos
+
+Cada tópico vive em uma pasta própria dentro de `content/`. O texto autoral é
+escrito **uma vez**, em `index.qmd`, e os outros formatos derivam dele. Ninguém
+reescreve o mesmo conteúdo em três lugares diferentes.
+
+```
+content/07-arquitetura-em-camadas/
+├── index.qmd          # texto autoral (obrigatório)
+├── metadata.yaml      # metadados do tópico (obrigatório)
+├── referencias.bib    # bibliografia do tópico (obrigatório)
+├── slides.qmd         # slides derivados do index.qmd (obrigatório)
+├── notebook.ipynb     # exemplo executável (obrigatório)
+└── assets/            # figuras, áudio, capturas de tela
+```
+
+Use `content/00-modelo/` como ponto de partida. Ela é um tópico completo e
+preenchido: copie a pasta, renomeie e substitua o conteúdo.
+
+## Formatos obrigatórios
+
+Uma contribuição só é aceita quando os seis itens abaixo estão presentes.
+
+### 1. Texto autoral em formato científico
+
+Escrito por você, em `index.qmd`. Não é tradução, não é paráfrase de um capítulo
+de livro, não é saída de IA colada. O texto precisa ser explicativo, com
+estrutura própria e voz própria.
+
+Estrutura mínima esperada:
+
+- **Definição e contexto** — o que é o estilo/prática e que problema resolve
+- **Estrutura e componentes** — como se organiza, com diagrama
+- **Exemplo aplicado** — um caso concreto, em Jupyter Notebook
+- **Trade-offs** — que atributos de qualidade favorece e quais sacrifica
+- **Quando usar e quando não usar** — critérios de decisão
+- **Referências** — geradas automaticamente a partir do `.bib`
+
+Extensão de referência: 1500 a 3000 palavras. Menos que isso raramente cobre os
+trade-offs com profundidade; mais que isso costuma indicar que o tópico deveria
+ser dividido.
+
+### 2. Exemplo executável (Google Colab ou Jupyter Notebook)
+
+Um `notebook.ipynb` na pasta do tópico, com código que roda do início ao fim sem
+erro. O notebook precisa demonstrar o conceito, não apenas ilustrá-lo: se o
+tópico é arquitetura em camadas, o notebook mostra o código organizado em
+camadas e o que acontece quando uma camada é violada.
+
+Requisitos:
+
+- Roda de ponta a ponta em ambiente limpo (teste no Colab antes de abrir o PR)
+- Células de texto explicando cada bloco
+- Dependências declaradas na primeira célula
+- Link do Colab incluído no `metadata.yaml`
+
+### 3. Áudio do NotebookLM
+
+Um episódio em áudio gerado pelo NotebookLM a partir do **seu** texto e das
+**suas** referências, não de fontes genéricas da internet. Isso importa: o
+áudio precisa refletir o conteúdo do tópico, com os mesmos exemplos e os mesmos
+trade-offs.
+
+Entregue como arquivo em `assets/` (se abaixo de 25 MB) ou como link em
+`metadata.yaml`. Duração de referência: 8 a 15 minutos.
+
+### 4. Gem do Gemini
+
+Uma Gem configurada para atuar como tutor daquele tópico específico, usando seu
+texto e suas referências como base de conhecimento. No `metadata.yaml`, registre
+o link público da Gem e cole as instruções usadas para configurá-la — as
+instruções ficam versionadas junto com o conteúdo, para que qualquer pessoa
+possa recriar ou melhorar a Gem.
+
+### 5. Referências no formato internacional
+
+Toda afirmação técnica não trivial precisa de fonte. As referências ficam em
+`referencias.bib` e são citadas no texto como `[@chave2023]`, que o Quarto
+converte automaticamente em `[1]`, `[2]` e monta a lista final no padrão IEEE.
+
+Regras:
+
+- **Mínimo de referências**, Livros de referência, artigos revisados por pares, ou padrões técnicos. Posts de blog e documentação de fornecedor entram como complemento nunca como base.
+- **Fontes originais, não intermediárias.** Se o conceito vem de Parnas (1972),
+  cite Parnas (1972), não cite um post que resume Parnas.
+- **Chaves de citação no padrão** `sobrenomeAnoPalavra`, por exemplo
+  `parnas1972modularization`. Chaves duplicadas quebram o build.
+- **DOI ou URL sempre que existir.** A validação automática rejeita entradas sem
+  nenhum identificador localizável.
+- Referências compartilhadas entre vários tópicos vão em
+  `_shared/referencias-globais.bib`.
+
+### 6. Slides
+
+Um `slides.qmd` que reaproveita o conteúdo do `index.qmd`. Referência: Entre 12 e 20
+slides, pensados para uma apresentação de 20 minutos.
+
+## Formatos opcionais
+
+Bem-vindos, contam como contribuição extra, e nenhum é exigido:
+
+- Vídeo explicativo (link do YouTube em `metadata.yaml`)
+- Publicação do áudio no Spotify ou outro agregador de podcast
+- Quiz ou exercícios interativos
+- Diagramas adicionais, glossário, mapa de relações com outros tópicos
+- Tradução do texto para inglês
+- Servidor MCP expondo o conteúdo do tópico para assistentes de IA
+- Outro formato que achar adequado. Mencione no `metadata.yaml`
+
+## Como contribuir, passo a passo
+
+1. **Abra uma issue antes de escrever.** Use o template *Proposta de novo
+   tópico*. Isso evita duas pessoas escrevendo o mesmo tópico e permite alinhar
+   escopo e referências antes do trabalho pesado.
+2. **Faça fork do repositório** e crie uma branch a partir da `main`, nomeada
+   como `topico/NN-nome-do-topico` (ex: `topico/07-arquitetura-em-camadas`).
+3. **Copie `content/00-modelo/`** para `content/NN-seu-topico/` e comece a
+   preencher.
+4. **Rode a validação local** antes de abrir o PR:
+
+   ```bash
+   python scripts/validar_conteudo.py content/NN-seu-topico
+   quarto render
+   ```
+
+5. **Abra o Pull Request** preenchendo o template por completo. PRs com o
+   template incompleto são fechados sem revisão.
+6. **Responda à revisão.** Cada PR recebe pelo menos duas revisões: uma de outro
+   grupo/contribuidor e uma da manutenção do projeto.
+7. **Merge.** O site publica automaticamente em poucos minutos.
+
+## O que faz um PR ser recusado
+
+Sendo direto, para poupar seu tempo:
+
+- Texto gerado por IA e entregue sem reescrita autoral. Usar IA para pesquisar,
+  revisar ou estruturar é permitido e até recomendado; entregar a saída dela como
+  seu texto não é.
+- Referências que não sustentam a afirmação, não abre, ou que não foram lidas. Citar um
+  livro de 600 páginas sem indicar capítulo ou seção conta como referência não
+  lida.
+- Jupyter Notebook que não roda.
+- Conteúdo copiado de outra fonte sem atribuição, em qualquer proporção.
+- Formatos obrigatórios faltando.
+
+## Licença
+
+O conteúdo (textos, slides, diagramas, áudio) é publicado sob
+[CC BY-NC 4.0](../LICENSE): qualquer pessoa pode usar, adaptar e redistribuir
+para fins não comerciais, **desde que dê o crédito apropriado** — nome do autor,
+link para o projeto e indicação de mudanças feitas.
+
+Ao abrir um PR você concorda em publicar sua contribuição sob essas licenças e
+confirma que a autoria é sua. Seu nome permanece no `metadata.yaml` do tópico, no
+histórico do Git e na página publicada, a atribuição é permanente.
+
+## Dúvidas
+
+Abra uma issue com o template *Dúvida ou sugestão*. Perguntas sobre o processo
+são úteis para todos: se algo neste guia não está claro, isso é um problema do
+guia, não seu.

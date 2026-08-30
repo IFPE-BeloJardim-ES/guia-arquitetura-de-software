@@ -1,0 +1,37 @@
+# Guia Aberto de Arquitetura de Software
+
+> Um guia colaborativo, em português, sobre como sistemas de software são estruturados — e por quê.
+
+Este site reúne conteúdo autoral sobre estilos e práticas de arquitetura de software. Cada tópico é escrito por um autor identificado, revisado por pares e sustentado por referências acadêmicas rastreáveis.
+
+O material é publicado sob [CC BY-NC 4.0](LICENSE).
+
+## Estrutura do site
+
+- [Página inicial](index.qmd): lista de tópicos disponíveis
+- [Como contribuir](guia/contribuindo.qmd): guia completo de contribuição
+- [Sobre o projeto](guia/sobre.qmd): descrição, público-alvo, licença
+
+## Tópicos
+
+Cada tópico está em `content/NN-nome/` e entrega:
+
+- Texto autoral em formato científico (`index.qmd`)
+- Exemplo executável em Jupyter Notebook (`notebook.ipynb`)
+- Áudio gerado no NotebookLM
+- Gem do Gemini configurada como tutor
+- Slides para apresentação
+- Bibliografia no padrão IEEE (`referencias.bib`)
+
+### 00 — Tópico modelo
+
+- Texto: [content/00-modelo/index.qmd](content/00-modelo/index.qmd)
+- Metadados: [content/00-modelo/metadata.yaml](content/00-modelo/metadata.yaml)
+- Notebook: [content/00-modelo/notebook.ipynb](content/00-modelo/notebook.ipynb)
+- Referências: [content/00-modelo/referencias.bib](content/00-modelo/referencias.bib)
+
+## Contexto técnico
+
+O site é gerado com [Quarto](https://quarto.org). O conteúdo é escrito em Markdown/QMD e as citações são geradas a partir de arquivos BibTeX.
+
+Este projeto nasceu na disciplina de Arquitetura de Software do IFPE.

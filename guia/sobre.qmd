@@ -1,0 +1,51 @@
+---
+title: "Sobre o projeto"
+subtitle: "O que é o Guia Aberto de Arquitetura de Software"
+date: last-modified
+author:
+  - name: "Prof. Matheus Barbosa"
+order: 2
+---
+
+## O que é
+
+O Guia Aberto de Arquitetura de Software é um recurso educacional colaborativo, em português, que reúne em um único lugar conteúdo autoral sobre estilos e práticas de arquitetura de software.
+
+Cada tópico é escrito por um autor identificado, revisado por pares e sustentado por referências acadêmicas rastreáveis. Não é uma coleção de resumos, é material original, com profundidade de livro-texto e formatos variados.
+
+## Público-alvo
+
+- Estudantes de graduação e pós-graduação em Computação
+- Profissionais que querem aprofundar fundamentos de arquitetura
+- Professores que buscam material aberto e reutilizável para suas disciplinas
+
+## O que cada tópico entrega
+
+| Formato | Descrição |
+|---|---|
+| **Texto autoral** | Explicação em formato científico |
+| **Notebook** | Exemplo executável no Colab ou Jupyter |
+| **Áudio** | Episódio gerado no NotebookLM |
+| **Gem** | Tutor de IA configurado sobre o tópico |
+| **Slides** | Apresentação |
+| **Referências** | Bibliografia no padrão IEEE |
+
+## Licença e crédito {#licenca-e-credito}
+
+O conteúdo (textos, slides, diagramas, áudio) é publicado sob [CC BY-NC 4.0](../LICENSE): qualquer pessoa pode usar, adaptar e redistribuir
+para fins não comerciais, **desde que dê o crédito apropriado**.
+
+Formato mínimo de atribuição:
+
+> "<TÍTULO DO TÓPICO>", por <AUTORES>, do Guia Aberto de Arquitetura de Software,
+> licenciado sob CC BY-NC 4.0.
+
+## Como contribuir
+
+Leia o [Guia de Contribuição](contribuindo.qmd) para começar.
+
+## Origem
+
+Este projeto nasceu na disciplina de Arquitetura de Software do IFPE, com o objetivo de criar material que pudesse ser usado além da sala de aula, aberto, referenciado e mantido pela comunidade.
+
+O próprio site é um caso de estudo da disciplina: o repositório funciona como estilo repositório, o build do Quarto como pipes e filtros, o CI como arquitetura orientada a eventos, e as extensões do tema como microkernel.
