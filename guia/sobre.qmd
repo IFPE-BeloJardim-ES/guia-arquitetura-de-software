@@ -11,7 +11,7 @@ order: 2
 
 O Guia Aberto de Arquitetura de Software é um recurso educacional colaborativo, em português, que reúne em um único lugar conteúdo autoral sobre estilos e práticas de arquitetura de software.
 
-Cada tópico é escrito por um autor identificado, revisado por pares e sustentado por referências acadêmicas rastreáveis. Não é uma coleção de resumos, é material original, com profundidade de livro-texto e formatos variados.
+Cada tópico é assinado por quem o escreveu — um ou mais autores identificados —, revisado por pares e sustentado por referências acadêmicas rastreáveis. Não é uma coleção de resumos, é material original, com profundidade de livro-texto e formatos variados.
 
 ## Público-alvo
 
@@ -39,6 +39,26 @@ Formato mínimo de atribuição:
 
 > "<TÍTULO DO TÓPICO>", por <AUTORES>, do Guia Aberto de Arquitetura de Software,
 > licenciado sob CC BY-NC 4.0.
+
+## Contribuidores
+
+Este guia existe pelo trabalho de quem escreve, revisa e mantém os tópicos.
+Obrigado a cada uma destas pessoas.
+
+<!-- CONTRIBUIDORES:INICIO -->
+
+<table>
+<tr>
+<td align="center" width="150">
+<a href="https://github.com/barbosamaatheus">
+<img src="https://github.com/barbosamaatheus.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Prof. Matheus Barbosa no GitHub"><br>
+Prof. Matheus Barbosa
+</a>
+</td>
+</tr>
+</table>
+
+<!-- CONTRIBUIDORES:FIM -->
 
 ## Como contribuir
 

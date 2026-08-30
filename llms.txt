@@ -2,7 +2,10 @@
 
 > Um guia colaborativo, em português, sobre como sistemas de software são estruturados — e por quê.
 
-Este site reúne conteúdo autoral sobre estilos e práticas de arquitetura de software. Cada tópico é escrito por um autor identificado, revisado por pares e sustentado por referências acadêmicas rastreáveis.
+Este site reúne conteúdo autoral sobre estilos e práticas de arquitetura de software. Cada tópico é assinado por um ou mais autores identificados, revisado por pares e sustentado por referências acadêmicas rastreáveis.
+
+Site: https://ifpe-belojardim-es.github.io/guia-arquitetura-de-software/
+Repositório: https://github.com/IFPE-BeloJardim-ES/guia-arquitetura-de-software
 
 O material é publicado sob [CC BY-NC 4.0](LICENSE).
 

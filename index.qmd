@@ -7,7 +7,7 @@ author:
   - name: "Prof. Matheus Barbosa"
 ---
 
-Cada tópico deste guia é escrito por um autor identificado, revisado por pares e sustentado por referências acadêmicas que você pode conferir. Nenhum tópico entra no site sem texto autoral, exemplo que executa, material em áudio e bibliografia rastreável.
+Cada tópico deste guia é assinado por quem o escreveu — um ou mais autores identificados —, revisado por pares e sustentado por referências acadêmicas que você pode conferir. Nenhum tópico entra no site sem texto autoral, exemplo que executa, material em áudio e bibliografia rastreável.
 
 O material é livre para uso [com crédito aos autores](guia/sobre.qmd#licenca-e-credito).
 

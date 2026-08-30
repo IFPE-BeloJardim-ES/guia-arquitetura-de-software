@@ -3,6 +3,7 @@ title: "Tópico modelo"
 subtitle: "Estrutura e profundidade esperadas de uma contribuição"
 author:
   - name: "Nome Completo do Autor"
+  - name: "Nome Completo da Segunda Autora"
 date: 2026-08-30
 date-modified: last-modified
 bibliography: referencias.bib
@@ -21,7 +22,7 @@ keywords: ["palavra-chave", "keyword"]
 <dd>Nenhum</dd>
 <dt>Formatos</dt>
 <dd>
-[texto]{.formato} [notebook]{.formato} [áudio]{.formato} [gem]{.formato} [slides]{.formato}
+[texto]{.formato} [notebook](notebook.ipynb){.formato} [áudio]{.formato} [gem]{.formato} [slides](slides.qmd){.formato}
 </dd>
 </dl>
 :::
@@ -144,6 +145,12 @@ de recomendações vagas.
 
 - Sintoma observável que indica desalinhamento entre estilo e problema
 
+::: {.callout-note}
+## Slides deste tópico
+A apresentação está em [`slides.qmd`](slides.qmd) — 16 slides para uma fala de
+20 minutos, com os mesmos exemplos e trade-offs deste texto.
+:::
+
 ## Referências
 
 As referências abaixo são geradas automaticamente a partir de `referencias.bib`.
@@ -155,7 +162,9 @@ Não escreva esta lista à mão.
 ::: {.como-citar}
 **Como citar este tópico**
 
-Nome Completo do Autor. "Tópico modelo". *Guia Aberto de Arquitetura de Software*,
-2026. Disponível em: <https://ORG.github.io/REPO/content/00-modelo/>.
-Licenciado sob CC BY-NC 4.0.
+Nome Completo do Autor; Nome Completo da Segunda Autora. "Tópico modelo".
+*Guia Aberto de Arquitetura de Software*, 2026. Disponível em:
+<https://ifpe-belojardim-es.github.io/guia-arquitetura-de-software/content/00-modelo/>. Licenciado sob CC BY-NC 4.0.
+
+Vários autores: separe por ponto e vírgula, na mesma ordem do `metadata.yaml`.
 :::

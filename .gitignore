@@ -29,5 +29,5 @@ Desktop.ini
 
 # === Dados intermediários ===
 mnt/
-
+site_libs
 **/*.quarto_ipynb

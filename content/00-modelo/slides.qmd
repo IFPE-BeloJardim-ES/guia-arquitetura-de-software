@@ -1,0 +1,161 @@
+---
+title: "Tópico modelo"
+subtitle: "Estrutura e profundidade esperadas de uma contribuição"
+author:
+  - "Nome Completo do Autor"
+  - "Nome Completo da Segunda Autora"
+date: 2026-08-30
+bibliography: referencias.bib
+format:
+  revealjs:
+    theme: default
+    lang: pt-BR
+    slide-number: c/t
+    slide-level: 2
+    incremental: false
+    code-overflow: wrap
+    link-external-newwindow: true
+    footer: "Guia Aberto de Arquitetura de Software · CC BY-NC 4.0"
+---
+
+## Como usar este modelo {.smaller}
+
+Estes slides são o **apoio de fala** do tópico, não o texto projetado. Substitua
+tudo, mantendo três regras:
+
+- Um slide, uma ideia. Se precisa de dois parágrafos, é fala, não slide
+- Entre 12 e 20 slides, para uma apresentação de 20 minutos
+- O que for prosa compartilhada com o `index.qmd` entra por
+  `{{{< include _arquivo.md >}}}`, nunca por copiar e colar
+
+::: {.notes}
+Notas do apresentador ficam aqui e não aparecem na projeção. Use-as para o que
+você vai falar, liberando o slide do texto corrido.
+:::
+
+## Roteiro
+
+1. O problema que veio antes da solução
+2. Definição e origem
+3. Estrutura e restrições
+4. Exemplo aplicado e a violação
+5. Trade-offs
+6. Critérios de decisão
+
+## O problema veio antes
+
+Todo estilo arquitetural nasce de uma dificuldade concreta:
+
+- Acoplamento que trava a evolução
+- Impossibilidade de mudar partes de forma independente
+- Custo de coordenação entre equipes
+
+::: {.notes}
+Abrir pelo problema, não pela solução. Quem começa pela solução ensina a decorar.
+:::
+
+## Definição
+
+> Enuncie o conceito em uma ou duas frases, com precisão, antes de qualquer
+> digressão histórica.
+
+Se a plateia não souber em dez segundos do que se trata, o slide falhou.
+
+## De onde vem a ideia
+
+O critério de decomposição modular de Parnas [@parnas1972modularization]:
+
+- Dividir por **informação escondida**, não por etapa de processamento
+- Módulo é unidade de **decisão de projeto**, não de fluxo de execução
+
+Cite a fonte original, nunca o post que a resume.
+
+## Estrutura
+
+```{mermaid}
+flowchart TD
+    A[Componente de interface] --> B[Componente de aplicação]
+    B --> C[Componente de domínio]
+    C --> D[(Armazenamento)]
+```
+
+Pelo menos um diagrama seu — não uma imagem tirada de livro.
+
+## O que o estilo proíbe
+
+Um estilo se define tanto pelas conexões que autoriza quanto pelas que
+veda [@bass2021software, cap. 1].
+
+- Interface não fala com armazenamento
+- Domínio não conhece a interface
+- A degradação começa quando essas restrições são negociadas "só desta vez"
+
+## Exemplo aplicado
+
+O mesmo caso do texto e do notebook. Três coisas a mostrar:
+
+1. A implementação correta
+2. A violação da restrição
+3. A consequência mensurável
+
+## A violação
+
+```python
+# atalho: a interface conversa direto com o banco
+def listar_pedidos(cliente_id):
+    return db.query("SELECT * FROM pedidos WHERE cliente = ?", cliente_id)
+```
+
+Funciona hoje. O problema aparece na segunda regra de negócio que precisar do
+mesmo dado.
+
+## A consequência mensurável
+
+Sem número, é opinião. Meça em alguma dimensão:
+
+- Acoplamento aferente/eferente
+- Tempo de build
+- Quantidade de dublês necessários para testar
+- Latência por requisição
+
+## Trade-offs
+
+Nenhum estilo é melhor que outro em abstrato: cada um favorece atributos de
+qualidade ao custo de outros [@richards2020fundamentals].
+
+## Trade-offs em uma tabela {.smaller}
+
+{{< include _trade-offs.md >}}
+
+::: {.notes}
+Esta tabela vem do mesmo `_trade-offs.md` incluído no index.qmd — editar em um
+lugar atualiza texto e slides.
+:::
+
+## Seja específico quanto à dimensão
+
+"É mais escalável" não diz nada.
+
+- Escalável em requisições simultâneas?
+- Em desenvolvedores trabalhando em paralelo?
+- Em volume de dados?
+
+## Quando usar
+
+- A condição concreta que torna o estilo adequado
+- Outra condição verificável
+
+Critérios acionáveis, não recomendações vagas.
+
+## Quando evitar
+
+- A condição em que o custo supera o benefício
+- Outra condição
+
+**Sinais de que a escolha foi errada:** o sintoma observável que indica
+desalinhamento entre estilo e problema.
+
+## Referências {.smaller}
+
+::: {#refs}
+:::

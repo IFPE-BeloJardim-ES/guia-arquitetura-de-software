@@ -1,0 +1,13 @@
+# Pessoas que mantêm o projeto — infraestrutura, revisão, coordenação.
+#
+# Autores de tópicos NÃO entram aqui: eles são lidos automaticamente do campo
+# 'autores' de cada content/NN-topico/metadata.yaml. Preencha o 'github' lá e
+# rode:
+#
+#     python scripts/gerar_contribuidores.py
+#
+# O script reescreve a lista no README.md e em guia/sobre.qmd.
+
+mantenedores:
+  - nome: "Prof. Matheus Barbosa"
+    github: "barbosamaatheus"

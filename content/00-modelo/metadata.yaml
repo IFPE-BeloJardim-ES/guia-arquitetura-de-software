@@ -9,11 +9,18 @@ resumo: >-
   Descreva o tópico em 2 ou 3 frases, como um abstract. Este texto aparece no
   cartão da home e nos metadados Open Graph.
 
+# Um tópico pode ter vários autores — liste um item por pessoa, na ordem em que
+# devem ser creditados. Todos entram no crédito, na citação e na lista de
+# contribuidores do site.
 autores:
   - nome: "Nome Completo do Autor"
     grupo: "Grupo 0" # opcional
     github: "usuario-github" # opcional
     orcid: ""          # opcional
+  - nome: "Nome Completo da Segunda Autora"
+    grupo: "Grupo 0"
+    github: "outro-usuario-github"
+    orcid: ""
 
 status: "modelo"        # rascunho | em-revisao | publicado | modelo
 data_criacao: "2026-08-30"

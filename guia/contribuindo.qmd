@@ -27,6 +27,7 @@ content/07-arquitetura-em-camadas/
 ├── metadata.yaml      # metadados do tópico (obrigatório)
 ├── referencias.bib    # bibliografia do tópico (obrigatório)
 ├── slides.qmd         # slides derivados do index.qmd (obrigatório)
+├── _trecho.md         # prosa compartilhada entre index e slides (opcional)
 ├── notebook.ipynb     # exemplo executável (obrigatório)
 └── assets/            # figuras, áudio, capturas de tela
 ```
@@ -40,9 +41,15 @@ Uma contribuição só é aceita quando os seis itens abaixo estão presentes.
 
 ### 1. Texto autoral em formato científico
 
-Escrito por você, em `index.qmd`. Não é tradução, não é paráfrase de um capítulo
-de livro, não é saída de IA colada. O texto precisa ser explicativo, com
-estrutura própria e voz própria.
+Escrito por você ou pelo seu grupo, em `index.qmd`. Não é tradução, não é
+paráfrase de um capítulo de livro, não é saída de IA colada. O texto precisa ser
+explicativo, com estrutura própria e voz própria.
+
+Um tópico pode ter **vários autores**. Liste todos em `autores`, no
+`metadata.yaml`, um item por pessoa e na ordem em que devem ser creditados —
+essa mesma ordem vale para o `author` do `index.qmd` e do `slides.qmd` e para o
+bloco "Como citar". Coautoria é crédito de verdade: todo nome da lista aparece
+no topo da página, na citação do tópico e na lista de contribuidores do site.
 
 Estrutura mínima esperada:
 
@@ -112,6 +119,10 @@ Regras:
 Um `slides.qmd` que reaproveita o conteúdo do `index.qmd`. Referência: Entre 12 e 20
 slides, pensados para uma apresentação de 20 minutos.
 
+Reaproveitar quer dizer incluir, não copiar: trechos comuns aos dois formatos
+ficam em um arquivo `_nome.md` (arquivos começados por `_` não viram página) e
+entram nos dois com `{{{< include _nome.md >}}}`. Veja `content/00-modelo/`.
+
 ## Formatos opcionais
 
 Bem-vindos, contam como contribuição extra, e nenhum é exigido:
@@ -123,6 +134,36 @@ Bem-vindos, contam como contribuição extra, e nenhum é exigido:
 - Tradução do texto para inglês
 - Servidor MCP expondo o conteúdo do tópico para assistentes de IA
 - Outro formato que achar adequado. Mencione no `metadata.yaml`
+
+## Entrando na lista de contribuidores
+
+A lista que aparece no `README.md` do repositório e na página
+[Sobre](sobre.qmd) é gerada por `scripts/gerar_contribuidores.py`, a partir de
+duas fontes:
+
+- `_shared/contribuidores.yaml` — quem mantém o projeto
+- o campo `autores` de cada `content/NN-topico/metadata.yaml` — quem assina os
+  tópicos
+
+Para entrar nela, preencha `nome` e `github` no `metadata.yaml` do seu tópico —
+cada coautor com o seu próprio `github` — e rode:
+
+```bash
+python scripts/gerar_contribuidores.py
+```
+
+O script reescreve o bloco entre os marcadores `CONTRIBUIDORES:INICIO` e
+`CONTRIBUIDORES:FIM` no `README.md` e em `guia/sobre.qmd`. Não edite esse bloco
+à mão: a próxima execução desfaz. Commite os dois arquivos junto com o tópico —
+o CI roda `python scripts/gerar_contribuidores.py --verificar` e reprova o PR se
+a lista estiver desatualizada.
+
+Cada pessoa aparece **uma vez só**, mesmo assinando vários tópicos ou sendo
+também mantenedora. O script casa as entradas pelo handle do GitHub — aceitando
+`ana`, `@ana` ou a URL completa, sem diferença de maiúsculas — e, quando o handle
+não está preenchido, pelo nome, ignorando acento, caixa e espaço extra.
+
+Autor sem conta no GitHub entra só com o nome, sem foto e sem link.
 
 ## Como contribuir, passo a passo
 
@@ -137,6 +178,7 @@ Bem-vindos, contam como contribuição extra, e nenhum é exigido:
 
    ```bash
    python scripts/validar_conteudo.py content/NN-seu-topico
+   python scripts/gerar_contribuidores.py
    quarto render
    ```
 

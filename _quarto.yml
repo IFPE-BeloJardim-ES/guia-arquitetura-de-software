@@ -9,6 +9,11 @@ project:
 website:
   title: "Guia Aberto de Arquitetura de Software"
   favicon: ""
+  site-url: "https://ifpe-belojardim-es.github.io/guia-arquitetura-de-software"
+  repo-url: "https://github.com/IFPE-BeloJardim-ES/guia-arquitetura-de-software"
+  repo-branch: main
+  repo-actions: [edit, issue]
+  open-graph: true
   navbar:
     left:
       - href: index.qmd
@@ -21,6 +26,10 @@ website:
             text: Sobre o projeto
       - href: content/00-modelo/index.qmd
         text: Tópicos
+    right:
+      - icon: github
+        href: "https://github.com/IFPE-BeloJardim-ES/guia-arquitetura-de-software"
+        aria-label: "Repositório no GitHub"
   page-footer:
     center: |
       Conteúdo sob [CC BY-NC 4.0](LICENSE).

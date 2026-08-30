@@ -50,6 +50,10 @@ CAMPOS_METADATA = [
 
 PADRAO_CHAVE = re.compile(r"^[a-z]+\d{4}[a-z]+$")
 
+# Todos os autores de exemplo do 00-modelo começam assim. Um tópico pode ter
+# vários autores; basta um placeholder esquecido para o crédito sair errado.
+PREFIXO_NOME_MODELO = "Nome Completo"
+
 
 @dataclass
 class Resultado:
@@ -136,8 +140,11 @@ def validar_topico(pasta: Path, chaves_globais: set[str]) -> Resultado:
         for a in autores:
             if not isinstance(a, dict) or not a.get("nome"):
                 r.erro("metadata.yaml: cada autor precisa ter 'nome'")
-            elif "Nome Completo do Autor" in a.get("nome", "") and not modelo:
-                r.erro("metadata.yaml: nome de autor não foi substituído (ainda está o do modelo)")
+            elif a.get("nome", "").strip().startswith(PREFIXO_NOME_MODELO) and not modelo:
+                r.erro(
+                    f"metadata.yaml: nome de autor não foi substituído "
+                    f"(ainda está o do modelo: '{a['nome']}')"
+                )
 
     if meta.get("slug") and not pasta.name.endswith(str(meta["slug"])):
         r.aviso(f"slug '{meta['slug']}' não corresponde ao nome da pasta '{pasta.name}'")
