@@ -1,0 +1,90 @@
+name: Versionar
+
+# Cria uma versão a cada merge na main, seguindo o versionamento semântico.
+# A numeração é calculada por scripts/gerar_versao.py; este workflow só cria a
+# tag anotada e a release com as notas.
+#
+# O preview da versão que um PR vai gerar aparece no resumo do workflow
+# "Validar conteúdo", antes do merge.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Uma versão por vez: dois merges seguidos não podem calcular a mesma tag.
+concurrency:
+  group: versionar
+  cancel-in-progress: false
+
+jobs:
+  versionar:
+    name: Criar tag e release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0      # histórico completo: o cálculo lê commits e tags
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Calcular versão
+        id: versao
+        run: |
+          python scripts/gerar_versao.py --explicar
+          python scripts/gerar_versao.py --json > versao.json
+          python scripts/gerar_versao.py --notas > notas.md
+          python - <<'PY' >> "$GITHUB_OUTPUT"
+          import json
+          d = json.load(open("versao.json", encoding="utf-8"))
+          print("tag=" + d["proxima"])
+          print("tipo=" + d["tipo"])
+          # Sem commits novos desde a última tag não há o que versionar
+          # (acontece em re-execuções manuais do workflow).
+          print("criar=" + ("true" if d["commits"] else "false"))
+          PY
+
+      - name: Nada a versionar
+        if: steps.versao.outputs.criar != 'true'
+        run: echo "Nenhum commit desde a última tag — nenhuma versão criada."
+
+      - name: Criar tag anotada
+        if: steps.versao.outputs.criar == 'true'
+        env:
+          TAG: ${{ steps.versao.outputs.tag }}
+          TIPO: ${{ steps.versao.outputs.tipo }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG" -m "$TAG ($TIPO)" -m "$(cat notas.md)"
+          git push origin "$TAG"
+
+      - name: Publicar release
+        if: steps.versao.outputs.criar == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.versao.outputs.tag }}
+        run: gh release create "$TAG" --title "$TAG" --notes-file notas.md
+
+      - name: Resumo
+        if: always()
+        env:
+          TAG: ${{ steps.versao.outputs.tag }}
+          CRIAR: ${{ steps.versao.outputs.criar }}
+        run: |
+          {
+            if [ "$CRIAR" = "true" ]; then
+              echo "## Versão publicada: \`$TAG\`"
+            else
+              echo "## Nenhuma versão criada"
+              echo
+              echo "Não houve commits desde a última tag."
+            fi
+            echo
+            cat notas.md
+          } >> "$GITHUB_STEP_SUMMARY"

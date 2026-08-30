@@ -33,6 +33,10 @@ except ImportError:
     print("ERRO: instale o pyyaml -> pip install pyyaml")
     sys.exit(2)
 
+# Acentos legíveis no log do CI e no console do Windows, que não usa UTF-8.
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8")
+
 RAIZ = Path(__file__).resolve().parent.parent
 CONTENT = RAIZ / "content"
 FONTE_MANTENEDORES = RAIZ / "_shared" / "contribuidores.yaml"

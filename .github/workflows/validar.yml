@@ -9,6 +9,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0      # histórico e tags: o preview de versão precisa
 
       - uses: actions/setup-python@v5
         with:
@@ -22,6 +24,21 @@ jobs:
 
       - name: Conferir lista de contribuidores
         run: python scripts/gerar_contribuidores.py --verificar
+
+      - name: Prever a versão que este merge vai gerar
+        if: always()
+        run: |
+          {
+            echo "## Versão que o merge deste PR vai gerar"
+            echo
+            echo '```'
+            python scripts/gerar_versao.py --explicar
+            echo '```'
+            echo
+            echo "### Notas previstas"
+            echo
+            python scripts/gerar_versao.py --notas
+          } >> "$GITHUB_STEP_SUMMARY"
 
   build:
     runs-on: ubuntu-latest

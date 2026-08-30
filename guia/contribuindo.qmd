@@ -172,6 +172,9 @@ Autor sem conta no GitHub entra só com o nome, sem foto e sem link.
    escopo e referências antes do trabalho pesado.
 2. **Faça fork do repositório** e crie uma branch a partir da `main`, nomeada
    como `topico/NN-nome-do-topico` (ex: `topico/07-arquitetura-em-camadas`).
+   Escreva as mensagens de commit no padrão *Conventional Commits* —
+   `feat: adiciona tópico de camadas`, `fix: corrige DOI da referência` — porque
+   é delas que sai o número da próxima versão.
 3. **Copie `content/00-modelo/`** para `content/NN-seu-topico/` e comece a
    preencher.
 4. **Rode a validação local** antes de abrir o PR:
@@ -186,7 +189,10 @@ Autor sem conta no GitHub entra só com o nome, sem foto e sem link.
    template incompleto são fechados sem revisão.
 6. **Responda à revisão.** Cada PR recebe pelo menos duas revisões: uma de outro
    grupo/contribuidor e uma da manutenção do projeto.
-7. **Merge.** O site publica automaticamente em poucos minutos.
+7. **Merge.** O site publica automaticamente em poucos minutos e o merge gera
+   uma versão nova. Publicar um tópico sobe a casa MENOR (`v0.3.0` → `v0.4.0`);
+   correções sobem a última casa. O resumo do PR mostra, antes do merge, qual
+   versão vai sair e com quais notas.
 
 ## O que faz um PR ser recusado
 
