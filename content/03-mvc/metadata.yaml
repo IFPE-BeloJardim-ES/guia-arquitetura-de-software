@@ -1,24 +1,21 @@
-# Metadados do tópico — preencha tudo. O CI valida os campos obrigatórios.
-# Este arquivo também alimenta a indexação por ferramentas de IA.
-
-numero: "00"
-slug: "modelo"
-titulo: "Tópico modelo"
-subtitulo: "Estrutura e profundidade esperadas de uma contribuição"
+# Metadados do tópico — MVC (Model-View-Controller)
+numero: "03"
+slug: "03-mvc"
+titulo: "MVC (Model-View-Controller)"
+subtitulo: "Separação de responsabilidades entre domínio, apresentação e controle"
 resumo: >-
-  O MVC divide uma aplicação interativa em Model (estado e regras de negócio),
-  View (apresentação) e Controller (entrada do usuário). Criado por Trygve
-  Reenskaug no Xerox PARC em 1979 para resolver o acoplamento entre interface e
-  lógica, o padrão continua sendo a base de muitos frameworks web e de interface.
+  O padrão arquitetural Model-View-Controller (MVC) divide sistemas interativos
+  em três partes com responsabilidades estritas: Model (estado e lógica de negócio),
+  View (exibição para o usuário) e Controller (tradução de entradas e comandos).
+  Nascido no Xerox PARC com Smalltalk-80 e amplamente difundido na web moderna,
+  o MVC isola o que o sistema faz da forma como ele se apresenta, viabilizando
+  testes automatizados e múltiplas interfaces simultâneas.
 
-# Um tópico pode ter vários autores — liste um item por pessoa, na ordem em que
-# devem ser creditados. Todos entram no crédito, na citação e na lista de
-# contribuidores do site.
 autores:
   - nome: "Antonio Mário Jesus Vidal Leite"
-    grupo: "Grupo 3" # opcional
-    github: "amjvidal" # opcional
-    orcid: ""          # opcional
+    grupo: "Grupo 3"
+    github: "amjvidal"
+    orcid: ""
   - nome: "David Soares da Silva"
     grupo: "Grupo 3"
     github: "DavidSoares18"
@@ -40,25 +37,29 @@ autores:
     github: "teixeiralucs"
     orcid: ""
 
-status: "em-revisao"        # rascunho | em-revisao | publicado | modelo
-data_criacao: "2026-08-30"
-ultima_revisao: "2026-10-14"
+status: "publicado"
+data_criacao: "2026-09-22"
+ultima_revisao: "2026-10-21"
 revisado_por:
-  - "David Soares da Silva"
+  - "Matheus Barbosa"
+  - "Maria Letícia"
+  - "Pedro Xavier"
+  - "Ruan Henrique"
+  - "João Henrique"
+  - "Danniel Soares"
+  - "Caio Vinicius"
 
-# Estrutura pedagógica
 competencias:
-  - "Distinguir as responsabilidades de Model, View e Controller em um sistema interativo"
-  - "Explicar como o mecanismo de notificação (padrão Observer) mantém o Model independente das Views"
-  - "Identificar violações da separação, como regra de negócio na View e Fat Controller, e seu impacto em modificabilidade e testabilidade"
-  - "Avaliar quando o MVC é adequado ao problema e quando ele representa overengineering"
-  - "Comparar o MVC clássico com sua adaptação para a web e com as variantes MVP e MVVM"
-nivel_bloom: ["compreender", "analisar", "avaliar"]   # lembrar|compreender|aplicar|analisar|avaliar|criar
-pre_requisitos: ["arquitetura-em-camadas"]    # slugs de outros tópicos
+  - "Distinguir com clareza as fronteiras de responsabilidade entre Model, View e Controller"
+  - "Explicar como o padrão Observer permite a sincronização reativa entre Model e múltiplas Views sem acoplamento direto"
+  - "Diagnosticar e evitar anti-padrões recorrentes como Fat Controller e vazamento de regras de negócio para a View"
+  - "Avaliar os trade-offs de adotar MVC em contrapartida a scripts diretos ou abordagens reativas modernas (MVP, MVVM)"
+  - "Estruturar testes automatizados de regras de domínio de maneira desacoplada da camada visual"
+nivel_bloom: ["compreender", "analisar", "avaliar"]
+pre_requisitos: ["arquitetura-em-camadas"]
 topicos_relacionados: ["cliente-servidor"]
-palavras_chave: ["MVC", "Model-View-Controller", "padrão arquitetural", "architectural pattern", "separação de responsabilidades", "separation of concerns", "Observer", "MVP", "MVVM", "Fat Controller"]
+palavras_chave: ["MVC", "Model-View-Controller", "padrão arquitetural", "separação de responsabilidades", "Observer", "MVP", "MVVM", "Fat Controller"]
 
-# Formatos entregues — o CI verifica a existência do que está marcado como true
 formatos:
   texto: true
   notebook:
@@ -66,28 +67,24 @@ formatos:
     colab_url: "https://colab.research.google.com/drive/1GiyY0wrC_AD0KsTNtF_1jRdxEOF3XsCk?usp=sharing"
   audio_notebooklm:
     entregue: true
-    arquivo: "assets/audio-notebooklm.m4a"
-    url: ""
+    arquivo: ""
+    url: "https://drive.google.com/file/d/1cjYLBBMD9wWiqQ3-ma2StS7Cvu9skX8V/view?usp=sharing"
     duracao_min: 12
     transcricao: "assets/audio-transcricao.md"
   gem_gemini:
     entregue: true
     url: "https://gemini.google.com/gem-labs/1NPyLSiayocYBjSqoxQ-kLajmonoaU4mc"
     instrucoes: |
-      Você é um tutor especialista em Arquitetura de Software com foco profundo no padrão Model-View-Controller (MVC) e na evolução dos padrões de interface de usuário (como MVP, MVVM, SPAs e a arquitetura unidirecional do React).
-      Seu objetivo é ajudar os alunos a compreender a separação de responsabilidades, o fluxo de dados e os papéis de cada componente na arquitetura.
-      Baseie todas as suas respostas exclusivamente no material do guia fornecido (textos, transcrições de áudio e referências bibliográficas).
-      Sempre cite a fonte ou a referência ao explicar um conceito (ex: "Segundo o comparativo da Baidu..." ou "[1]").
-      Seja didático, utilize analogias do mundo real (como a analogia do restaurante ou do diplomata da ONU) e encoraje o pensamento crítico do aluno.
-      Se a pergunta do aluno não for coberta pelo material fornecido, informe educadamente que o material atual não aborda esse ponto específico e não invente ou improvise informações de fontes externas.
+      Você é um tutor especialista em Arquitetura de Software com foco no padrão Model-View-Controller (MVC) e na evolução dos padrões de interface de usuário (como MVP, MVVM e Web MVC).
+      Seu objetivo é ajudar os leitores a compreender a separação de responsabilidades, o fluxo de dados e os papéis de cada componente.
+      Baseie suas respostas no material do guia, cite sempre as fontes teóricas adequadas e use analogias claras para apoiar o raciocínio.
   slides:
     entregue: true
-    num_slides: 15
+    num_slides: 19
     arquivo: "slides.qmd"
-  # opcionais
   video:
     entregue: true
-    arquivo: "assets/video-mvc.mp4"
+    url: "https://drive.google.com/file/d/1mtYWU0p2qS9ffTEQb-AjIMLSF2HATSHK/view?usp=sharing"
   podcast:
     entregue: false
     url: ""

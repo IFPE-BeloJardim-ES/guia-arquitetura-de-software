@@ -81,12 +81,16 @@ A seta do Modelo para a Visão é o padrão Observer: o Modelo avisa sem saber q
 
 ## Estrutura e restrições {.smaller}
 
-{{< include _responsabilidades.md >}}
+| Componente | Responsabilidade | O que não pode fazer |
+|---|---|---|
+| Model | Guarda o estado e regras de negócio; notifica observadores | Conhecer telas, renderizar HTML ou chamar print |
+| View | Apresenta o estado do Model ao usuário; lê dados | Processar regras de negócio ou alterar o Model direto |
+| Controller | Recebe eventos do usuário, aciona o Model e escolhe a View | Conter regras de negócio ou formatar apresentação |
 
-Tudo pode depender do Modelo. O Modelo não depende de ninguém [@buschmann1996pattern, seção 2.4].
+Tudo pode depender do Modelo. O Modelo não depende de ninguém [@buschmann1996pattern].
 
 ::: {.notes}
-Esta tabela é a mesma do texto: vem do arquivo `_responsabilidades.md`, incluído nos dois lugares. Editar em um só lugar atualiza texto e slides.
+Tabela sintetizando o papel de cada parte e as fronteiras estritas entre domínio, visualização e fluxo de controle.
 :::
 
 ## Quando a separação é quebrada {.arte background-image="assets/slide-06-acoplamento.jpg" background-size="contain" background-color="#0f3c78" aria-label="Acoplamento intenso entre Visão, Modelo e um Controlador gordo, com vazamento de lógica e testabilidade comprometida."}
