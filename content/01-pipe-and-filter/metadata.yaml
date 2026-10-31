@@ -104,7 +104,7 @@ formatos:
       modificabilidade ao comparar Pipe and Filter com outros estilos.
   slides:
     entregue: true
-    num_slides: 16
+    num_slides: 20
   # opcionais
   video:
     entregue: false

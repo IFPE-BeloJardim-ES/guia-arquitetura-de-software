@@ -50,24 +50,26 @@ O critério de decomposição modular de Parnas é um bom exemplo de como uma de
 
 ## Estrutura e componentes
 
-Voltando à fábrica de suco, o estilo tem só duas peças:
+Voltando à fábrica de suco, o estilo tem quatro componentes. Dois deles são os extremos da cadeia, onde o sistema encontra o mundo de fora; os outros dois são o que há no meio e o que liga tudo.
 
-- **Filtro** (as máquinas): recebe dados, transforma e entrega o resultado. Pode ter três papéis: *fonte*, que só produz (o caminhão de laranjas); *transformação*, que recebe e devolve (a lavadora, a espremedora); e *sumidouro*, que só consome (a engarrafadora).
-- **Pipe** (as esteiras): o canal entre dois filtros. Não transforma nada; no máximo guarda os dados por um instante (um *buffer*), para a máquina rápida não afogar a lenta.
+- **Fonte:** É onde o fluxo nasce. Só tem saída: não recebe nada de nenhum pipe. A fonte lê a realidade (um arquivo, uma fila, um sensor) e a transforma em fluxo no formato combinado, entregando **um item por vez** em vez de despejar a carga inteira de uma só vez. Na fábrica, é o caminhão de laranjas. No exemplo aplicado, é a `fonte(n)`, que emite uma linha de log de cada vez.
+- **Filtro:** É a máquina da linha de montagem. Tem entrada e saída, e faz **uma única transformação**: descartar itens, converter o formato, enriquecer o dado. Não sabe quem veio antes nem quem vem depois; conhece apenas o formato do que recebe e do que entrega. Na fábrica, são a lavadora e a espremedora. No exemplo aplicado, `so_erros` descarta as linhas que não são de erro e `extrai_ms` converte cada linha em um númer- 
+- **Pipe:** Pipe É a esteira. Liga a saída de um componente à entrada do seguinte, em **um único sentido**, e não transforma nada: no máximo guarda os dados por um instante (um *buffer*), para a máquina rápida não afogar a lenta. Ele também é o contrato do estilo, porque o formato dos dados que passa por ele é o único combinado entre as etapas. No Unix, o pipe é o `|`. No exemplo aplicado, é o próprio encadeamento dos geradores, e como cada linha passa sozinha, nem buffer há.
+- **Sumidouro:** É onde o fluxo termina. Só tem entrada: não passa nada adiante por pipe algum. O sumidouro consome o fluxo e entrega o resultado ao mundo de fora, seja gravando um arquivo, imprimindo um relatório ou devolvendo um número. Na fábrica, é a engarrafadora. No código do exemplo aplicado, `media` cumpre as duas últimas caixas do diagrama de uma vez: calcula e entrega.
 
-A relação entre elas é simples: os dados correm em um único sentido, de filtro em filtro, sempre por um pipe. Cada filtro conhece apenas o formato do que entra e do que sai; entregou, esqueceu.
+Um detalhe que surpreende: com geradores, quem dá o ritmo é o sumidouro. Montar a cadeia não executa nada; só quando o sumidouro pede o primeiro item é que o pedido sobe de filtro em filtro até a fonte, e cada item desce a cadeia inteira antes de o próximo ser pedido. É por isso que o pico de memória do exemplo aplicado fica em zero.
 
 ```{mermaid}
 %%| label: fig-pipeline
-%%| fig-cap: "Estrutura do estilo. Linhas contínuas: fluxo permitido. Linhas tracejadas em vermelho, marcadas com ✗: conexões proibidas."
+%%| fig-cap: "Estrutura do estilo. Linhas contínuas: fluxo permitido. Linhas tracejadas em vermelho, marcadas com X: conexões proibidas."
 flowchart LR
     F[(Fonte: log)] -->|pipe| A[Filtro: só erros]
     A -->|pipe| B[Filtro: extrai latência]
     B -->|pipe| C[Filtro: calcula média]
     C -->|pipe| S[Sumidouro: relatório]
-    A -.->|✗ chamada direta| C
-    E[(Estado compartilhado)] -.->|✗| A
-    E -.->|✗| B
+    A -.->|X chamada direta| C
+    E[(Estado compartilhado)] -.->|X| A
+    E -.->|X| B
     linkStyle 4,5,6 stroke:#d33,stroke-width:2px,stroke-dasharray:5 4
 ```
 
@@ -83,7 +85,7 @@ Um estilo se define tanto pelas conexões que autoriza quanto pelas que veda, e 
 Na nossa fábrica, o caminhão de laranjas agora é um arquivo de log com milhões de linhas, e queremos saber a **latência média das requisições que deram erro**. São três etapas: filtrar só as linhas de erro, extrair a latência de cada uma e calcular a média.
 
 ::: {.callout-note title="Exemplo executável"}
-O notebook deste tópico está em [`notebook.ipynb`](notebook.html) e pode ser aberto direto no [Google Colab](https://colab.research.google.com/). Ele implementa este mesmo exemplo, do log, e reproduz a tabela abaixo. A `fonte`, que gera as linhas de log, está lá.
+O notebook deste tópico está em [`notebook.ipynb`](notebook.html) e pode ser aberto direto no [Google Colab](https://colab.research.google.com/drive/1FqKE4d6d5e4zQp9AeZNTi8hFgcVFrHRc#scrollTo=pIsUXaD4-iqv). Ele implementa este mesmo exemplo, do log, e reproduz a tabela abaixo. A `fonte`, que gera as linhas de log, está lá.
 :::
 
 **1. A implementação correta.** Cada filtro é um gerador Python, e o "pipe" é o próprio encadeamento: cada linha atravessa a cadeia inteira antes de a próxima entrar. Os dados fluem, um item de cada vez, e cada filtro só conhece o formato do que recebe e do que entrega.
@@ -130,16 +132,7 @@ O resultado é o mesmo e o tempo também (cerca de 9 s por milhão de linhas nas
 
 Nenhum estilo arquitetural é melhor que outro em abstrato: cada um favorece certos atributos de qualidade ao custo de outros [@richards2020fundamentals, cap. 11]. A fábrica de suco é ótima para encher milhares de garrafas por hora, mas péssima para quem quer **um único copo agora**, porque esse copo também precisa passar por todas as máquinas. Por isso, em cada linha da tabela, o atributo vem com a dimensão em que ele é medido.
 
-| Atributo (e a dimensão) | Efeito | Por quê |
-|---|---|---|
-| Modificabilidade (quantos filtros mudam para inserir ou trocar uma etapa) | Favorecida | Só o filtro novo é escrito; os vizinhos continuam iguais, desde que o formato dos dados se mantenha |
-| Uso de memória (volume de dados processado) | Favorecido | Com filtros incrementais, o consumo independe do tamanho da entrada, como na tabela do exemplo aplicado |
-| Vazão (itens processados por segundo) | Favorecida | Etapas independentes podem rodar em paralelo, cada uma em seu processador [@buschmann1996pattern, cap. 2] |
-| Testabilidade (infraestrutura necessária por teste) | Favorecida | Cada filtro é testado sozinho: uma lista de entrada, uma lista de saída esperada |
-| Latência (tempo de resposta para **um** item) | Comprometida | O item atravessa todas as etapas, e cada passagem por um pipe pode custar cópia ou conversão |
-| Tratamento de erros (recuperação de falhas no meio do fluxo) | Comprometido | O filtro não sabe quem veio antes nem depois; reportar o erro e desfazer o que já passou adiante é difícil |
-| Acoplamento (filtros alterados quando o formato dos dados muda) | Comprometido | Todos os filtros dependem do mesmo formato; mudá-lo atinge a cadeia inteira |
-| Simplicidade operacional (peças para implantar e monitorar) | Depende | Filtros como funções no mesmo programa saem de graça; filtros como processos ou serviços separados multiplicam as peças |
+{{< include _trade-offs.md >}}
 
 A linha do acoplamento é o alerta de Parnas em ação: dividir o sistema por etapas de processamento espalha o formato dos dados por vários módulos, e uma mudança nele atinge todos ao mesmo tempo [@parnas1972modularization]. Em uma frase, o Pipe and Filter troca a resposta rápida de um item por volume processado com folga, e troca a liberdade de formato por independência entre as etapas.
 
@@ -173,16 +166,4 @@ Antes de montar a esteira, passe pelo checklist abaixo. Cada item é uma condiç
 ## Referências
 
 ::: {#refs}
-:::
-
-<br>
-
-::: {.como-citar}
-
-**Como citar este tópico**
-
-Emerson Silva; Gustavo Henrique; José Victor; Randson Bredley; Thiago Leal;
-Thiago Patriota. "Pipe and Filter".
-*Guia Aberto de Arquitetura de Software*, 2026. Disponível em:
-<https://ifpe-belojardim-es.github.io/guia-arquitetura-de-software/content/01-pipe-and-filter/>. Licenciado sob CC BY-NC 4.0.
 :::

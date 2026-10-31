@@ -273,7 +273,7 @@
 }
 
 .reveal .mermaid .edgePath path {
-  stroke: #38bdf8 !important;
+  stroke: #38bdf8;
   stroke-width: 2px;
 }
 
