@@ -1,7 +1,7 @@
 # Metadados do tópico — preencha tudo. O CI valida os campos obrigatórios.
 # Este arquivo também alimenta a indexação por ferramentas de IA.
 
-numero: "04"
+numero: "05"
 slug: "microsservicos"
 titulo: "Arquitetura de microsserviços"
 subtitulo: "Estrutura, componentes e comunicação entre serviços"
@@ -37,9 +37,9 @@ autores:
     github: ""
     orcid: ""
 
-status: "em-revisao"        # rascunho | em-revisao | publicado | modelo
+status: "publicado"        # rascunho | em-revisao | publicado | modelo |
 data_criacao: "2026-08-30"
-ultima_revisao: "2026-10-11"
+ultima_revisao: "2026-10-11" # 2026-10-30|Revisão de texto. 
 revisado_por:
   - "Nome do revisor par"
   - "Nome do revisor de manutenção"

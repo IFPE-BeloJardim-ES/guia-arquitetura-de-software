@@ -1,0 +1,302 @@
+---
+title: "Microsserviços — leitura interativa"
+subtitle: "Conceitos, decisões e trade-offs em uma leitura rápida"
+author:
+  - name: "Agdo José Samuel Sousa de oliveira"
+  - name: "Antonio Carlos Verissimo de Souza"
+  - name: "Pedro Henrique Borges Silva"
+  - name: "Felipe dos Santos Silva"
+  - name: "Antonio Pedro Guimarães Santos de Macedo"
+date: 2026-09-30
+date-modified: last-modified
+bibliography: referencias.bib
+citation:
+  type: webpage
+  container-title: "Guia Aberto de Arquitetura de Software"
+license: "CC BY-NC 4.0"
+keywords: ["microsserviços", "arquitetura de software", "sistemas distribuídos"]
+---
+
+::: {.meta-topico}
+<dl>
+<dt>Competências</dt>
+<dd>Avaliar quando microsserviços fazem sentido e reconhecer seus principais custos.</dd>
+<dt>Pré-requisitos</dt>
+<dd>Conceitos básicos de arquitetura de software e sistemas distribuídos.</dd>
+<dt>Formatos</dt>
+<dd>
+[texto]{.formato} [notebook](notebook.ipynb){.formato} [áudio](assets/audio/){.formato} [slides](slides.qmd){.formato}
+</dd>
+</dl>
+:::
+
+## Definição e contexto
+
+Microsserviços dividem o sistema por **capacidades de negócio**. Cada serviço tem uma responsabilidade clara, controla seu ciclo de vida e se comunica com os demais por contratos explícitos [@newman2015building, cap. 1].
+
+::: {.callout-tip}
+## Em uma frase
+
+**Um serviço = uma capacidade de negócio + autonomia para evoluir.**
+:::
+
+::: {.panel-tabset}
+### O que muda
+
+| Monólito | Microsserviços |
+|---|---|
+| Uma unidade de execução e implantação | Várias unidades independentes |
+| Ciclo de vida compartilhado | Ciclos de vida próprios |
+| Limites tendem a ser técnicos | Limites orientados pelo negócio |
+
+### O que não muda
+
+O sistema continua precisando de coesão, contratos, testes, observabilidade e decisões claras sobre dados. Microsserviços não eliminam complexidade: eles a distribuem.
+:::
+
+## Conceitos fundamentais
+
+Use os cartões abaixo como um mapa rápido do estilo arquitetural:
+
+::: {.panel-tabset}
+### Serviço autônomo
+
+Responsável por uma capacidade de negócio e capaz de ser desenvolvido, testado e implantado com independência.
+
+### Fronteira de negócio
+
+O limite do serviço deve acompanhar regras e dados que mudam juntos — não apenas separar interface, lógica e banco.
+
+### Contrato explícito
+
+APIs e eventos definem como os serviços colaboram. O contrato deve ser pequeno, documentado e compatível com sua evolução.
+
+### Dados sob responsabilidade
+
+Cada serviço deve controlar seu próprio modelo de dados. Outros serviços acessam informações por APIs ou eventos, não pelo banco interno [@richardson2018microservices].
+
+### Operação distribuída
+
+Rede, latência, falhas parciais, logs, métricas e traces passam a fazer parte do desenho da solução.
+:::
+
+::: {.callout-note collapse="true"}
+## Checklist de um bom serviço
+
+- Tem uma responsabilidade que pode ser explicada em uma frase.
+- Possui regras e dados que fazem sentido juntos.
+- Pode evoluir sem alterações coordenadas em vários serviços.
+- Tem contrato, logs, métricas e mecanismo de saúde.
+:::
+
+## Monólito ou microsserviços?
+
+A escolha depende do contexto. Compare as duas opções pelo problema que você precisa resolver:
+
+| Pergunta | Monólito modular | Microsserviços |
+|---|---|---|
+| Quantas unidades precisam ser operadas? | Poucas | Muitas |
+| Como ocorre a implantação? | Como uma unidade | Por serviço |
+| Como escalar? | Aplicação inteira ou módulos internos | Por capacidade de negócio |
+| Como é a comunicação? | Principalmente local | Pela rede ou mensageria |
+| Qual é o custo inicial? | Menor | Maior |
+| Quando tende a funcionar melhor? | Produto pequeno ou domínio ainda incerto | Domínio grande, equipes autônomas e necessidades distintas de escala |
+
+::: {.callout-warning}
+## Atenção ao “monólito distribuído”
+
+Vários serviços não garantem autonomia. Se toda mudança exige alterar e publicar vários serviços juntos, o sistema apenas espalhou o monólito pela rede.
+:::
+
+## Estrutura e componentes
+
+Uma arquitetura típica pode ser lida de fora para dentro:
+
+::: {.panel-tabset}
+### Entrada
+
+**Cliente → API Gateway**
+
+O gateway pode autenticar, aplicar limites, rotear versões e adaptar respostas. Não deve concentrar regras de negócio.
+
+### Capacidades
+
+**Gateway → Serviços de negócio**
+
+Cada serviço representa uma capacidade, possui um contrato e mantém autonomia sobre sua evolução.
+
+### Dados
+
+**Serviço → Banco sob sua responsabilidade**
+
+O serviço é dono dos dados que administra. O isolamento reduz acoplamento e facilita mudanças independentes.
+
+### Plataforma
+
+**Discovery + observabilidade + mensageria**
+
+Esses componentes apoiam localização de instâncias, comunicação assíncrona e diagnóstico do comportamento distribuído.
+:::
+
+| Componente | Pergunta que ele responde |
+|---|---|
+| API Gateway | Como o cliente entra no sistema? |
+| Microsserviço | Qual capacidade de negócio está sendo executada? |
+| Banco por serviço | Quem controla estes dados? |
+| Broker/Event Bus | Como propagar um fato para vários consumidores? |
+| Service Discovery | Onde está a instância disponível? |
+| Observabilidade | O que está acontecendo no sistema? |
+
+## Como decompor o sistema
+
+Comece pelo domínio, não pela infraestrutura:
+
+1. Liste capacidades e fluxos de negócio.
+2. Agrupe regras que mudam juntas.
+3. Defina o que cada serviço possui e o que ele não conhece.
+4. Publique contratos pequenos, orientados a casos de uso.
+5. Valide as fronteiras com cenários de mudança e falha.
+
+::: {.callout-tip}
+## Teste de fronteira
+
+Pergunte: **“Se esta regra mudar, quantos serviços precisarão mudar junto?”**
+
+Se a resposta for “muitos”, a fronteira provavelmente está mal definida ou o contrato está acoplado demais.
+:::
+
+## Comunicação entre serviços
+
+Escolha o estilo de comunicação pelo tipo de interação:
+
+| Situação | Preferência inicial |
+|---|---|
+| O consumidor precisa da resposta agora | HTTP/REST síncrono |
+| O processamento pode terminar depois | Fila ou evento assíncrono |
+| Há vários interessados em uma mudança | Publish/subscribe |
+| Existem vários tipos de cliente | Gateway ou BFF |
+| Instâncias mudam dinamicamente | Discovery + health checks |
+| A chamada pode falhar ou atrasar | Timeout, retry limitado e circuit breaker |
+
+### APIs REST
+
+Use REST quando o consumidor precisa do resultado durante a própria interação:
+
+```text
+GET  /produtos/{id}  → consulta um produto
+POST /pedidos        → cria uma intenção de pedido
+```
+
+O contrato inclui rota, método, payload, códigos HTTP e formato de erro. OpenAPI ajuda a documentar e validar esse contrato [@richardson2018microservices, cap. 3].
+
+### Mensageria e eventos
+
+Use eventos quando o trabalho é demorado, há vários consumidores ou a resposta não precisa esperar todo o processamento.
+
+```text
+PedidoCriado → Estoque reserva → Pagamento processa → Notificação envia
+```
+
+Inclua identificador de correlação, versão do evento, retry, ordenação quando necessária e fila para mensagens não processáveis [@microsoft-communication].
+
+::: {.callout-warning}
+## O risco da cadeia síncrona
+
+`Gateway → Pedidos → Pagamento → Estoque → Notificações` acumula latência e pontos de falha. Mantenha o caminho síncrono curto e publique eventos para o que puder acontecer depois.
+:::
+
+## Exemplo aplicado: compra online
+
+Uma compra pode ser dividida em três capacidades:
+
+::: {.panel-tabset}
+### Produtos
+
+Catálogo e disponibilidade de itens.
+
+### Pedidos
+
+Criação e acompanhamento do pedido.
+
+### Pagamentos
+
+Autorização e confirmação do pagamento.
+:::
+
+### Fluxo de sucesso
+
+1. O cliente cria um pedido.
+2. Pedidos consulta a disponibilidade em Produtos.
+3. Pedidos solicita o pagamento.
+4. Pagamentos confirma a transação.
+5. Pedidos registra o pedido como confirmado.
+
+### Fluxo de falha
+
+Se o pagamento for recusado, Pedidos não confirma a compra. O cliente recebe um estado explícito, como `PAGAMENTO_RECUSADO`, em vez de uma resposta ambígua.
+
+::: {.callout-note collapse="true"}
+## Onde entra a consistência eventual?
+
+Se estoque, pagamento e pedido possuem dados separados, a confirmação pode ocorrer em etapas. O sistema precisa representar estados intermediários e definir ações de compensação quando uma etapa falhar [@richardson2018microservices].
+:::
+
+## Trade-offs
+
+Microsserviços trocam **autonomia** por **complexidade distribuída**:
+
+| Benefício | Custo associado |
+|---|---|
+| Implantação independente | Mais pipelines e versões para operar |
+| Escalabilidade seletiva | Infraestrutura e observabilidade adicionais |
+| Fronteiras mais claras | Risco de fronteiras artificiais |
+| Autonomia das equipes | Necessidade de contratos compatíveis |
+| Tecnologia adequada a cada serviço | Diversidade tecnológica para manter |
+| Falhas isoladas | Falhas de rede e consistência eventual |
+
+::: {.panel-tabset}
+### Benefícios
+
+- Entregas menores e mais frequentes.
+- Escala específica por capacidade.
+- Equipes trabalhando com maior autonomia.
+- Limites de negócio mais claros.
+
+### Custos
+
+- Comunicação pela rede.
+- Dados distribuídos e consistência eventual.
+- Testes de integração mais complexos.
+- Monitoramento, deploy e operação de muitos processos.
+:::
+
+## Quando usar — e quando evitar
+
+::: {.panel-tabset}
+### Considere usar quando
+
+- O domínio é grande e possui capacidades bem separáveis.
+- Diferentes partes precisam de ritmos de entrega distintos.
+- Há necessidade real de escalar capacidades específicas.
+- Múltiplos times precisam de autonomia.
+- A organização possui CI/CD, containers e observabilidade.
+
+### Evite quando
+
+- O produto ainda é pequeno ou o domínio está mudando rapidamente.
+- O time é pequeno e não consegue operar vários serviços.
+- Os dados são fortemente entrelaçados.
+- Não existe maturidade de DevOps e observabilidade.
+- A adoção acontece apenas por moda.
+:::
+
+::: {.callout-tip}
+## Regra de decisão
+
+Adote microsserviços quando o ganho de autonomia, escala ou evolução independente superar o custo operacional da distribuição. Caso contrário, comece com um **monólito modular** e extraia serviços quando as fronteiras estiverem claras.
+:::
+
+## Referências
+
+::: {#refs}
+:::
