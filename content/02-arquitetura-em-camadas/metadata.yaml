@@ -22,21 +22,21 @@ autores:
     grupo: "Grupo 1"
     github: "joaohenrique11z"
     orcid: ""
-  - nome: "Ruan Henrique Pereira dos Santos"
-    grupo: "Grupo 1"
-    github: "RuanHD"
-    orcid: ""
   - nome: "Pedro Henrique Reis Xavier"
     grupo: "Grupo 1"
     github: "xavier9190"
+    orcid: ""
+  - nome: "Wellison Danniel Soares Ponciano"
+    grupo: "Grupo 1"
+    github: "DannSrs"
     orcid: ""
   - nome: "Caio Vinícius Santana Gomes"
     grupo: "Grupo 1"
     github: "Caioxlw"
     orcid: ""
-  - nome: "Wellison Danniel Soares Ponciano"
+  - nome: "Ruan Henrique Pereira dos Santos"
     grupo: "Grupo 1"
-    github: "DannSrs"
+    github: "RuanHD"
     orcid: ""
 
 status: "publicado"        # rascunho | em-revisao | publicado | modelo
@@ -64,8 +64,8 @@ formatos:
   audio_notebooklm:
     entregue: true
     arquivo: ""   
-    url: "https://open.spotify.com/episode/4QAbowgllhdeZKOtkmlmbP?si=t2erNo5jTDWlPq7CuvwX0Q"
-    duracao_min: 12
+    url: "https://open.spotify.com/episode/6moSsNJjkyOJEPnRK5Wy7b?si=EVQa48X3T_-_SE3h2Grnuw"
+    duracao_min: 14
     transcricao: "assets/audio-transcricao.md"
   gem_gemini:
     entregue: true
@@ -93,6 +93,6 @@ formatos:
   # opcionais
   podcast:
     entregue: true
-    url: "https://open.spotify.com/episode/4QAbowgllhdeZKOtkmlmbP?si=t2erNo5jTDWlPq7CuvwX0Q"
+    url: "https://open.spotify.com/episode/6moSsNJjkyOJEPnRK5Wy7b?si=EVQa48X3T_-_SE3h2Grnuw"
 
 licenca: "CC-BY-NC-4.0"

@@ -28,7 +28,7 @@ keywords: ["arquitetura em camadas", "layered architecture", "separação de int
 <dd>Nenhum</dd>
 <dt>Formatos</dt>
 <dd>
-[texto]{.formato} [notebook](notebook.ipynb){.formato} [áudio](https://open.spotify.com/episode/4QAbowgllhdeZKOtkmlmbP?si=t2erNo5jTDWlPq7CuvwX0Q){.formato} [gem](https://gemini.google.com/gem/1krjUZgc8cYvjBu-8bu19-VkZMbJB6nb0?usp=sharing){.formato} [slides](slides.qmd){.formato}
+[texto]{.formato} [notebook](notebook.ipynb){.formato} [áudio](https://open.spotify.com/episode/6moSsNJjkyOJEPnRK5Wy7b?si=EVQa48X3T_-_SE3h2Grnuw){.formato} [gem](https://gemini.google.com/gem/1krjUZgc8cYvjBu-8bu19-VkZMbJB6nb0?usp=sharing){.formato} [slides](slides.qmd){.formato}
 </dd>
 </dl>
 :::
@@ -39,38 +39,23 @@ A **Arquitetura em Camadas** (Layered Architecture) é um padrão de design estr
 
 Essa regra trata do sentido das **dependências**, e não do retorno das chamadas. Toda chamada tem uma resposta, que volta de baixo para cima (por retorno de função, *callbacks* ou eventos). Isso é permitido desde que a camada inferior não conheça a superior: ela apenas executa uma função que recebeu, sem saber quem a forneceu.
 
-Primordialmente, no início do desenvolvimento dos sistemas monolíticos, a separação em camadas não era um fator levado em consideração na arquitetura de uma aplicação. Desde que o código manipulasse os arquivos necessários, organizar o projeto em camadas não era considerado essencial.
+É um dos padrões mais usados desde os primeiros sistemas de grande porte, na década de 60, e uma das primeiras propostas foi de Edsger W. Dijkstra, em 1968 [@valente2020engenharia]. A ideia já aparecia em sistemas operacionais e protocolos de rede, como o modelo OSI, muito antes de chegar ao desenvolvimento web.
 
-Essa realidade começou a mudar a partir dos anos 1990 com a ascensão do modelo cliente-servidor [@fowler2003patterns, cap. 1]. De maneira resumida, trata-se de um sistema baseado em uma arquitetura de duas camadas: o cliente ficava responsável pela interface do usuário (UI) e o servidor era, geralmente, um banco de dados relacional. Esse modelo se popularizou devido às ferramentas que surgiram na época, as quais facilitavam fortemente a conexão da UI com o banco de dados SQL.
-
-De fato, se o objetivo da aplicação fosse apenas exibir e atualizar dados simples em uma tabela relacional, esse sistema de duas camadas funcionaria muito bem. O problema surge quando, além de exibir e editar, torna-se necessário aplicar lógicas de negócio (ou de domínio) sobre os dados, como regras específicas, validações e cálculos.
-
-A solução inicial dos programadores para essa necessidade era alocar toda a lógica na camada do cliente. Isso resultava no acoplamento de toda a inteligência da aplicação diretamente no código da tela (UI). Conforme o software crescia, a manutenção ficava cada vez mais difícil, gerando problemas críticos como a duplicação de código. Consequentemente, essa se tornou uma abordagem inviável a longo prazo.
-
-Na tentativa de contornar a situação, a indústria adotou outra solução utilizando **stored procedures** (procedimentos executados dentro do próprio banco de dados). Contudo, essa era uma saída bastante restrita, esbarrando nas limitações dos mecanismos estruturais da época e na inflexibilidade do hardware.
-
-Enquanto tudo isso acontecia, a **Orientação a Objetos (OO)** era um paradigma que ganhava popularidade rapidamente no mundo da programação. Foi justamente essa comunidade que idealizou a solução para o problema: a migração para um sistema de três camadas.
-
-Na arquitetura em três camadas, definem-se três divisões essenciais: a camada de **Apresentação** (responsável pela interface do usuário), a camada de **Domínio/Negócio** (onde reside a lógica e as regras do sistema) e a camada de **Persistência ou Dados** (responsável pela comunicação com o banco de dados).
+Nas aplicações corporativas, Fowler [-@fowler2003patterns, cap. 1] explica que os sistemas saíram de monólitos sem separação para o [modelo cliente-servidor](../04-cliente-servidor/index.qmd) dos anos 1990. Essa arquitetura de duas camadas servia para operações simples, mas não tinha lugar para regras de negócio complexas: a lógica acabava dentro da interface (UI), gerando código duplicado e manutenção difícil. Com a Orientação a Objetos, o mercado migrou para três camadas. Com a Web, o benefício ficou claro: com a lógica isolada, bastava criar novas interfaces para navegadores e reaproveitar o resto do sistema.
 
 | Camada | Responsabilidades |
 |:---|:---|
-| **Apresentação** | Provisão de serviços, exibição de informações (ex: em HTML ou janelas desktop), manipulação das interações do usuário (cliques de mouse, toques de teclado), requisições HTTP, invocações via linha de comando ou execução de APIs em lote. |
-| **Domínio** | Lógica de negócio que representa o verdadeiro ponto central do sistema. |
-| **Fonte de Dados** | Comunicação com bancos de dados, sistemas de mensageria, gerenciadores de transações e outros pacotes ou serviços externos. |
+| Apresentação | Provisão de serviços, exibição de informações (ex: em HTML ou janelas desktop), manipulação das interações do usuário (cliques de mouse, toques de teclado), requisições HTTP, invocações via linha de comando ou execução de APIs em lote. |
+| Negócio | Lógica de negócio que representa o verdadeiro ponto central do sistema. |
+| Persistência | Comunicação com bancos de dados, sistemas de mensageria, gerenciadores de transações e outros pacotes ou serviços externos. |
 
-: As três camadas principais e suas responsabilidades. Fonte: [@fowler2003patterns, cap. 1]. {#tbl-camadas}
-
-Apesar de solucionar os problemas de acoplamento da época, esse modelo não se popularizou imediatamente. O principal motivo era que a maioria dos sistemas ainda era relativamente simples, e a arquitetura cliente-servidor de duas camadas continuava atendendo bem a essas demandas. Além disso, havia uma resistência natural à curva de aprendizado e à drástica mudança de ferramentas de desenvolvimento que essa transição exigiria. O grande ponto de virada que mudou essa mentalidade e consolidou o modelo de três camadas foi a ascensão da Web.
-
-As empresas queriam publicar suas aplicações na internet, mas esbarraram em um grande obstáculo: se toda a lógica estivesse acoplada em um código enorme na camada do cliente (como em aplicativos desktop tradicionais), elas teriam que refazer todo o sistema do zero para se adaptar a uma interface Web. Em contrapartida, se já estivessem utilizando a separação em três camadas, a lógica estaria isolada; bastaria criar uma nova camada de apresentação voltada para navegadores e reaproveitar todo o restante do sistema, resolvendo o problema de forma eficiente.
-
+: As três camadas principais e suas responsabilidades. Fonte: [@fowler2003patterns, cap. 1]. {#tbl-camadas tbl-colwidths="[20,80]"}
 
 ## Estrutura e componentes
 
-A camada de **Apresentação** (ou **Presentation Layer**) tem como objetivo principal lidar com todas as interações entre o usuário e o software. Suas responsabilidades fundamentais são exibir informações de forma acessível e interpretar os comandos recebidos (como o clique em um botão, o preenchimento de um formulário ou uma requisição HTTP). Na prática, ela atua como uma tradutora: capta a ação do usuário na interface e a transforma em um formato estruturado para que as camadas inferiores possam processar. É fundamental que esta camada mantenha-se focada apenas na interface (seja ela web, mobile ou terminal), não contendo nenhuma lógica do funcionamento do sistema.
+A camada de **Apresentação** (ou Presentation Layer) tem como objetivo principal lidar com todas as interações entre o usuário e o software. Suas responsabilidades fundamentais são exibir informações de forma acessível e interpretar os comandos recebidos (como o clique em um botão, o preenchimento de um formulário ou uma requisição HTTP). Na prática, ela atua como uma tradutora: capta a ação do usuário na interface e a transforma em um formato estruturado para que as camadas inferiores possam processar. É fundamental que esta camada mantenha-se focada apenas na interface (seja ela web, mobile ou terminal), não contendo nenhuma lógica do funcionamento do sistema.
 
-A camada de **Lógica de Domínio** (também conhecida como Lógica de Negócio ou Business Logic Layer) é considerada o "coração" do sistema. Ela armazena toda a inteligência e as regras do trabalho que a aplicação de fato deve realizar. Suas responsabilidades envolvem executar cálculos, aplicar validações e garantir a conformidade e integridade dos dados, a partir dos comandos que recebe da camada de apresentação. Ao centralizar essas regras aqui, garante-se que o sistema se comporte da mesma maneira, independentemente da interface que o usuário esteja utilizando.
+A camada de **Lógica de Negócio** (também conhecida como Lógica de Domínio ou Business Logic Layer) é considerada o "coração" do sistema. Ela armazena toda a inteligência e as regras do trabalho que a aplicação de fato deve realizar. Suas responsabilidades envolvem executar cálculos, aplicar validações e garantir a conformidade e integridade dos dados, a partir dos comandos que recebe da camada de apresentação. Ao centralizar essas regras aqui, garante-se que o sistema se comporte da mesma maneira, independentemente da interface que o usuário esteja utilizando.
 
 Já a camada de **Persistência** (ou Data Access Layer) é responsável por se comunicar com os sistemas e infraestruturas que armazenam as informações da aplicação de forma permanente. Para a esmagadora maioria das aplicações, o foco dessa camada é a comunicação direta com o banco de dados (relacional ou não relacional), gerenciando como os dados são salvos, lidos e atualizados. O grande papel dessa camada é abstrair a complexidade técnica dos dados: ela realiza o "trabalho sujo" (como escrever as queries SQL), entregando a informação limpa e pronta para ser usada pela camada de domínio.
 
@@ -112,37 +97,11 @@ flowchart TD
     class C persistence
     class DB database
     class SW architecture
-``` 
+```
 
-Uma única aplicação pode possuir múltiplos pacotes (ou módulos) para uma mesma camada. Por exemplo, se um sistema precisa ser acessado tanto por uma interface gráfica quanto por uma interface de linha de comando (CLI), teremos duas implementações distintas na camada de Apresentação, porém ambas consumirão a exata mesma camada de Domínio.
+A regra de dependência é inegociável: o fluxo é top-down, ou seja, as camadas superiores conhecem as inferiores, nunca o contrário. As camadas podem ser **fechadas** (*strict*), quando a requisição passa por todos os níveis (mais isolamento, porém mais código de repasse), ou **abertas** (*relaxed*), quando permitem "saltos", como a Apresentação consultar direto a Persistência numa leitura simples.
 
-Um princípio inegociável desse padrão é a direção das dependências: as camadas superiores conhecem (e dependem das) camadas inferiores, mas o inverso é estritamente proibido. Uma camada inferior jamais deve saber qual camada a está consumindo. "Saltos" entre as divisões (como a camada de Apresentação consultar a de Persistência diretamente, ignorando o Domínio) podem até acontecer (e na verdade é algo bem comum), desde que a regra do fluxo unidirecional (sempre de cima para baixo) seja respeitada.
-
-O modelo de três camadas é uma base, mas o número total de camadas pode ser alterado dependendo das necessidades e da complexidade do programa (como a adição de uma camada de Serviços, por exemplo). Independentemente de quantas divisões existam, a regra de dependência top-down (de cima para baixo) deve prevalecer.
-
-É crucial entender que essas divisões referem-se a **camadas lógicas** (*logical layers*), e não a **camadas físicas** ou de infraestrutura (*physical tiers*). Elas ditam a organização e estruturação do código, não necessariamente onde ele será executado. Você pode executar todas as três camadas na sua própria máquina local; ter a Apresentação e o Domínio em um desktop e o banco de dados em um servidor remoto; ou até mesmo dividir a Apresentação, colocando a interface rodando no navegador e comunicando-se com um Backend For Frontend (BFF) no servidor.
-
-Por fim, a forma de materializar essa arquitetura nos arquivos do projeto varia conforme a escala do sistema. O isolamento em camadas pode ocorrer em diferentes níveis: um programa pequeno pode simplesmente agrupar as funções de cada camada em arquivos distintos. Já em um sistema maior e mais complexo, cada camada pode corresponder a namespaces, pacotes ou diretórios inteiros contendo dezenas de classes e subpastas.
-
-Apesar de o conceito de separação parecer claro na teoria, na prática, uma das maiores dificuldades ao trabalhar com o modelo em camadas é justamente reconhecer o que é, de fato, a lógica de domínio e o que pertence a outras divisões.
-
-::: {.callout-tip title="Teste de Saúde Arquitetural"}
-Um teste informal e muito útil para avaliar a saúde da sua arquitetura é imaginar a adição de uma camada externa radicalmente diferente à sua aplicação. Por exemplo, imagine precisar criar uma interface de linha de comando (CLI) para um sistema que, até então, era exclusivamente Web. Se durante esse processo houver qualquer funcionalidade ou regra que você precise duplicar para fazer a nova interface funcionar, esse é um forte indício de que a lógica de domínio "vazou" e foi indevidamente acoplada na camada de Apresentação original [@fowler2003patterns, cap. 1].
-:::
-
-Com a estrutura e as responsabilidades bem definidas, é importante entender os impactos práticos que esse padrão traz para o ciclo de vida do software. Por ser um dos modelos mais tradicionais da engenharia, a Arquitetura em Camadas possui pontos fortes muito claros para a organização do código, mas também impõe desafios estruturais. A seguir, listamos as principais vantagens e desvantagens dessa abordagem:
-
-**Vantagens:**
-
-- **Redução da carga cognitiva:** A maior vantagem no dia a dia do desenvolvimento é a redução do escopo de atenção. A separação permite que o desenvolvedor pense sobre os três pilares (interface, regras de negócio e banco de dados) de forma relativamente independente. Focar em um escopo estreito de cada vez torna o código muito mais fácil de ser compreendido e mantido.
-- **Substituição e Reusabilidade:** O isolamento modular permite substituir implementações inteiras de uma camada sem quebrar o resto do sistema. É possível criar múltiplas interfaces (como Web, Mobile e CLI) sobre a mesma lógica de domínio, evitando a duplicação de código. Da mesma forma, abstrair a fonte de dados permite que a equipe lide de forma graciosa com mudanças na tecnologia do banco de dados ou nos serviços de persistência, exigindo pouquíssimo impacto no resto da aplicação.
-- **Baixo acoplamento:** A arquitetura atua ativamente para minimizar e organizar as dependências entre as partes do sistema, criando fronteiras claras do que cada módulo pode ou não acessar. Esse princípio remete diretamente ao critério de decomposição modular proposto por Parnas, segundo o qual os módulos devem ser definidos de modo a ocultar decisões de projeto que possam mudar [@parnas1972modularization].
-
-**Desvantagens:**
-
-- **Mudanças em cascata (Cascading changes):** Embora as camadas encapsulem muito bem a maioria dos comportamentos, elas não cobrem tudo. O exemplo clássico é quando surge um novo requisito para adicionar um simples campo na tela que precisa ser salvo no banco de dados: essa alteração exigirá modificações na interface, na lógica de domínio, na transferência de dados e na tabela do banco, propagando a mudança por todas as camadas intermediárias.
-- **Impacto na performance (Overhead):** Adicionar camadas extras pode prejudicar o desempenho da aplicação. A cada cruzamento de fronteira entre as camadas, os dados tipicamente precisam ser transformados ou mapeados de uma representação para outra (como transformar um registro SQL em um objeto de Domínio, e depois em um JSON para a Apresentação). Contudo, vale ressaltar que o encapsulamento também pode trazer ganhos de eficiência compensatórios, como uma camada centralizada de controle de transações otimizando o acesso ao banco.
-- **Complexidade de delimitação:** A parte mais difícil de adotar uma arquitetura em camadas não é a sua implementação técnica, mas sim o seu planejamento. Decidir quantas divisões criar e traçar a linha exata da responsabilidade de cada uma exige maturidade e experiência da equipe. Belle et al. [-@belle2021layered] evidenciam que, em sistemas reais, a identificação de critérios claros para separar responsabilidades entre camadas continua sendo um dos principais desafios na adoção desse padrão.
+Essas divisões são lógicas (organização de arquivos e pacotes), não físicas. Por isso uma camada pode ter vários pacotes, como uma interface gráfica e uma CLI usando o mesmo Domínio. Se for preciso duplicar lógica para a segunda interface funcionar, o domínio "vazou" para a Apresentação, e essa é a raiz dos principais trade-offs do modelo.
 
 
 ## Exemplo aplicado
@@ -151,18 +110,18 @@ O exemplo deste tópico é um sistema de gerenciamento de tarefas com três
 camadas: `TarefaRepository` (Persistência), `TarefaService` (Domínio, dono das
 validações de título e prioridade) e `PresentationCLI` (Apresentação).
 
-1. **A implementação correta** — `PresentationCLI` só fala com `TarefaService`;
+1. A implementação correta: `PresentationCLI` só fala com `TarefaService`;
    `TarefaService` só fala com `TarefaRepository`. As dependências apontam
    exclusivamente para baixo.
-2. **A violação** — `TarefaRepositoryViolador`, uma subclasse da Persistência,
+2. A violação: `TarefaRepositoryViolador`, uma subclasse da Persistência,
    injeta o `TarefaService` (Domínio) no próprio construtor e o chama dentro de
    `salvar()`. Isso cria uma **dependência ascendente** (Persistência → Domínio),
    exatamente o sentido proibido pelas setas tracejadas do diagrama.
-3. **A consequência mensurável** — a dependência ascendente gera um ciclo:
-   `TarefaService` depende de `TarefaRepository`; `TarefaRepositoryViolador`
-   depende de `TarefaService`. Nenhum dos dois pode ser instanciado nem testado
-   sem o outro. O notebook inspeciona o código-fonte das classes de
-   Persistência e prova com contagem de referências qual delas conhece o Domínio.
+3. A consequência mensurável: a dependência ascendente gera um ciclo.
+   `TarefaService` precisa do repositório, e `TarefaRepositoryViolador` precisa
+   do serviço. As duas classes só podem ser montadas com gambiarra, e a
+   Persistência deixa de funcionar sozinha. O notebook inspeciona o código das
+   classes, conta as referências ao Domínio e testa o isolamento de cada uma.
 
 ::: {.callout-note}
 ## Exemplo executável
@@ -171,40 +130,61 @@ O notebook deste tópico está em [notebook.ipynb](notebook.ipynb) e pode ser ab
 
 ## Trade-offs
 
+Não existe arquitetura "perfeita": cada escolha facilita umas coisas e complica outras [@richards2020fundamentals, cap. 10]. Aqui, os benefícios vêm da separação de responsabilidades no código, e as dores vêm de colocar todas as camadas em um único pacote no deploy.
+
+### O que a separação de interesses compra
+
+- Menos carga mental e manutenção mais fácil: quem mexe na regra de negócio não lida com SQL ou HTML. Trocar o banco não afeta o resto, desde que a comunicação entre camadas continue a mesma [@bass2021software, cap. 8; @parnas1972modularization].
+- Testabilidade: dá para testar uma regra "simulando" o banco [@bass2021software, cap. 12].
+- Simplicidade e reuso: padrão barato, familiar para a maioria das equipes e que favorece o reaproveitamento de código [@buschmann1996pattern, cap. 2; @richards2020fundamentals, cap. 10].
+
+### O que o monólito em camadas cobra
+
+- Deploy: mudar a cor de um botão exige reimplantar a aplicação inteira [@bass2021software, cap. 5], e qualquer alteração pede retestar o projeto todo [@richards2020fundamentals, cap. 10].
+- Escalabilidade: se só o Negócio é gargalo, não dá para escalar só ele; é preciso duplicar tudo.
+- Mudanças em cascata: um campo novo na tela costuma exigir mudanças em Apresentação, Negócio e banco [@fowler2003patterns, cap. 1], e decidir onde fica cada lógica continua sendo um desafio [@belle2021layered].
+
+### O antipadrão *Architecture Sinkhole*
+
+O **Architecture Sinkhole** ocorre quando requisições atravessam todas as camadas sem que nenhuma aplique lógica, como um CRUD simples em que o Negócio vira só um "telefonista". Richards e Ford [-@richards2020fundamentals, cap. 10] propõem a **regra 80-20**: alguns repasses são inevitáveis, mas se mais de ~20% das requisições forem *sinkholes*, o estilo provavelmente não se ajusta ao problema. A saída usual é declarar uma camada aberta, permitindo o salto do diagrama (menos latência, menos isolamento).
+
+A tabela a seguir sintetiza esses compromissos.
+
 {{< include _trade-offs.md >}}
 
 ## Quando usar e quando não usar
 
-A decisão de adotar uma arquitetura em camadas deve ser orientada pelas características concretas do projeto e da equipe, não por preferência subjetiva. O padrão *Layers*, formalizado por Buschmann et al. [-@buschmann1996pattern, cap. 2], não é uma solução universal: Bass, Clements e Kazman [-@bass2021software, cap. 3] defendem que a escolha de um estilo arquitetural precisa ser justificada pelos atributos de qualidade prioritários do sistema, avaliados contra os compromissos inerentes a cada modelo.
+Nenhuma arquitetura serve para tudo [@bass2021software, cap. 3]. A pergunta central é: o projeto precisa mais de código organizado por responsabilidade ou de partes independentes no deploy? Para o padrão *Layers* [@buschmann1996pattern, cap. 2]:
 
-**Considere usar quando:**
+### Vale a pena usar quando
 
-- O sistema possui **complexidade de domínio significativa**, com regras de negócio que tendem a evoluir independentemente da interface e da infraestrutura de dados. A separação em camadas isola essas mudanças e reduz o risco de efeitos colaterais [@sommerville2011engenharia, cap. 6].
-- A equipe de desenvolvimento é **grande ou distribuída**, de modo que diferentes grupos possam trabalhar em camadas distintas com mínima coordenação. A fronteira entre camadas funciona como um contrato estável que permite desenvolvimento paralelo [@bass2021software, cap. 2].
-- O projeto exige **manutenção de longo prazo** e ciclos frequentes de atualização tecnológica. A capacidade de substituir uma camada inteira — por exemplo, migrar de um framework de apresentação para outro — sem reescrever o domínio justifica o investimento inicial na separação.
-- Existe necessidade de **múltiplas interfaces** sobre a mesma lógica (Web, mobile, API pública), cenário em que o reuso da camada de domínio elimina duplicação de código e inconsistências de comportamento [@fowler2015presentation].
+- As regras de negócio são complexas e mudam muito, independentes de tela e banco (ex.: análise de crédito, folha de pagamento em ERPs) [@sommerville2011engenharia, cap. 6].
+- Prazo e orçamento são curtos ou a evolução do sistema é incerta; por ser simples e barato, é bom ponto de partida (ex.: MVPs de startups, sistemas internos) [@richards2020fundamentals, cap. 10].
+- A equipe é dividida por especialidade (front-end, back-end, DBAs), o que facilita separar quem faz o quê.
+- Várias interfaces consomem as mesmas regras (ex.: um e-commerce no navegador, no app e com API REST para parceiros) [@fowler2015presentation].
 
-**Evite quando:**
+### Melhor evitar quando
 
-- O sistema é um **protótipo ou prova de conceito** com ciclo de vida curto. A indireção introduzida pelas camadas adiciona complexidade que não será compensada pelo tempo de manutenção [@sommerville2011engenharia, cap. 6].
-- A aplicação é **simples o suficiente** para que toda a lógica caiba em um único módulo sem prejuízo à compreensão — por exemplo, utilitários de linha de comando, scripts de automação ou microserviços com escopo muito reduzido.
-- O desempenho por requisição é um **requisito crítico e inegociável**. Em sistemas de tempo real ou de altíssima vazão, o *overhead* de atravessar múltiplas camadas pode ser inaceitável, e uma arquitetura com menos indireção pode ser mais adequada [@bass2021software, cap. 9].
+- Partes do sistema precisam escalar ou ir ao ar separadamente (ex.: streaming, em que navegar no catálogo é leve, mas converter vídeo exige servidores pesados) [@richards2020fundamentals, cap. 10].
+- Cada milissegundo conta, pois o repasse de dados entre camadas atrapalha (ex.: bolsa de valores de alta frequência, sensores em tempo real) [@bass2021software, cap. 9].
+- É um protótipo ou algo muito simples, em que várias camadas só geram trabalho à toa (ex.: scripts de automação, ferramentas CLI, hackathons) [@sommerville2011engenharia, cap. 6].
 
-**Sinais de que a escolha foi errada:**
+### Sinais de que a escolha deu errado
 
-- A maioria das alterações exige modificações simultâneas em todas as camadas (*mudanças em cascata* frequentes), indicando que a separação não está alinhada com os eixos reais de mudança do sistema.
-- A camada de domínio tornou-se uma mera repassadora de dados (*pass-through layer*), sem lógica própria, sugerindo que a complexidade do problema não justifica a separação. Esse antipadrão é frequentemente reportado na literatura como indicativo de que os limites entre camadas foram definidos sem critérios suficientemente claros [@belle2021layered].
-- A equipe sistematicamente "fura" as camadas com atalhos diretos entre apresentação e persistência, revelando que as fronteiras estabelecidas impõem mais fricção do que benefício ao fluxo de trabalho.
+- Mais de 20% das requisições viram *sinkholes* [@richards2020fundamentals, cap. 10; @belle2021layered].
+- Qualquer mudança simples gera efeito cascata (ex.: adicionar "telefone" ao cadastro mexe em formulário, repasse, mapeamento e tabela).
+- A equipe viola o isolamento o tempo todo (ex.: SQL direto na Apresentação para contornar lentidão) ou as entregas travam porque qualquer ajuste exige testar e fazer o deploy do monólito inteiro.
+
 
 ::: {.callout-note}
 ## Slides deste tópico
-A apresentação está em [`slides.qmd`](slides.qmd) — 16 slides para uma fala de
+A apresentação está em [`slides.qmd`](slides.qmd) — 17 slides para uma fala de
 20 minutos, com os mesmos exemplos e trade-offs deste texto.
 :::
 
 ## Exercícios de fixação
 
-**Questão 1: Direção das Dependências**
+### Questão 1: Direção das Dependências
 
 De acordo com o material, qual é a regra fundamental e inegociável sobre a direção das dependências na Arquitetura em Camadas?
 
@@ -215,12 +195,13 @@ D) Dependências cruzadas são permitidas para otimizar o tempo de resposta das 
 
 <details>
 <summary>Gabarito e Explicação</summary>
-**Resposta: C**
+
+Resposta: C
 
 O princípio inegociável desse padrão é o fluxo unidirecional: as camadas superiores conhecem as inferiores, mas uma camada inferior (como Persistência) jamais deve saber quem a está consumindo (como o Domínio).
 </details>
 
-**Questão 2: Saúde da Arquitetura**
+### Questão 2: Saúde da Arquitetura
 
 Qual é um forte indício (teste informal de saúde arquitetural) de que a lógica de domínio "vazou" e foi indevidamente acoplada na camada de Apresentação?
 
@@ -231,12 +212,13 @@ D) A aplicação exigir múltiplas tabelas no banco de dados para salvar um úni
 
 <details>
 <summary>Gabarito e Explicação</summary>
-**Resposta: B**
+
+Resposta: B
 
 O teste de saúde arquitetural consiste em imaginar a adição de uma interface externa radicalmente diferente; se for necessário duplicar regras para fazê-la funcionar, a lógica vazou para a interface original.
 </details>
 
-**Questão 3: Trade-offs (Compromissos)**
+### Questão 3: Trade-offs (Compromissos)
 
 Nenhum estilo arquitetural é perfeito. Segundo o texto, qual dos seguintes atributos de qualidade é frequentemente sacrificado (comprometido) ao adotar a Arquitetura em Camadas?
 
@@ -247,28 +229,30 @@ D) Manutenibilidade, pois uma mudança no banco de dados quebra automaticamente 
 
 <details>
 <summary>Gabarito e Explicação</summary>
-**Resposta: A**
+
+Resposta: A
 
 O desempenho é comprometido porque cada requisição acumula latência ao ter que atravessar fronteiras e transformar dados (ex.: SQL para Objeto, Objeto para JSON).
 </details>
 
-**Questão 4: Violação do Estilo (Exemplo Prático)**
+### Questão 4: Violação do Estilo (Exemplo Prático)
 
 No exemplo do notebook sobre o sistema de gerenciamento de tarefas, o antipadrão demonstrado pela classe TarefaRepositoryViolador ocorre porque:
 
 A) O Repositório valida se o título da tarefa está vazio.
-B) A classe de Persistência instancia e chama explicitamente a camada de Domínio (TarefaService), criando uma dependência ascendente (para cima) e um ciclo infinito.
+B) A classe de Persistência recebe e chama explicitamente a camada de Domínio (TarefaService), criando uma dependência ascendente (para cima) e um ciclo de dependências.
 C) A Apresentação chama diretamente o banco de dados ignorando as camadas inferiores.
 D) O Domínio se recusa a se comunicar com a interface de linha de comando.
 
 <details>
 <summary>Gabarito e Explicação</summary>
-**Resposta: B**
 
-A violação acontece quando a Persistência tenta notificar o Domínio, o que trava a arquitetura num ciclo fechado onde Domínio e Persistência se tornam inseparáveis nos testes e na execução.
+Resposta: B
+
+A violação acontece quando a Persistência passa a chamar o Domínio. Isso cria um ciclo de dependências: as classes só podem ser montadas com gambiarra, e a Persistência não pode mais ser testada sozinha.
 </details>
 
-**Questão 5: Quando Evitar**
+### Questão 5: Quando Evitar
 
 O texto menciona cenários onde a Arquitetura em Camadas não é recomendada. Em qual das situações abaixo esse estilo deve ser evitado?
 
@@ -279,24 +263,16 @@ D) Em protótipos de ciclo curto, utilitários simples de linha de comando ou si
 
 <details>
 <summary>Gabarito e Explicação</summary>
-**Resposta: D**
+
+Resposta: D
 
 A indireção introduzida pelas camadas adiciona uma complexidade desnecessária para scripts simples ou protótipos, e o overhead pode ser inaceitável para sistemas de altíssima vazão em tempo real.
 </details>
 
 ## Referências
 
-As referências abaixo são geradas automaticamente a partir de `referencias.bib`.
-Não escreva esta lista à mão.
-
 ::: {#refs}
 :::
 
 ::: {.como-citar}
-**Como citar este tópico**
-
-Maria Letícia de Sousa Barboza; João Henrique Lopes de Araújo Freire; Ruan Henrique Pereira dos Santos; Pedro Henrique Reis Xavier; Caio Vinícius Santana Gomes; Wellison Danniel Soares Ponciano. "Arquitetura em Camadas".
-*Guia Aberto de Arquitetura de Software*, 2026. Disponível em:
-<https://ifpe-belojardim-es.github.io/guia-arquitetura-de-software/content/02-arquitetura-em-camadas/>. Licenciado sob CC BY-NC 4.0.
 :::
-

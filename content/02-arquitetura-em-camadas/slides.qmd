@@ -35,24 +35,18 @@ format:
 
 ## O problema veio antes
 
-No modelo cliente-servidor de duas camadas, a UI falava direto com o banco:
+No modelo cliente-servidor de duas camadas, a UI falava direto com o banco [@fowler2003patterns, cap. 1]:
 
-- Bom para exibir e editar dados simples de uma tabela
-- Quebra quando entram regras de negócio: validações, cálculos, condições
-- A saída comum era empurrar tudo isso para dentro da tela
+- Bom para exibir e editar dados simples
+- Sem lugar para regras de negócio: a lógica acabava dentro da tela
+- Resultado: código duplicado e manutenção difícil
+
+A saída: migrar para três camadas, com a Orientação a Objetos. Com a Web, bastou criar novas interfaces e reaproveitar o resto.
 
 ::: {.notes}
 Essa foi a saída inicial da indústria antes das três camadas: acoplar a
 lógica na UI. Funcionava até o sistema crescer.
 :::
-
-## O que isso custava
-
-- Lógica de negócio duplicada em cada tela que precisava dela
-- Manutenção cada vez mais cara conforme o sistema crescia
-- *Stored procedures* tentaram resolver, mas esbarravam no hardware da época
-
-A saída veio da comunidade de Orientação a Objetos: migrar para três camadas.
 
 ## Definição
 
@@ -62,6 +56,7 @@ responsabilidades isoladas — Apresentação, Domínio, Persistência.
 - Hierarquia rígida: cada camada só fala com a de baixo
 - Fluxo de controle unidirecional
 - Sem dependências circulares ou cruzadas
+- Origem: anos 1960, proposta por Dijkstra em 1968 [@valente2020engenharia]
 
 ## As três camadas
 
@@ -69,7 +64,7 @@ responsabilidades isoladas — Apresentação, Domínio, Persistência.
 |:---|:---|
 | **Apresentação** | Interface, entrada do usuário, requisições |
 | **Domínio** | Regras de negócio — o coração do sistema |
-| **Persistência** | Comunicação com banco de dados e serviços externos |
+| **Fonte de Dados** | Comunicação com banco de dados, mensageria, transações e serviços externos |
 
 : Fonte: [@fowler2003patterns, cap. 1]
 
@@ -103,7 +98,8 @@ distribuídas.
 - Domínio nunca conhece a Apresentação
 - Persistência **nunca** conhece o Domínio
 - A dependência só aponta para baixo — o inverso gera ciclo
-  [@bass2021software, cap. 1]
+- **Camadas fechadas** (*strict*): a requisição passa por todos os níveis — mais isolamento, mais código de repasse
+- **Camadas abertas** (*relaxed*): permitem "saltos", como a Apresentação consultar direto a Persistência numa leitura simples
 
 ::: {.notes}
 A violação que demonstramos é exatamente o sentido ascendente: a Persistência
@@ -166,44 +162,52 @@ TarefaRepositoryViolador  Refs ao Domínio: salvar:TarefaService → VIOLA o est
 
 O ciclo prova o custo: instanciar um exige instanciar o outro.
 
-## Trade-offs favorecidos 
+## Trade-offs
 
-Nenhum estilo é melhor em abstrato: cada um favorece certos atributos ao custo de outros [@richards2020fundamentals].
+Nenhum estilo é melhor em abstrato: cada um favorece certos atributos ao custo
+de outros [@richards2020fundamentals, cap. 10].
 
-- **Manutenibilidade** — mudança interna numa camada não se propaga, desde
-  que a interface se mantenha
-- **Portabilidade** — trocar a camada superior não exige tocar nas inferiores
-- **Testabilidade** — camadas isoláveis, testáveis com dublês independentes
-- **Reuso** — uma camada inferior pode servir a múltiplas interfaces
-
-## Trade-offs sacrificados 
-
-- **Desempenho** — cada requisição atravessa todas as camadas, somando
-  latência
-- **Simplicidade** — mais indireção do que uma arquitetura monolítica
-- **Acoplamento vertical** — mudar a interface de uma camada inferior pode
-  propagar ajustes para cima (*mudanças em cascata*)
+- **Separar por responsabilidade** → menos carga mental, manutenção mais fácil, testabilidade, simplicidade e reuso [@bass2021software, cap. 8; @parnas1972modularization; @buschmann1996pattern, cap. 2]
+- **Empacotar tudo em um único deploy** → reimplantar tudo, escalar tudo, mudanças em cascata [@bass2021software, cap. 5; @fowler2003patterns, cap. 1; @belle2021layered]
 
 ::: {.notes}
-Detalhes e justificativas completas estão em `_trade-offs.md`, incluído no
-index.qmd — aqui só o resumo que cabe no slide.
+Distinguir as duas decisões é a chave: camadas lógicas não são unidades de
+implantação. Os benefícios vêm da separação; a maior parte dos custos vem do
+monólito.
 :::
+
+## Trade-offs em uma tabela {.smaller .scrollable}
+
+{{< include _trade-offs.md >}}
+
+::: {.notes}
+Esta tabela vem do mesmo `_trade-offs.md` incluído no index.qmd — editar em um
+lugar atualiza texto e slides.
+:::
+
+## Architecture Sinkhole
+
+Requisições que atravessam Apresentação → Negócio → Persistência **sem lógica
+nenhuma**, só repassando dados [@richards2020fundamentals, cap. 10].
+
+- Regra 80-20: alguns repasses são inevitáveis
+- Mais de ~20% das requisições → o estilo não se ajusta ao problema
+- Camada **aberta** reduz a latência, mas enfraquece o isolamento
 
 ## Quando usar
 
-- Domínio com regras que evoluem independente da UI e dos dados
-- Equipe grande ou distribuída, trabalhando em camadas separadas
-- Projeto de manutenção longa, com troca previsível de tecnologia
-- Necessidade de múltiplas interfaces sobre a mesma lógica
+- Regras de negócio complexas, independentes de tela e banco (ex.: crédito, folha de pagamento) [@sommerville2011engenharia, cap. 6]
+- Prazo e orçamento curtos, ou evolução incerta (ex.: MVPs) [@richards2020fundamentals, cap. 10]
+- Equipe organizada por especialidade (front, back, banco)
+- Várias interfaces sobre a mesma lógica (Web, app, API) [@fowler2015presentation]
 
 ## Quando evitar
 
-- Protótipo ou prova de conceito de ciclo curto
-- Sistema simples o bastante para caber num único módulo
-- Desempenho por requisição é requisito crítico e inegociável
+- Partes que precisam escalar ou ir ao ar separadamente (ex.: streaming) [@richards2020fundamentals, cap. 10]
+- Cada milissegundo conta (ex.: alta frequência, sensores em tempo real) [@bass2021software, cap. 9]
+- Protótipo ou algo muito simples (ex.: scripts, CLI) [@sommerville2011engenharia, cap. 6]
 
-**Sinais de escolha errada:** mudanças em cascata frequentes, Domínio virando
-repassador de dados, equipe furando as camadas com atalhos.
+**Sinais de escolha errada:** mais de 20% de *sinkholes* [@belle2021layered], mudanças simples em cascata, violação constante do isolamento, entregas travadas pelo deploy do monólito.
 
 ## Referências {.smaller}
 
