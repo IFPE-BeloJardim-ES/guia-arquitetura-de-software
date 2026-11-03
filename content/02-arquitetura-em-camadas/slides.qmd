@@ -168,7 +168,7 @@ Nenhum estilo é melhor em abstrato: cada um favorece certos atributos ao custo
 de outros [@richards2020fundamentals, cap. 10].
 
 - **Separar por responsabilidade** → menos carga mental, manutenção mais fácil, testabilidade, simplicidade e reuso [@bass2021software, cap. 8; @parnas1972modularization; @buschmann1996pattern, cap. 2]
-- **Empacotar tudo em um único deploy** → reimplantar tudo, escalar tudo, mudanças em cascata [@bass2021software, cap. 5; @fowler2003patterns, cap. 1; @belle2021layered]
+- **Empacotar tudo em um único deploy** → reimplantar tudo, escalar tudo junto, mudanças em cascata [@bass2021software, cap. 5; @fowler2003patterns, cap. 1; @belle2021layered]
 
 ::: {.notes}
 Distinguir as duas decisões é a chave: camadas lógicas não são unidades de

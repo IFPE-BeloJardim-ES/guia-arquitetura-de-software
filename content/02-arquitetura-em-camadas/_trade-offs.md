@@ -6,6 +6,6 @@
 | Simplicidade e custo inicial | Favorecidos | Estilo amplamente conhecido, sem distribuição em rede, barato para começar [@richards2020fundamentals, cap. 10] |
 | Implantabilidade | Comprometida | Unidade monolítica de deploy: alterar uma linha exige reimplantar e retestar a aplicação inteira [@richards2020fundamentals, cap. 10] |
 | Desempenho (latência) | Comprometido | Cada requisição atravessa e remapeia dados em todas as camadas, mesmo quando não há lógica a executar [@buschmann1996pattern, cap. 2] |
-| Escalabilidade e elasticidade | Comprometidas | Não é possível escalar só a camada sobrecarregada; replica-se o monólito inteiro [@richards2020fundamentals, cap. 10] |
+| Escalabilidade e elasticidade (deploy único) | Comprometidas | Com as camadas no mesmo pacote, replica-se o monólito inteiro. Em camadas físicas separadas, cada uma escala sozinha [@richards2020fundamentals, cap. 10] |
 | Mudanças transversais | Comprometidas | Requisitos que cruzam as camadas (um campo novo na tela) alteram todas elas em cascata [@buschmann1996pattern, cap. 2] |
 | Proporção de *Architecture Sinkhole* | Risco | Requisições que só repassam dados entre camadas; acima de ~20% indicam camadas sem propósito [@richards2020fundamentals, cap. 10] |

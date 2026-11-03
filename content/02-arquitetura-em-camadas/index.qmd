@@ -135,7 +135,7 @@ Não existe arquitetura "perfeita": cada escolha facilita umas coisas e complica
 ### O que a separação de interesses compra
 
 - Menos carga mental e manutenção mais fácil: quem mexe na regra de negócio não lida com SQL ou HTML. Trocar o banco não afeta o resto, desde que a comunicação entre camadas continue a mesma [@bass2021software, cap. 8; @parnas1972modularization].
-- Testabilidade: dá para testar uma regra "simulando" o banco [@bass2021software, cap. 12].
+- Escalabilidade: o limite vem do deploy único, não das camadas. Se todas vão no mesmo pacote, escalar o Negócio significa replicar tudo. Em camadas físicas separadas (web, aplicação e banco), cada uma escala sozinha.
 - Simplicidade e reuso: padrão barato, familiar para a maioria das equipes e que favorece o reaproveitamento de código [@buschmann1996pattern, cap. 2; @richards2020fundamentals, cap. 10].
 
 ### O que o monólito em camadas cobra
