@@ -33,9 +33,11 @@ keywords: ["arquitetura em camadas", "layered architecture", "separação de int
 </dl>
 :::
 
-## Definição e contexto
+  ## Definição e contexto
 
-A **Arquitetura em Camadas** (Layered Architecture) é um padrão de design estrutural que organiza o software em divisões lógicas com responsabilidades estritamente isoladas, tipicamente separadas em Apresentação, Negócio e Persistência. Ela estabelece uma hierarquia rígida: cada camada só pode se comunicar com a camada imediatamente inferior, garantindo um fluxo de controle unidirecional e prevenindo dependências circulares ou cruzadas.
+A **Arquitetura em Camadas** (Layered Architecture) é um padrão de design estrutural que organiza o software em divisões lógicas com responsabilidades estritamente isoladas, tipicamente separadas em Apresentação, Negócio e Persistência. Ela estabelece uma hierarquia em que as **requisições** fluem de cima para baixo: nas chamadas, cada camada depende apenas da camada imediatamente inferior (camadas **fechadas**), o que garante um fluxo de controle unidirecional e previne dependências circulares ou cruzadas. Nesse modelo, uma camada pode ser *aberta*, permitindo que as camadas acima a acessem diretamente, sem passar pela camada intermediária.
+
+Essa regra trata do sentido das **dependências**, e não do retorno das chamadas. Toda chamada tem uma resposta, que volta de baixo para cima (por retorno de função, *callbacks* ou eventos). Isso é permitido desde que a camada inferior não conheça a superior: ela apenas executa uma função que recebeu, sem saber quem a forneceu.
 
 Primordialmente, no início do desenvolvimento dos sistemas monolíticos, a separação em camadas não era um fator levado em consideração na arquitetura de uma aplicação. Desde que o código manipulasse os arquivos necessários, organizar o projeto em camadas não era considerado essencial.
 
