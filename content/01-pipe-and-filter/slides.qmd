@@ -117,19 +117,16 @@ Cada transformação cumpre estritamente o Princípio da Responsabilidade Única
 ## Pipeline textual em ação
 
 ```{mermaid}
+%%{init: {"theme": "dark", "themeVariables": {"edgeLabelBackground": "transparent", "labelTextColor": "#ffffff"}} }%%
 flowchart LR
-    IN[/"Texto Bruto<br/><i>string</i>"/] -->|pipe: str| F1["1. Normalizar<br/><i>limpeza</i>"]
-    F1 -->|pipe: str| F2["2. Tokenizar<br/><i>segmentação</i>"]
-    F2 -->|pipe: list| F3["3. Filtrar Stop Words<br/><i>limpeza semântica</i>"]
-    F3 -->|pipe: list| F4["4. Contar Frequências<br/><i>agregação</i>"]
-    F4 -->|pipe: dict| OUT[/"Frequências<br/><i>resultado</i>"/]
-
-    style IN fill:#0c4a6e,stroke:#38bdf8,stroke-width:2px,color:#e0f2fe
-    style F1 fill:#1e293b,stroke:#818cf8,stroke-width:2px,color:#f8fafc
-    style F2 fill:#1e293b,stroke:#818cf8,stroke-width:2px,color:#f8fafc
-    style F3 fill:#1e293b,stroke:#818cf8,stroke-width:2px,color:#f8fafc
-    style F4 fill:#1e293b,stroke:#818cf8,stroke-width:2px,color:#f8fafc
-    style OUT fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#ecfdf5
+    F[(Fonte: log)] -->|pipe| A[Filtro: só erros]
+    A -->|pipe| B[Filtro: extrai latência]
+    B -->|pipe| C[Filtro: calcula média]
+    C -->|pipe| S[Sumidouro: relatório]
+    A -.->|X chamada direta| C
+    E[(Estado compartilhado)] -.->|X| A
+    E -.->|X| B
+    linkStyle 4,5,6 stroke:#d33,stroke-width:2px,stroke-dasharray:5 4
 ```
 
 - Filtros substituíveis sem intervenção no restante da cadeia
@@ -173,6 +170,7 @@ class ContadorAcoplado:
 ## Diagrama da violação arquitetural
 
 ```{mermaid}
+%%{init: {"theme": "dark", "themeVariables": {"edgeLabelBackground": "transparent", "labelTextColor": "#ffffff"}} }%%
 flowchart LR
     N["Normalizador<br/><i>estado: idioma='pt'</i>"] -->|pipe: texto| T["Tokenizador"]
     T -->|pipe: tokens| C["Contador"]
