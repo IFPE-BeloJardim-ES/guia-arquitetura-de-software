@@ -4,6 +4,11 @@ subtitle: "Um guia colaborativo, em português, sobre como sistemas de software 
 toc: false
 number-sections: false
 author:
+  - name: "Pedro Borges"
+  - name: "Antonio Verissimo"
+  - name: "Antonio Pedro"
+  - name: "Samuel Oliveira"
+  - name: "Felipe dos Santos"
   - name: "Prof. Matheus Barbosa"
 ---
 
@@ -20,12 +25,11 @@ concluídos e revisados. Para escrever um, comece pelo
 
 ## Tópicos
 
-### [00 — Tópico modelo](content/00-modelo/index.qmd)
+### [04 — Microsserviços](content/04-microsservicos/index.qmd)
 
-Referência de estrutura e profundidade esperada. Copie esta pasta para começar um
-tópico novo.
+Material do tópico de microsserviços: texto, notebook, áudio, Gem e slides.
 
-**Formatos:** texto · jupyter notebook · áudio · gem · slides
+**Formatos:** [texto](content/04-microsservicos/index.qmd) · [jupyter notebook](content/04-microsservicos/notebook.ipynb) · [áudio](content/04-microsservicos/assets/audio-arquitetura-camadas.wav) · [gem](https://gemini.google.com/gem/1xG1FvWU5t9C_gJmn_z_Z0l1q2GqTHo5Y?usp=sharing) · [slides](content/04-microsservicos/slides.html)
 
 ## O que cada tópico entrega
 

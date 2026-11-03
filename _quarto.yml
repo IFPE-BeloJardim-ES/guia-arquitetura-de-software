@@ -24,7 +24,7 @@ website:
             text: Como contribuir
           - href: guia/sobre.qmd
             text: Sobre o projeto
-      - href: content/00-modelo/index.qmd
+      - href: content/04-microsservicos/index.qmd
         text: Tópicos
     right:
       - icon: github
