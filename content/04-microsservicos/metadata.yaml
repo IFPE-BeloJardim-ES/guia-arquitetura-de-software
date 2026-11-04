@@ -1,17 +1,14 @@
-# Metadados do tópico — preencha tudo. O CI valida os campos obrigatórios.
-# Este arquivo também alimenta a indexação por ferramentas de IA.
+# Metadados do tópico — conteúdo sobre arquitetura de microsserviços
 
 numero: "04"
 slug: "microsservicos"
 titulo: "Microsserviços"
-subtitulo: "Tópico 04 — Arquitetura de microsserviços"
+subtitulo: "Tópico 04 — Serviços independentes, limites de domínio e custos distribuídos"
 resumo: >-
-  Material em elaboração sobre arquitetura de microsserviços, com notebook
-  próprio e estrutura de texto, slides e áudio copiada do modelo.
+  Introdução à arquitetura de microsserviços com critérios de decomposição por
+  capacidades de negócio, comunicação entre serviços, propriedade de dados,
+  trade-offs e um exemplo executável de loja virtual.
 
-# Um tópico pode ter vários autores — liste um item por pessoa, na ordem em que
-# devem ser creditados. Todos entram no crédito, na citação e na lista de
-# contribuidores do site.
 autores:
   - nome: "Pedro Borges"
   - nome: "Antonio Verissimo"
@@ -20,50 +17,43 @@ autores:
   - nome: "Felipe dos Santos"
   - nome: "Prof. Matheus Barbosa"
 
-status: "rascunho"        # rascunho | em-revisao | publicado | modelo
+status: "em-revisao"
 data_criacao: "2026-08-30"
-ultima_revisao: "2026-08-30"
-revisado_por:
-  - "Nome do revisor par"
-  - "Nome do revisor de manutenção"
+ultima_revisao: "2026-11-03"
+revisado_por: []
 
-# Estrutura pedagógica
 competencias:
-  - "Descreva em forma de verbo + objeto o que o leitor consegue fazer depois"
-  - "Ex: avaliar quando a decomposição em camadas prejudica desempenho"
-nivel_bloom: ["compreender", "analisar"]   # lembrar|compreender|aplicar|analisar|avaliar|criar
-pre_requisitos: []                          # slugs de outros tópicos
+  - "Identificar limites de serviços com base em capacidades de negócio"
+  - "Avaliar custos de comunicação, dados distribuídos e operação"
+  - "Decidir quando microsserviços são adequados ao contexto"
+nivel_bloom: ["compreender", "aplicar", "analisar", "avaliar"]
+pre_requisitos: []
 topicos_relacionados: []
-palavras_chave: ["palavra-chave", "keyword em inglês"]
+palavras_chave: ["microsserviços", "arquitetura distribuída", "APIs", "Domain-Driven Design"]
 
-# Formatos entregues — o CI verifica a existência do que está marcado como true
 formatos:
   texto: true
   notebook:
     entregue: true
-    colab_url: "https://colab.research.google.com/..."
+    colab_url: "https://colab.research.google.com/github/samuel8sousa/guia-arquitetura-de-software/blob/feat/microsservicos-conteudo/content/04-microsservicos/notebook.ipynb"
   audio_notebooklm:
     entregue: true
-    arquivo: "assets/audio-arquitetura-camadas.wav"   # ou deixe vazio e use url
+    arquivo: "assets/audio-microsservicos.wav"
     url: ""
     duracao_min: 10
     transcricao: "assets/audio-transcricao.md"
-    origem: "Narração sintetizada em português brasileiro a partir do roteiro versionado."
+    origem: "Narração sintetizada em português brasileiro a partir do roteiro versionado sobre microsserviços."
   gem_gemini:
     entregue: true
     url: "https://gemini.google.com/gem/1xG1FvWU5t9C_gJmn_z_Z0l1q2GqTHo5Y?usp=sharing"
     instrucoes: |
-      Cole aqui as instruções exatas usadas para configurar a Gem, para que
-      qualquer pessoa possa recriá-la ou melhorá-la.
-
-      Ex: "Você é um tutor de Arquitetura de Software especializado em <tópico>.
-      Baseie todas as respostas exclusivamente no texto e nas referências
-      fornecidas. Cite sempre a referência no formato [n]. Se a pergunta não for
-      coberta pelo material, diga isso em vez de improvisar."
+      Tutor do projeto especializado em arquitetura de microsserviços. Baseie as
+      respostas no texto, no notebook e nas referências do tópico. Explique os
+      limites entre serviços, os contratos e os trade-offs com exemplos claros.
+      Quando o material não cobrir uma pergunta, informe essa limitação.
   slides:
     entregue: true
     num_slides: 16
-  # opcionais
   video:
     entregue: false
     url: ""

@@ -1,10 +1,14 @@
 ---
 title: "Microsserviços"
-subtitle: "Tópico 04 — Material em elaboração"
+subtitle: "Tópico 04 — Serviços independentes, limites de domínio e custos distribuídos"
 author:
-  - "Pedro Henrique Borges, Antonio Verissimo, Antonio Pedro, Samuel Oliveira, Felipe dos Santos"
-  - "Professor Matheus"
-date: 2026-08-30
+  - "Pedro Borges"
+  - "Antonio Verissimo"
+  - "Antonio Pedro"
+  - "Samuel Oliveira"
+  - "Felipe dos Santos"
+  - "Prof. Matheus Barbosa"
+date: 2026-11-03
 bibliography: referencias.bib
 format:
   revealjs:
@@ -18,142 +22,146 @@ format:
     footer: "Guia Aberto de Arquitetura de Software · CC BY-NC 4.0"
 ---
 
-## Como usar este modelo {.smaller}
+## Microsserviços: autonomia com responsabilidade
 
-Estes slides são o **apoio de fala** do tópico, não o texto projetado. Substitua
-tudo, mantendo três regras:
-
-- Um slide, uma ideia. Se precisa de dois parágrafos, é fala, não slide
-- Entre 12 e 20 slides, para uma apresentação de 20 minutos
-- O que for prosa compartilhada com o `index.qmd` entra por
-  `{{{< include _arquivo.md >}}}`, nunca por copiar e colar
+Tópico 04 · Guia Aberto de Arquitetura de Software
 
 ::: {.notes}
-Notas do apresentador ficam aqui e não aparecem na projeção. Use-as para o que
-você vai falar, liberando o slide do texto corrido.
+Objetivo: apresentar o que caracteriza microsserviços, usar um exemplo comum ao texto e ao notebook e discutir quando a distribuição se justifica.
 :::
 
-## Roteiro
+## O problema que queremos resolver
 
-1. O problema que veio antes da solução
-2. Definição e origem
-3. Estrutura e restrições
-4. Exemplo aplicado e a violação
-5. Trade-offs
-6. Critérios de decisão
-
-## O problema veio antes
-
-Todo estilo arquitetural nasce de uma dificuldade concreta:
-
-- Acoplamento que trava a evolução
-- Impossibilidade de mudar partes de forma independente
-- Custo de coordenação entre equipes
+- Um sistema cresce e partes diferentes mudam em ritmos distintos
+- Cada alteração exige coordenar e implantar o conjunto inteiro
+- A divisão pode dar autonomia, mas introduz custos de rede e operação
 
 ::: {.notes}
-Abrir pelo problema, não pela solução. Quem começa pela solução ensina a decorar.
+Comece pelo problema observado. Um monólito bem organizado pode funcionar muito bem; o tamanho do sistema, sozinho, não justifica distribuí-lo.
 :::
 
-## Definição
+## O que caracteriza microsserviços?
 
-> Enuncie o conceito em uma ou duas frases, com precisão, antes de qualquer
-> digressão histórica.
+Serviços com responsabilidades de negócio claras, execução independente e implantação separada.
 
-Se a plateia não souber em dez segundos do que se trata, o slide falhou.
+- Colaboram por contratos explícitos
+- Controlam os próprios dados
+- Permitem mudanças independentes quando os limites são bons
 
-## De onde vem a ideia
+[@fowler2014microservices; @newman2021building]
 
-O critério de decomposição modular de Parnas [@parnas1972modularization]:
+## Encontrar limites de negócio
 
-- Dividir por **informação escondida**, não por etapa de processamento
-- Módulo é unidade de **decisão de projeto**, não de fluxo de execução
+- Agrupar regras que mudam juntas
+- Separar capacidades distintas: catálogo, pagamentos, pedidos
+- Usar vocabulário e contexto do domínio
+- Evitar dividir apenas por telas, camadas técnicas ou tabelas
 
-Cite a fonte original, nunca o post que a resume.
+[@waseem2021design; @parnas1972modularization]
 
-## Estrutura
+## Serviços colaboram por contratos
 
-```{mermaid}
-flowchart TD
-    A[Componente de interface] --> B[Componente de aplicação]
-    B --> C[Componente de domínio]
-    C --> D[(Armazenamento)]
-```
+~~~{mermaid}
+flowchart LR
+  C[Cliente] -->|HTTP| P[Pedidos]
+  P --> CAT[Produtos]
+  P --> PG[Pagamentos]
+  P -.-> DBP[(Dados de pedidos)]
+  CAT -.-> DBC[(Dados de catálogo e estoque)]
+  PG -.-> DBPG[(Dados de pagamentos)]
+~~~
 
-Pelo menos um diagrama seu — não uma imagem tirada de livro.
+Cada serviço responde por suas regras e seus dados.
 
-## O que o estilo proíbe
+## API síncrona ou mensagem?
 
-Um estilo se define tanto pelas conexões que autoriza quanto pelas que
-veda [@bass2021software, cap. 1].
+- HTTP: resposta imediata e interação simples
+- Mensagens: processamento assíncrono e menor dependência de disponibilidade
+- Ambas exigem contratos, tratamento de erro e monitoramento
+- Escolha conforme a necessidade do fluxo
 
-- Interface não fala com armazenamento
-- Domínio não conhece a interface
-- A degradação começa quando essas restrições são negociadas "só desta vez"
+[@newman2021building; @richardson2018microservices]
 
-## Exemplo aplicado
+## Propriedade dos dados
 
-O mesmo caso do texto e do notebook. Três coisas a mostrar:
+- Consumidores chamam APIs ou reagem a eventos
+- Evite leitura e escrita direta no banco de outro serviço
+- Consultas entre domínios podem precisar de projeções
+- Uma transação local não cobre automaticamente vários serviços
 
-1. A implementação correta
-2. A violação da restrição
-3. A consequência mensurável
+[@richardson2018microservices]
 
-## A violação
+## Exemplo: finalizar uma compra
 
-```python
-# atalho: a interface conversa direto com o banco
-def listar_pedidos(cliente_id):
-    return db.query("SELECT * FROM pedidos WHERE cliente = ?", cliente_id)
-```
+1. Pedidos consulta catálogo e estoque
+2. Pedidos solicita autorização de pagamento
+3. Se aprovado, pede a atualização do estoque
+4. Devolve o resultado ao cliente
 
-Funciona hoje. O problema aparece na segunda regra de negócio que precisar do
-mesmo dado.
+O notebook implementa esse fluxo com três serviços Flask.
 
-## A consequência mensurável
+## Uma falha entre etapas
 
-Sem número, é opinião. Meça em alguma dimensão:
+**Pagamento aprovado, atualização do estoque indisponível.**
 
-- Acoplamento aferente/eferente
-- Tempo de build
-- Quantidade de dublês necessários para testar
-- Latência por requisição
+- A transação distribuída não é automática
+- Precisamos evitar cobranças duplicadas
+- Repetição segura, idempotência e compensação precisam ser planejadas
 
-## Trade-offs
+[@richardson2018microservices]
 
-Nenhum estilo é melhor que outro em abstrato: cada um favorece atributos de
-qualidade ao custo de outros [@richards2020fundamentals].
+## O que o notebook demonstra
 
-## Trade-offs em uma tabela {.smaller}
+- Serviços independentes e APIs próprias
+- Comunicação HTTP entre processos
+- Respostas de compra aprovada, recusada e sem estoque
+- Limites didáticos: memória local, sem autenticação ou telemetria
+
+Abra notebook.ipynb para executar o exemplo.
+
+## Benefícios e custos
 
 {{< include _trade-offs.md >}}
 
+[@bass2021software; @bushong2021mapping]
+
 ::: {.notes}
-Esta tabela vem do mesmo `_trade-offs.md` incluído no index.qmd — editar em um
-lugar atualiza texto e slides.
+Leia os efeitos como possibilidades, não garantias. A divisão só ajuda se reduzir um custo concreto e se a equipe puder manter a plataforma necessária.
 :::
 
-## Seja específico quanto à dimensão
+## Custos operacionais
 
-"É mais escalável" não diz nada.
+- Descoberta de serviços e configuração
+- Implantação automatizada e gestão de segredos
+- Logs, métricas e rastreamento distribuídos
+- Segurança, retentativas e limites de tempo
 
-- Escalável em requisições simultâneas?
-- Em desenvolvedores trabalhando em paralelo?
-- Em volume de dados?
+[@newman2021building; @waseem2021design]
 
-## Quando usar
+## Quando considerar
 
-- A condição concreta que torna o estilo adequado
-- Outra condição verificável
+- Capacidades de negócio têm limites relativamente estáveis
+- Existe motivo medido para escalar partes separadamente
+- Equipes conseguem operar serviços de ponta a ponta
+- Automação e observabilidade estão disponíveis
 
-Critérios acionáveis, não recomendações vagas.
+[@balalaie2016microservices]
 
-## Quando evitar
+## Quando começar com monólito modular
 
-- A condição em que o custo supera o benefício
-- Outra condição
+- Domínio ainda está sendo descoberto
+- Equipe pequena ou operação sem automação suficiente
+- Nenhuma necessidade de escalar ou implantar partes separadamente
+- Custos distribuídos superam a autonomia esperada
 
-**Sinais de que a escolha foi errada:** o sintoma observável que indica
-desalinhamento entre estilo e problema.
+[@bass2021software; @parnas1972modularization]
+
+## Perguntas antes de separar
+
+- Qual capacidade de negócio o serviço representa?
+- Quem é responsável por operar e proteger esse serviço?
+- O que acontece quando um consumidor falha?
+- Como mediremos o benefício da separação?
 
 ## Referências {.smaller}
 
