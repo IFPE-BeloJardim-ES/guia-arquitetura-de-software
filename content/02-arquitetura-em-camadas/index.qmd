@@ -33,11 +33,11 @@ keywords: ["arquitetura em camadas", "layered architecture", "separação de int
 </dl>
 :::
 
-  ## Definição e contexto
+## Definição e contexto
 
-A **Arquitetura em Camadas** (Layered Architecture) é um padrão de design estrutural que organiza o software em divisões lógicas com responsabilidades estritamente isoladas, tipicamente separadas em Apresentação, Negócio e Persistência. Ela estabelece uma hierarquia em que as **requisições** fluem de cima para baixo: nas chamadas, cada camada depende apenas da camada imediatamente inferior (camadas **fechadas**), o que garante um fluxo de controle unidirecional e previne dependências circulares ou cruzadas. Nesse modelo, uma camada pode ser *aberta*, permitindo que as camadas acima a acessem diretamente, sem passar pela camada intermediária.
+A **Arquitetura em Camadas** (Layered Architecture) é um padrão de design estrutural que organiza o software em divisões lógicas com responsabilidades estritamente isoladas, tipicamente separadas em Apresentação, Negócio e Persistência. Ela estabelece uma hierarquia em que as **requisições** fluem de cima para baixo: em um modelo de camadas **fechadas**, onde cada nível depende apenas da camada imediatamente inferior, garantindo um fluxo unidirecional que previne dependências circulares ou cruzadas. Porém, essa arquitetura também admite o uso de camadas **abertas**, permitindo que uma camada superior acesse um nível mais profundo diretamente, sem precisar de uma camada intermediária.
 
-Essa regra trata do sentido das **dependências**, e não do retorno das chamadas. Toda chamada tem uma resposta, que volta de baixo para cima (por retorno de função, *callbacks* ou eventos). Isso é permitido desde que a camada inferior não conheça a superior: ela apenas executa uma função que recebeu, sem saber quem a forneceu.
+É importante destacar que essa regra trata do sentido das **dependências**, e não do retorno das chamadas. Toda requisição tem uma resposta que volta de baixo para cima (seja por retorno de função, callbacks ou eventos). Esse fluxo ascendente é totalmente válido, desde que a camada inferior não conheça a superior.
 
 É um dos padrões mais usados desde os primeiros sistemas de grande porte, na década de 60, e uma das primeiras propostas foi de Edsger W. Dijkstra, em 1968 [@valente2020engenharia]. A ideia já aparecia em sistemas operacionais e protocolos de rede, como o modelo OSI, muito antes de chegar ao desenvolvimento web.
 
@@ -57,12 +57,12 @@ A camada de **Apresentação** (ou Presentation Layer) tem como objetivo princip
 
 A camada de **Lógica de Negócio** (também conhecida como Lógica de Domínio ou Business Logic Layer) é considerada o "coração" do sistema. Ela armazena toda a inteligência e as regras do trabalho que a aplicação de fato deve realizar. Suas responsabilidades envolvem executar cálculos, aplicar validações e garantir a conformidade e integridade dos dados, a partir dos comandos que recebe da camada de apresentação. Ao centralizar essas regras aqui, garante-se que o sistema se comporte da mesma maneira, independentemente da interface que o usuário esteja utilizando.
 
-Já a camada de **Persistência** (ou Data Access Layer) é responsável por se comunicar com os sistemas e infraestruturas que armazenam as informações da aplicação de forma permanente. Para a esmagadora maioria das aplicações, o foco dessa camada é a comunicação direta com o banco de dados (relacional ou não relacional), gerenciando como os dados são salvos, lidos e atualizados. O grande papel dessa camada é abstrair a complexidade técnica dos dados: ela realiza o "trabalho sujo" (como escrever as queries SQL), entregando a informação limpa e pronta para ser usada pela camada de domínio.
+Já a camada de **Persistência** (ou Data Access Layer) é responsável por se comunicar com os sistemas e infraestruturas que armazenam as informações da aplicação de forma permanente. Para a esmagadora maioria das aplicações, o foco dessa camada é a comunicação direta com o banco de dados (relacional ou não relacional), gerenciando como os dados são salvos, lidos e atualizados. O grande papel dessa camada é abstrair a complexidade técnica dos dados: ela realiza o "trabalho sujo" (como escrever as queries SQL), entregando a informação limpa e pronta para ser usada pela camada de negócio.
 
 ```{mermaid}
 %%| label: fig-estrutura
 %%| fig-cap: "Componentes do estilo arquitetural de 3 camadas, ilustrando as dependências top-down e o isolamento do banco de dados."
-%%| fig-alt: "Diagrama mostrando as três camadas empilhadas verticalmente: Apresentação (topo), Domínio (meio) e Persistência (base). As setas apontam para baixo indicando que as dependências fluem da camada superior para a inferior. A camada de persistência se conecta a um banco de dados."
+%%| fig-alt: "Diagrama mostrando as três camadas empilhadas verticalmente: Apresentação (topo), Negócio (meio) e Persistência (base). As setas apontam para baixo indicando que as dependências fluem da camada superior para a inferior. A camada de persistência se conecta a um banco de dados."
 flowchart TD
     %% Definição de classes
     classDef presentation fill:#e1f5fe,stroke:#0288d1,stroke-width:2px,color:#01579b,font-weight:bold,rx:6
@@ -74,7 +74,7 @@ flowchart TD
     subgraph SW [" Aplicação (Três Camadas Lógicas) "]
         direction TB
         A["Camada de Apresentação<br>(Interface Web / UI / CLI)"]
-        B["Camada de Lógica de Domínio<br>(Regras de Negócio / Serviços)"]
+        B["Camada de Negócio<br>(Regras de Negócio / Serviços)"]
         C["Camada de Persistência<br>(Data Access Layer / Repositórios)"]
     end
 
@@ -101,27 +101,27 @@ flowchart TD
 
 A regra de dependência é inegociável: o fluxo é top-down, ou seja, as camadas superiores conhecem as inferiores, nunca o contrário. As camadas podem ser **fechadas** (*strict*), quando a requisição passa por todos os níveis (mais isolamento, porém mais código de repasse), ou **abertas** (*relaxed*), quando permitem "saltos", como a Apresentação consultar direto a Persistência numa leitura simples.
 
-Essas divisões são lógicas (organização de arquivos e pacotes), não físicas. Por isso uma camada pode ter vários pacotes, como uma interface gráfica e uma CLI usando o mesmo Domínio. Se for preciso duplicar lógica para a segunda interface funcionar, o domínio "vazou" para a Apresentação, e essa é a raiz dos principais trade-offs do modelo.
+Essas divisões são lógicas (organização de arquivos e pacotes), não físicas. Por isso uma camada pode ter vários pacotes, como uma interface gráfica e uma CLI usando a mesma camada de Negócio. Se for preciso duplicar lógica para a segunda interface funcionar, a lógica de negócio "vazou" para a Apresentação, e essa é a raiz dos principais trade-offs do modelo.
 
 
 ## Exemplo aplicado
 
 O exemplo deste tópico é um sistema de gerenciamento de tarefas com três
-camadas: `TarefaRepository` (Persistência), `TarefaService` (Domínio, dono das
+camadas: `TarefaRepository` (Persistência), `TarefaService` (Negócio, dono das
 validações de título e prioridade) e `PresentationCLI` (Apresentação).
 
 1. A implementação correta: `PresentationCLI` só fala com `TarefaService`;
    `TarefaService` só fala com `TarefaRepository`. As dependências apontam
    exclusivamente para baixo.
 2. A violação: `TarefaRepositoryViolador`, uma subclasse da Persistência,
-   injeta o `TarefaService` (Domínio) no próprio construtor e o chama dentro de
-   `salvar()`. Isso cria uma **dependência ascendente** (Persistência → Domínio),
+   injeta o `TarefaService` (Negócio) no próprio construtor e o chama dentro de
+   `salvar()`. Isso cria uma **dependência ascendente** (Persistência → Negócio),
    exatamente o sentido proibido pelas setas tracejadas do diagrama.
 3. A consequência mensurável: a dependência ascendente gera um ciclo.
    `TarefaService` precisa do repositório, e `TarefaRepositoryViolador` precisa
    do serviço. As duas classes só podem ser montadas com gambiarra, e a
    Persistência deixa de funcionar sozinha. O notebook inspeciona o código das
-   classes, conta as referências ao Domínio e testa o isolamento de cada uma.
+   classes, conta as referências à camada de Negócio e testa o isolamento de cada uma.
 
 ::: {.callout-note}
 ## Exemplo executável
@@ -190,7 +190,7 @@ De acordo com o material, qual é a regra fundamental e inegociável sobre a dir
 
 A) As dependências podem apontar para qualquer direção, desde que a camada de Persistência não acesse o banco de dados diretamente.
 B) As camadas inferiores conhecem e dependem das camadas superiores.
-C) As dependências devem apontar estritamente para baixo, onde a Apresentação conhece o Domínio e o Domínio conhece a Persistência, sendo o inverso proibido.
+C) As dependências devem apontar estritamente para baixo, onde a Apresentação conhece o Negócio e o Negócio conhece a Persistência, sendo o inverso proibido.
 D) Dependências cruzadas são permitidas para otimizar o tempo de resposta das requisições Web.
 
 <details>
@@ -198,24 +198,24 @@ D) Dependências cruzadas são permitidas para otimizar o tempo de resposta das 
 
 Resposta: C
 
-O princípio inegociável desse padrão é o fluxo unidirecional: as camadas superiores conhecem as inferiores, mas uma camada inferior (como Persistência) jamais deve saber quem a está consumindo (como o Domínio).
+O princípio inegociável desse padrão é o fluxo unidirecional: as camadas superiores conhecem as inferiores, mas uma camada inferior (como Persistência) jamais deve saber quem a está consumindo (como a de Negócio).
 </details>
 
-### Questão 2: Saúde da Arquitetura
+### Questão 2: Isolamento entre Apresentação e Negócio
 
-Qual é um forte indício (teste informal de saúde arquitetural) de que a lógica de domínio "vazou" e foi indevidamente acoplada na camada de Apresentação?
+De acordo com o texto, o que indica que a lógica de negócio "vazou" indevidamente para a camada de Apresentação?
 
-A) O tempo de build da aplicação aumentar significativamente.
-B) A necessidade de duplicar regras de negócio ao tentar adicionar uma nova interface (como adicionar um CLI a um sistema exclusivamente Web).
-C) A camada de persistência possuir consultas SQL muito complexas para formatar dados.
-D) A aplicação exigir múltiplas tabelas no banco de dados para salvar um único formulário.
+A) Todas as camadas lógicas serem empacotadas juntas em um único deploy.
+B) Ser necessário duplicar regras de negócio para fazer uma segunda interface (como uma CLI além da interface gráfica) funcionar sobre o mesmo sistema.
+C) A camada de Persistência concentrar as queries SQL para entregar dados limpos à camada de Negócio.
+D) Uma camada inferior devolver o retorno de uma chamada de função para a camada superior.
 
 <details>
 <summary>Gabarito e Explicação</summary>
 
 Resposta: B
 
-O teste de saúde arquitetural consiste em imaginar a adição de uma interface externa radicalmente diferente; se for necessário duplicar regras para fazê-la funcionar, a lógica vazou para a interface original.
+Como as camadas são divisões lógicas, diferentes interfaces (como Web, interface gráfica ou CLI) devem conseguir consumir a mesma camada de Negócio. Se for preciso duplicar regras para uma nova interface funcionar, a lógica de negócio ficou acoplada na Apresentação original em vez de centralizada no Negócio.
 </details>
 
 ### Questão 3: Trade-offs (Compromissos)
@@ -240,16 +240,16 @@ O desempenho é comprometido porque cada requisição acumula latência ao ter q
 No exemplo do notebook sobre o sistema de gerenciamento de tarefas, o antipadrão demonstrado pela classe TarefaRepositoryViolador ocorre porque:
 
 A) O Repositório valida se o título da tarefa está vazio.
-B) A classe de Persistência recebe e chama explicitamente a camada de Domínio (TarefaService), criando uma dependência ascendente (para cima) e um ciclo de dependências.
+B) A classe de Persistência recebe e chama explicitamente a camada de Negócio (TarefaService), criando uma dependência ascendente (para cima) e um ciclo de dependências.
 C) A Apresentação chama diretamente o banco de dados ignorando as camadas inferiores.
-D) O Domínio se recusa a se comunicar com a interface de linha de comando.
+D) A camada de Negócio se recusa a se comunicar com a interface de linha de comando.
 
 <details>
 <summary>Gabarito e Explicação</summary>
 
 Resposta: B
 
-A violação acontece quando a Persistência passa a chamar o Domínio. Isso cria um ciclo de dependências: as classes só podem ser montadas com gambiarra, e a Persistência não pode mais ser testada sozinha.
+A violação acontece quando a Persistência passa a chamar a camada de Negócio. Isso cria um ciclo de dependências: as classes só podem ser montadas com gambiarra, e a Persistência não pode mais ser testada sozinha.
 </details>
 
 ### Questão 5: Quando Evitar
