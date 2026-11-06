@@ -1,0 +1,41 @@
+numero: "05"
+slug: "cliente-servidor"
+titulo: "Arquitetura Cliente-Servidor"
+resumo: "Divisão de responsabilidades entre provedores e solicitantes de serviços em sistemas distribuídos."
+status: "publicado"
+licenca: "CC BY-NC 4.0"
+
+autores:
+  - nome: "Edson Cavalcante Valença"
+    github: "EdsonCavalcanteValenca"
+  - nome: "Matheus Emanuel" 
+
+revisores:
+  - nome:"samuel8sousa"
+
+palavras_chave:
+  - "cliente-servidor"
+  - "client-server"
+  - "sistemas-distribuidos"
+  - "requisicao-resposta"
+  - "arquitetura-de-software"
+
+competencias:
+  - "Avaliar a viabilidade da arquitetura Cliente-Servidor"
+  - "Projetar a divisão clara de responsabilidades entre clientes e servidores"
+  - "Identificar gargalos de desempenho e falhas comuns em sistemas centralizados"
+
+formatos:
+  texto: true
+  slides: true
+  notebook:
+    entregue: true
+    colab_url: "https://colab.research.google.com/github/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/04-cliente-servidor/notebook.ipynb"
+  audio_notebooklm:"Comunicação com o notebook.ipynb."
+    entregue: true
+    url: "https://github.com/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/04-cliente-servidor/_trade-offs.md"
+    transcricao: "Análise detalhada de trade-offs técnicos e de infraestrutura da arquitetura Cliente-Servidor."
+  gem_gemini:
+    entregue: true
+    url: "https://github.com/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/04-cliente-servidor/slides.qmd"
+    instrucoes: "Apresentação de Slides do projeto atual."

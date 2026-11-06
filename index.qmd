@@ -20,6 +20,13 @@ concluídos e revisados. Para escrever um, comece pelo
 
 ## Tópicos
 
+### [04 — Arquitetura Cliente-Servidor](content/04-cliente-servidor/index.qmd)
+
+Divisão de responsabilidades entre provedores e solicitantes de serviços em sistemas distribuídos.
+
+**Formatos:** [texto](content/04-cliente-servidor/index.qmd) · [notebook](content/04-cliente-servidor/notebook.ipynb) · [slides](content/04-cliente-servidor/slides.qmd)
+
+### [00 — Tópico modelo](content/00-modelo/index.qmd)
 ### [01 — Pipe and Filter](content/01-pipe-and-filter/index.qmd)
 
 O estilo arquitetural Pipe and Filter organiza o processamento de dados como
