@@ -26,6 +26,10 @@ website:
             text: Sobre o projeto
       - text: Tópicos
         menu:
+          - href: content/00-modelo/index.qmd
+            text: Modelo
+          - href: content/02-arquitetura-em-camadas/index.qmd
+            text: Arquitetura em Camadas
           - href: content/01-pipe-and-filter/index.qmd
             text: "01 — Pipe and Filter"
 

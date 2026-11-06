@@ -36,6 +36,13 @@ Separação de responsabilidades entre domínio, apresentação e controle em si
 
 **Formatos:** texto · jupyter notebook · áudio · gem · slides
 
+### [02 — Arquitetura em Camadas](content/02-arquitetura-em-camadas/index.qmd)
+
+Conceitos, aplicabilidade e trade-offs do modelo de camadas: separação de
+interesses entre Apresentação, Negócio e Persistência.
+
+**Formatos:** texto · jupyter notebook · áudio · gem · slides
+
 ## O que cada tópico entrega
 
 | Formato | O que é |

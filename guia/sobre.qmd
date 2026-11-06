@@ -56,6 +56,21 @@ Prof. Matheus Barbosa
 </a>
 </td>
 <td align="center" width="150">
+<a href="https://github.com/omeIets">
+<img src="https://github.com/omeIets.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Maria Letícia de Sousa Barboza no GitHub"><br>
+Maria Letícia de Sousa Barboza
+</a>
+</td>
+<td align="center" width="150">
+<a href="https://github.com/joaohenrique11z">
+<img src="https://github.com/joaohenrique11z.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de João Henrique Lopes de Araújo Freire no GitHub"><br>
+João Henrique Lopes de Araújo Freire
+</a>
+</td>
+<td align="center" width="150">
+<a href="https://github.com/RuanHD">
+<img src="https://github.com/RuanHD.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Ruan Henrique Pereira dos Santos no GitHub"><br>
+Ruan Henrique Pereira dos Santos
 <a href="https://github.com/emersontecn">
 <img src="https://github.com/emersontecn.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Emerson Silva no GitHub"><br>
 Emerson Silva
@@ -91,6 +106,21 @@ Ian Képler dos Santos Araújo
 </tr>
 <tr>
 <td align="center" width="150">
+<a href="https://github.com/xavier9190">
+<img src="https://github.com/xavier9190.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Pedro Henrique Reis Xavier no GitHub"><br>
+Pedro Henrique Reis Xavier
+</a>
+</td>
+<td align="center" width="150">
+<a href="https://github.com/Caioxlw">
+<img src="https://github.com/Caioxlw.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Caio Vinícius Santana Gomes no GitHub"><br>
+Caio Vinícius Santana Gomes
+</a>
+</td>
+<td align="center" width="150">
+<a href="https://github.com/DannSrs">
+<img src="https://github.com/DannSrs.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Wellison Danniel Soares Ponciano no GitHub"><br>
+Wellison Danniel Soares Ponciano
 <a href="https://github.com/randsonbredley">
 <img src="https://github.com/randsonbredley.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Randson Bredley no GitHub"><br>
 Randson Bredley
