@@ -24,8 +24,12 @@ website:
             text: Como contribuir
           - href: guia/sobre.qmd
             text: Sobre o projeto
-      - href: content/00-modelo/index.qmd
-        text: Tópicos
+      - text: Tópicos
+        menu:
+          - href: content/00-modelo/index.qmd
+            text: "00 — Modelo"
+          - href: content/03-mvc/index.qmd
+            text: "03 — MVC"
     right:
       - icon: github
         href: "https://github.com/IFPE-BeloJardim-ES/guia-arquitetura-de-software"
