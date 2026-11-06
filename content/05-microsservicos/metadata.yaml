@@ -1,0 +1,94 @@
+# Metadados do tópico — preencha tudo. O CI valida os campos obrigatórios.
+# Este arquivo também alimenta a indexação por ferramentas de IA.
+
+numero: "05"
+slug: "microsservicos"
+titulo: "Arquitetura de microsserviços"
+subtitulo: "Estrutura, componentes e comunicação entre serviços"
+resumo: >-
+  Apresenta os conceitos fundamentais da arquitetura de microsserviços,
+  sua organização por capacidades de negócio, autonomia dos serviços,
+  comunicação por REST e mensageria, além do uso de API Gateway e
+  Service Discovery. Também aborda consistência de dados, padrão Saga,
+  consistência eventual, vantagens, desafios e principais trade-offs.
+
+# Um tópico pode ter vários autores — liste um item por pessoa, na ordem em que
+# devem ser creditados. Todos entram no crédito, na citação e na lista de
+# contribuidores do site.
+autores:
+  - nome: "Agdo José Samuel Sousa de oliveira"
+    grupo: ""
+    github: ""
+    orcid: ""
+  - nome: "Antonio Carlos Verissimo de Souza"
+    grupo: ""
+    github: ""
+    orcid: ""
+  - nome: "Pedro Henrique Borges Silva"
+    grupo: ""
+    github: ""
+    orcid: ""
+  - nome: "Felipe dos Santos Silva"
+    grupo: ""
+    github: ""
+    orcid: ""
+  - nome: "Antonio Pedro Guimarães Santos de Macedo"
+    grupo: ""
+    github: ""
+    orcid: ""
+
+status: "publicado"        # rascunho | em-revisao | publicado | modelo |
+data_criacao: "2026-08-30"
+ultima_revisao: "2026-10-11" # 2026-10-30|Revisão de texto. 
+revisado_por:
+  - "Nome do revisor par"
+  - "Nome do revisor de manutenção"
+
+# Estrutura pedagógica
+competencias:
+  - "Explicar a organização e os componentes de uma arquitetura de microsserviços"
+  - "Selecionar comunicação REST, mensageria, gateway e discovery conforme o contexto"
+  - "Analisar os trade-offs relacionados à implantação, comunicação, dados e operação de microsserviços"
+nivel_bloom: ["compreender", "aplicar", "analisar"]   # lembrar|compreender|aplicar|analisar|avaliar|criar
+pre_requisitos: []                          # slugs de outros tópicos
+topicos_relacionados: []
+palavras_chave: ["microsserviços", "REST", "mensageria", "API Gateway", "Service Discovery"]
+
+# Formatos entregues — o CI verifica a existência do que está marcado como true
+formatos:
+  texto: true
+  notebook:
+    entregue: true
+    colab_url: "https://colab.research.google.com/..."
+  audio_notebooklm:
+    entregue: true
+    arquivo: "assets/audio-notebooklm.m4a"   # ou deixe vazio e use url
+    url: ""
+    duracao_min: 12
+    transcricao: "assets/audio-transcricao.md"
+  gem_gemini:
+    entregue: true
+    url: "https://gemini.google.com/gem/..."
+    instrucoes: |
+      Cole aqui as instruções exatas usadas para configurar a Gem, para que
+      qualquer pessoa possa recriá-la ou melhorá-la.
+
+      Ex: "Você é um tutor de Arquitetura de Software especializado em <tópico>.
+      Baseie todas as respostas exclusivamente no texto e nas referências
+      fornecidas. Cite sempre a referência no formato [n]. Se a pergunta não for
+      coberta pelo material, diga isso em vez de improvisar."
+  slides:
+    entregue: true
+    num_slides: 16
+  # opcionais
+  video:
+    entregue: false
+    url: ""
+  podcast:
+    entregue: false
+    url: ""
+  mcp:
+    entregue: false
+    url: ""
+
+licenca: "CC-BY-NC-4.0"
