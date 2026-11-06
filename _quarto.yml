@@ -26,6 +26,22 @@ website:
             text: Sobre o projeto
       - href: content/04-microsservicos/index.qmd
         text: Tópicos
+      - text: Tópicos
+        menu:
+          - href: content/00-modelo/index.qmd
+            text: 00 - Modelo de Exemplo
+          - href: content/04-cliente-servidor/index.qmd
+            text: 04 - Arquitetura Cliente-Servidor
+            text: Modelo
+          - href: content/02-arquitetura-em-camadas/index.qmd
+            text: Arquitetura em Camadas
+          - href: content/01-pipe-and-filter/index.qmd
+            text: "01 — Pipe and Filter"
+
+          - href: content/00-modelo/index.qmd
+            text: "00 — Modelo"
+          - href: content/03-mvc/index.qmd
+            text: "03 — MVC"
     right:
       - icon: github
         href: "https://github.com/IFPE-BeloJardim-ES/guia-arquitetura-de-software"

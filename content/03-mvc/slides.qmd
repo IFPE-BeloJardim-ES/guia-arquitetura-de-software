@@ -1,0 +1,206 @@
+---
+title: "MVC (Model-View-Controller)"
+subtitle: "Decodificando padrões de arquitetura: MVC, MVP e MVVM"
+author:
+  - "João Gabriel"
+  - "David Soares"
+  - "João Lucas"
+  - "Ian Kepler"
+  - "Lucas Matheus"
+  - "Antonio Mario"
+date: 2026-09-22
+bibliography: referencias.bib
+format:
+  revealjs:
+    theme: default
+    lang: pt-BR
+    slide-number: c/t
+    slide-level: 2
+    incremental: false
+    code-overflow: wrap
+    link-external-newwindow: true
+    footer: "Guia Aberto de Arquitetura de Software · CC BY-NC 4.0"
+---
+
+## Decodificando padrões de arquitetura {.arte background-image="assets/slide-01-capa.jpg" background-size="contain" background-color="#f2f0eb" aria-label="Capa: Decodificando Padrões de Arquitetura. Uma jornada visual pelo MVC, MVP e MVVM."}
+
+```{=html}
+<style>
+/* Os títulos abaixo ficam no HTML (para leitores de tela e para a navegação),
+   mas não aparecem na projeção, porque a própria imagem já traz o título. */
+.reveal section.arte h2 {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+</style>
+```
+
+::: {.notes}
+Apresentação: João Gabriel.
+
+Abrir dizendo o que a gente vai fazer em 20 minutos: partir do problema que existia antes do MVC, ver as três partes, mostrar o que acontece quando a separação é quebrada e terminar comparando com MVP e MVVM.
+:::
+
+## O problema antes do MVC {.arte background-image="assets/slide-02-abismo-interface.jpg" background-size="contain" background-color="#0f3c78" aria-label="O abismo entre a mente do usuário, fluida, e os dados brutos, rígidos. No meio, código espaguete e sistemas frágeis."}
+
+::: {.notes}
+De um lado o jeito como a pessoa pensa, do outro os dados guardados em tabela. Quando a interface e a regra de negócio ficam misturadas, esse meio de campo vira código espaguete: mudar uma tela quebra uma regra.
+
+Perguntar para a turma: quem já fez um trabalho em que o cálculo estava dentro do botão?
+:::
+
+## De onde veio a ideia: Xerox PARC {.arte background-image="assets/slide-03-xerox-parc.jpg" background-size="contain" background-color="#0f3c78" aria-label="Trygve Reenskaug criou o MVC no Xerox PARC para a linguagem Smalltalk, dando origem à separação de responsabilidades."}
+
+::: {.notes}
+Apresentação: David Soares.
+
+Trygve Reenskaug trabalhou nisso no Xerox PARC entre 1978 e 1979, e a nota técnica que descreve o MVC é de dezembro de 1979 [@reenskaug1979mvc]. O objetivo não era só organizar código: era deixar o usuário ver e manipular os mesmos dados de várias formas.
+
+Quem documentou o uso na prática foram Krasner e Pope, em 1988 [@krasner1988cookbook]. E a ideia de fundo é mais velha ainda: separar responsabilidades [@dijkstra1982role] e esconder atrás de um módulo aquilo que mais muda [@parnas1972modularization].
+:::
+
+## As três partes {.arte background-image="assets/slide-04-tres-partes.jpg" background-size="contain" background-color="#0f3c78" aria-label="Modelo: dados e lógica de negócios. Visão: apresentação e interface. Controlador: o maestro das interações."}
+
+::: {.notes}
+Apresentação: João Lucas.
+
+Modelo guarda dados e regra. Visão mostra. Controlador recebe a ação do usuário.
+
+O que cada um NÃO pode fazer é tão importante quanto: o Modelo não conhece tela, a Visão não decide regra, o Controlador não guarda estado de negócio.
+:::
+
+## O fluxo clássico {.arte background-image="assets/slide-05-fluxo-classico.jpg" background-size="contain" background-color="#0f3c78" aria-label="O usuário envia uma entrada ao Controlador, que atualiza o Modelo; o Modelo avisa a Visão, que exibe a mudança."}
+
+::: {.notes}
+O caminho: usuário age, Controlador traduz, Modelo muda e avisa, Visão se redesenha.
+
+A seta do Modelo para a Visão é o padrão Observer: o Modelo avisa sem saber quem está ouvindo. É isso que o mantém independente da tela [@gamma1994design, cap. 1].
+:::
+
+## Estrutura e restrições {.smaller}
+
+| Componente | Responsabilidade | O que não pode fazer |
+|---|---|---|
+| Model | Guarda o estado e regras de negócio; notifica observadores | Conhecer telas, renderizar HTML ou chamar print |
+| View | Apresenta o estado do Model ao usuário; lê dados | Processar regras de negócio ou alterar o Model direto |
+| Controller | Recebe eventos do usuário, aciona o Model e escolhe a View | Conter regras de negócio ou formatar apresentação |
+
+Tudo pode depender do Modelo. O Modelo não depende de ninguém [@buschmann1996pattern].
+
+::: {.notes}
+Tabela sintetizando o papel de cada parte e as fronteiras estritas entre domínio, visualização e fluxo de controle.
+:::
+
+## Quando a separação é quebrada {.arte background-image="assets/slide-06-acoplamento.jpg" background-size="contain" background-color="#0f3c78" aria-label="Acoplamento intenso entre Visão, Modelo e um Controlador gordo, com vazamento de lógica e testabilidade comprometida."}
+
+::: {.notes}
+Apresentação: Lucas Matheus.
+
+Três sintomas: lógica vazando para a tela, Controlador gordo absorvendo tudo e teste virando pesadelo.
+
+É exatamente o que o nosso notebook demonstra com o boletim da turma.
+:::
+
+## O exemplo do boletim
+
+- **Modelo:** `Turma` (notas, média, aprovação com média ≥ 6,0)
+- **Visões:** `TabelaView` e `ResumoView`
+- **Controlador:** `BoletimController` (comando `nota Ana 7.5`)
+
+Lançou uma nota, as duas telas se atualizam sozinhas.
+
+::: {.notes}
+Se der tempo, abrir o notebook e rodar ao vivo. Se não, mostrar só o resultado do próximo slide.
+:::
+
+## A violação e a consequência
+
+```python
+# cada tela com a sua própria regra
+situacao = "aprovado" if media >= 7.0 else "reprovado"   # tabela, atualizada
+aprovados = [a for a in alunos if media(a) >= 6.0]       # resumo, esquecido
+```
+
+| Tela | Diz que a aluna com média 6,5 está |
+|---|---|
+| Tabela | reprovada |
+| Resumo | aprovada |
+
+::: {.notes}
+O mesmo sistema dando duas respostas. E a medida: no MVC a regra está em 1 lugar; no atalho, em 1 por tela. Cada tela nova é mais um lugar para esquecer.
+:::
+
+## Trade-offs {.smaller}
+
+{{< include _trade-offs.md >}}
+
+::: {.notes}
+Apresentação: Antonio Mario.
+
+Nenhum estilo é melhor em abstrato: cada um favorece uns atributos de qualidade e sacrifica outros [@richards2020fundamentals]. Separar a interface ajuda justamente porque ela é refeita muitas vezes [@bass2021software, cap. 13].
+:::
+
+## O MVC na web {.arte background-image="assets/slide-13-mvc-na-web.jpg" background-size="contain" background-color="#0f3c78" aria-label="Requisição HTTP chega ao Controlador no servidor, que fala com o Modelo e devolve a Visão renderizada em HTML para o navegador."}
+
+::: {.notes}
+Apresentação: Ian Kepler.
+
+Na web não dá para o servidor avisar o navegador a cada mudança. O Controlador recebe a requisição, chama o Modelo e escolhe a Visão [@fowler2002patterns, cap. 14]. Django, Rails, Laravel e Spring MVC seguem essa linha [@leff2001web].
+:::
+
+## Entra o MVP {.arte background-image="assets/slide-07-mvp.jpg" background-size="contain" background-color="#0f3c78" aria-label="No MVP o Controlador vira Presenter, a ligação direta entre Visão e Modelo é cortada e a Visão fica passiva."}
+
+::: {.notes}
+O Presenter assume a lógica de tela e a Visão fica passiva, só renderizando o que mandam [@potel1996mvp].
+:::
+
+## O custo: muito código repetitivo {.arte background-image="assets/slide-09-interfaces-dinamicas.jpg" background-size="contain" background-color="#0f3c78" aria-label="Em interfaces ricas, o Presenter precisa comandar cada detalhe da tela e vira um gargalo de micro-gerenciamento."}
+
+::: {.notes}
+Em tela rica e cheia de eventos, o Presenter precisa mandar em cada detalhe. Daí a busca por uma sincronia automática.
+:::
+
+## MVVM e o data binding {.arte background-image="assets/slide-10-mvvm.jpg" background-size="contain" background-color="#0f3c78" aria-label="No MVVM o Presenter vira ViewModel e o data binding sincroniza automaticamente a Visão com a lógica de apresentação."}
+
+::: {.notes}
+O Presenter vira ViewModel e o binding sincroniza os dois lados sozinho. É o padrão mais usado em interface pesada.
+:::
+
+## Os três lado a lado: excluir tarefa {.smaller}
+
+| | MVC | MVP | MVVM |
+|---|---|---|---|
+| **Quem trata o clique** | Controlador | Presenter | ViewModel |
+| **Quem altera o Modelo** | Controlador deleta | Presenter deleta | ViewModel altera |
+| **Como a tela muda** | Visão recarrega a lista | Presenter manda a Visão remover a linha | Binding espelha a mudança |
+
+::: {.notes}
+Mesma ação, três caminhos. No MVC o Controlador deleta e a Visão recarrega; no MVP o Presenter manda a Visão remover a linha; no MVVM o binding espelha a mudança.
+:::
+
+## Mapa de decisão {.arte background-image="assets/slide-12-mapa-decisao.jpg" background-size="contain" background-color="#0f3c78" aria-label="Tabela comparando MVC, MVP e MVVM em acoplamento visão-modelo, suporte a testes, conexão primária e cenário ideal."}
+
+::: {.notes}
+Cuidado ao ler esta tabela: ela compara os padrões no formato clássico. No MVC web, por exemplo, o acoplamento direto entre Visão e Modelo praticamente some.
+:::
+
+## Quando usar e quando evitar
+
+**Use quando:** há mais de uma forma de ver os mesmos dados · a interface muda mais que a regra · vocês querem testar regra sem abrir tela · o framework já é MVC
+
+**Evite quando:** o programa é pequeno e tem uma tela só · não existe interface com usuário · a tela precisa atualizar muito rápido (jogos)
+
+**Sinal de alerta:** a mesma regra em duas telas, ou Controlador com centenas de linhas.
+
+## A forma segue a função {.arte background-image="assets/slide-15-forma-funcao.jpg" background-size="contain" background-color="#0f3c78" aria-label="Peças encaixando: arquitetura não é decorar acrônimos, é alinhar o software às necessidades do usuário."}
+
+::: {.notes}
+Fechar: não é decorar sigla. É escolher o padrão que protege a ligação entre o que o usuário precisa e o que o sistema faz. Abrir para perguntas.
+:::
+
+## Referências {.smaller}
+
+::: {#refs}
+:::

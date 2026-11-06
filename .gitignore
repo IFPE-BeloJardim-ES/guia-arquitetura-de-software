@@ -31,3 +31,6 @@ Desktop.ini
 mnt/
 site_libs
 **/*.quarto_ipynb
+
+
+content/03-pipe-and-filter/.Rhistory
