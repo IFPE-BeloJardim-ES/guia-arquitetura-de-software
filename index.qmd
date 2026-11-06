@@ -30,6 +30,13 @@ Leal e Thiago Patriota.
 
 **Formatos:** texto · notebook · áudio · gem · slides
 
+### [03 — MVC (Model-View-Controller)](content/03-mvc/index.qmd)
+
+Separação de responsabilidades entre domínio, apresentação e controle em sistemas interativos e aplicações web.
+
+**Formatos:** texto · jupyter notebook · áudio · gem · slides
+
+## O que cada tópico entrega
 
 | Formato | O que é |
 |---|---|
