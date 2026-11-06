@@ -8,166 +8,117 @@ author:
   - name: "Samuel Oliveira"
   - name: "Felipe dos Santos"
   - name: "Prof. Matheus Barbosa"
-date: 2026-08-30
+date: 2026-11-03
 date-modified: last-modified
 bibliography: referencias.bib
 citation:
   type: webpage
   container-title: "Guia Aberto de Arquitetura de Software"
 license: "CC BY-NC 4.0"
-keywords: ["palavra-chave", "keyword"]
+keywords: ["microsserviços", "arquitetura distribuída", "domínio", "APIs"]
 ---
 
 ::: {.meta-topico}
 <dl>
 <dt>Competências</dt>
-<dd>Avaliar quando um estilo arquitetural é adequado ao problema</dd>
+<dd>Identificar limites de serviços, avaliar custos de distribuição e decidir quando microsserviços são adequados</dd>
 <dt>Pré-requisitos</dt>
-<dd>Nenhum</dd>
+<dd>Conhecimentos básicos de APIs, processos e bancos de dados</dd>
 <dt>Formatos</dt>
 <dd>
-[texto](#definicao-e-contexto){.formato} [notebook](notebook.ipynb){.formato} [áudio](assets/audio-arquitetura-camadas.wav){.formato} [gem](https://gemini.google.com/gem/1xG1FvWU5t9C_gJmn_z_Z0l1q2GqTHo5Y?usp=sharing){.formato} [slides](slides.html){.formato}
+[texto](#definicao-e-contexto){.formato} [notebook](notebook.ipynb){.formato} [áudio](assets/audio-microsservicos.wav){.formato} [gem](https://gemini.google.com/gem/1xG1FvWU5t9C_gJmn_z_Z0l1q2GqTHo5Y?usp=sharing){.formato} [slides](slides.html){.formato}
 </dd>
 </dl>
 :::
 
-::: {.callout-note}
-## Como usar esta página
-Este tópico está em elaboração. O texto, os slides e o áudio foram copiados do
-modelo e ainda precisam ser adaptados para microsserviços. O notebook é o
-exemplo de microsserviços já existente neste diretório.
-:::
-
 ## Definição e contexto
 
-Abra definindo o conceito com precisão, em uma ou duas frases, antes de qualquer
-digressão histórica. O leitor que chegou aqui de uma busca precisa saber em dez
-segundos se está na página certa.
+Microsserviços são uma forma de construir uma aplicação como um conjunto de serviços pequenos o bastante para ter uma responsabilidade de negócio clara, executar como processos independentes e ser implantados separadamente. Os serviços colaboram por contratos explícitos, geralmente usando APIs HTTP ou mensagens. A arquitetura não é definida pelo número de repositórios, contêineres ou endpoints: o ponto central é a autonomia dos serviços e a qualidade dos limites entre eles [@fowler2014microservices; @newman2021building].
 
-Depois, situe o problema. Todo estilo arquitetural existe porque alguma
-dificuldade concreta apareceu antes dele: acoplamento excessivo, impossibilidade
-de evoluir partes independentes, custo de coordenação entre equipes. Nomeie essa
-dificuldade. Um texto que apresenta a solução sem apresentar o problema ensina a
-decorar, não a decidir.
+A proposta ganhou força como resposta a sistemas que cresciam em tamanho e exigiam coordenação demais para mudar. Um único sistema implantável, chamado de monólito, pode ser bem organizado e funcionar muito bem. O problema aparece quando diferentes partes precisam evoluir, escalar ou ser operadas com ritmos distintos e cada alteração exige reconstruir, testar e implantar o conjunto inteiro. Dividir o sistema em serviços pode reduzir algumas dessas dependências e permitir que equipes entreguem mudanças com mais autonomia [@dragoni2017microservices].
 
-O critério de decomposição modular proposto por Parnas [@parnas1972modularization]
-é um bom exemplo de como uma decisão arquitetural nasce de um problema observado:
-a dificuldade de modificar sistemas cujos módulos foram divididos por etapas de
-processamento em vez de por informação escondida.
-
-::: {.callout-tip}
-## Sobre as citações
-Cite com `[@chave2023]`, que o Quarto converte em `[1]`, `[2]` automaticamente e
-usa para montar a lista de referências no fim da página. Nunca escreva `[1]` na
-mão: a numeração muda quando você insere uma citação nova, e o vínculo com a
-bibliografia se perde.
-
-Para citar uma seção específica de um livro longo, use
-`[@bass2021software, cap. 13]` — isso é obrigatório em livros de referência.
-:::
+Essa separação tem um preço: uma chamada local passa a cruzar a rede, os processos podem falhar separadamente e dados antes protegidos por uma transação única podem ficar distribuídos. Por isso, microsserviços não são uma versão automaticamente melhor de uma arquitetura monolítica. São uma escolha para problemas em que os benefícios de autonomia compensam o custo de operar um sistema distribuído [@bass2021software].
 
 ## Estrutura e componentes
 
-Descreva as partes que compõem o estilo e como se relacionam. Esta seção precisa
-de **pelo menos um diagrama seu** — não uma imagem copiada de um livro.
+O primeiro trabalho é escolher os limites. Uma decomposição útil acompanha capacidades de negócio e regras que mudam juntas: catálogo, pagamentos e pedidos são candidatos plausíveis porque têm responsabilidades e vocabulários diferentes. Separar por camada técnica — um serviço para todas as telas, outro para todas as regras e outro para todos os bancos — costuma recriar dependências distribuídas e obriga cada funcionalidade a atravessar vários serviços. A decomposição deve buscar alta coesão dentro de cada serviço e reduzir mudanças que exigem coordenação entre serviços [@fowler2014microservices; @newman2021building].
 
-Diagramas podem ser feitos em Mermaid direto no texto, o que tem a vantagem de
-ficarem versionados como código:
+A linguagem ubíqua e os contextos delimitados do Domain-Driven Design ajudam a equipe a encontrar esses limites. Um contexto delimitado define onde um modelo e seus termos têm significado consistente. “Produto” pode representar um item comercial no catálogo e uma linha de pedido dentro de outra capacidade; os dois modelos não precisam ser uma entidade compartilhada por todo o sistema. Estudos com profissionais relatam o uso de capacidades de negócio e DDD na decomposição, embora a identificação dos limites continue sendo uma decisão que exige conhecimento do domínio e revisão [@waseem2021design].
 
-```{mermaid}
-%%| label: fig-estrutura
-%%| fig-cap: "Componentes do estilo e a direção das dependências permitidas."
-flowchart TD
-    A[Componente de interface] --> B[Componente de aplicação]
-    B --> C[Componente de domínio]
-    C --> D[(Armazenamento)]
-```
+Um serviço deve possuir os dados pelos quais responde. Outros serviços pedem uma operação pela API ou recebem uma mensagem; não consultam diretamente suas tabelas. Isso permite que o serviço escolha o formato de armazenamento que atende às próprias regras e evita que uma alteração no esquema interno quebre consumidores. Em contrapartida, uma pergunta que atravessa vários domínios pode exigir chamadas adicionais, projeções de leitura ou dados eventualmente consistentes. “Um banco por serviço” significa propriedade lógica e acesso controlado; em sistemas pequenos, bancos separados fisicamente podem ser desnecessários no começo [@newman2021building; @richardson2018microservices].
 
-Ao descrever a estrutura, seja explícito sobre **o que é proibido**, não apenas
-sobre o que é permitido. Um estilo arquitetural se define tanto pelas conexões que
-autoriza quanto pelas que veda — e é a violação dessas restrições que degrada a
-arquitetura ao longo do tempo [@bass2021software, cap. 1].
+A comunicação pode ser síncrona ou assíncrona. Uma API HTTP é simples de entender e funciona bem quando o cliente precisa de uma resposta imediata. Também cria dependência de disponibilidade e latência: se o serviço chamado demora, quem chamou espera. Mensagens e eventos ajudam a desacoplar produtores e consumidores e a executar trabalho em segundo plano, mas trazem duplicidade, ordenação, repetição e atraso como preocupações. Não existe protocolo único que torne uma arquitetura de microsserviços; o contrato precisa ser explícito, versionado com cuidado e monitorado [@newman2021building; @richardson2018microservices].
 
-## Exemplo aplicado
+~~~{mermaid}
+%%| label: fig-microsservicos
+%%| fig-cap: "Serviços de pedidos, produtos e pagamentos colaboram por contratos e mantêm a propriedade de seus dados."
+flowchart LR
+    C[Cliente] -->|HTTP| P[Serviço de Pedidos]
+    P -->|consulta e atualização de estoque| CAT[Serviço de Produtos]
+    P -->|solicita autorização| PG[Serviço de Pagamentos]
+    P -.-> DBP[(Dados de pedidos)]
+    CAT -.-> DBC[(Dados de catálogo e estoque)]
+    PG -.-> DBPG[(Dados de pagamentos)]
+    PG -->|evento: pagamento aprovado| E[Mensageria opcional]
+~~~
 
-Traga um caso concreto e conecte-o ao notebook. O texto explica o raciocínio; o
-notebook mostra o código rodando. Os dois precisam falar do mesmo exemplo — se o
-texto discute um sistema de pedidos e o notebook implementa uma calculadora, a
-contribuição volta na revisão.
+A figura mostra três serviços como exemplo, não como receita. Um gateway de API pode oferecer um ponto de entrada para clientes, aplicar autenticação e encaminhar chamadas, mas não deve concentrar as regras de negócio de todos os serviços. Descoberta de serviços, configuração, gestão de segredos, limites de requisição, registros, métricas e rastreamento distribuído formam a base operacional. Sem essas capacidades, descobrir por que um pedido ficou preso entre serviços pode custar mais do que a divisão economizou [@newman2021building; @waseem2021design].
 
-Um bom exemplo aplicado mostra três coisas:
+A autonomia também pede automação. Cada serviço precisa de compilação, testes, empacotamento e implantação repetíveis, além de compatibilidade planejada para seus contratos. Isso não significa que todo serviço tenha de usar uma linguagem diferente ou ser mantido por uma equipe exclusiva. Significa que uma mudança pode ser validada e colocada em produção sem obrigar a implantação sincronizada de toda a aplicação. A experiência de migração para uma arquitetura nativa de nuvem destaca a relação entre microsserviços, automação e práticas de DevOps [@balalaie2016microservices].
 
-1. **A implementação correta** — o conceito funcionando
-2. **A violação** — o que acontece quando a restrição do estilo é quebrada
-3. **A consequência mensurável** — o custo dessa violação, em acoplamento,
-   tempo de build, dificuldade de teste ou desempenho
+## Exemplo aplicado: uma compra em uma loja
 
-::: {.callout-note}
-## Exemplo executável
-O notebook deste tópico está em
-[`notebook.ipynb`](notebook.ipynb) e pode ser aberto direto no
-[Google Colab](https://colab.research.google.com/).
+O notebook deste tópico apresenta uma loja didática com três serviços Flask independentes. O Serviço de Produtos consulta catálogo e estoque; o Serviço de Pagamentos simula uma autorização; e o Serviço de Pedidos coordena a compra. Cada serviço expõe uma API própria, e o notebook os executa em portas diferentes para tornar visível a comunicação pela rede.
 
-O notebook precisa rodar de ponta a ponta em ambiente limpo. Teste no Colab antes
-de abrir o PR — funcionar na sua máquina não é suficiente.
-:::
+Quando o cliente pede um notebook, o Serviço de Pedidos consulta o produto, verifica o estoque, calcula o valor e solicita o pagamento. Se o pagamento é aprovado, pede ao Serviço de Produtos que atualize o estoque e devolve a confirmação. Se o pagamento é recusado ou o estoque é insuficiente, o pedido é interrompido. A regra de autorização pertence ao serviço de pagamentos; o Serviço de Pedidos conhece o contrato necessário para coordenar o caso de uso, sem acessar diretamente os dados internos dos outros serviços.
+
+Esse fluxo também revela uma falha importante. O pagamento pode ser aprovado e, em seguida, a atualização do estoque pode falhar por indisponibilidade da rede. Não existe uma transação de banco única cobrindo os dois serviços. Em produção, a equipe precisaria definir como repetir a atualização com segurança, evitar débito duplicado e compensar a cobrança caso o pedido não possa ser concluído. Padrões como saga e outbox podem ajudar, mas acrescentam estados e processos que precisam ser observados e testados [@richardson2018microservices].
+
+O exemplo é intencionalmente pequeno: dados em memória, serviços no mesmo computador e pagamento simulado. Ele demonstra limites e chamadas independentes, não uma configuração pronta para produção. Não inclui autenticação, persistência durável, limites de tempo, retentativas, idempotência, descoberta de serviços nem telemetria. Esses itens devem fazer parte de uma implementação real, de acordo com os riscos do domínio.
 
 ## Trade-offs
 
-Esta é a seção que separa um texto útil de um resumo de Wikipédia. Nenhum estilo
-arquitetural é melhor que outro em abstrato: cada um favorece certos atributos de
-qualidade ao custo de outros [@richards2020fundamentals].
+A divisão pode favorecer implantação independente, escalabilidade seletiva e alinhamento entre serviços e capacidades de negócio. Ela também cria custo de rede, operação distribuída, segurança entre serviços e consistência de dados. Pesquisas sobre arquitetura e sua evolução destacam que a fragmentação pode aumentar a complexidade e que a qualidade da decomposição precisa ser avaliada ao longo do tempo [@bushong2021mapping].
 
-Seja específico quanto à dimensão. "É mais escalável" não diz nada — escalável em
-quê? Número de requisições simultâneas? Número de desenvolvedores trabalhando em
-paralelo? Volume de dados?
+{{< include _trade-offs.md >}}
 
-| Atributo | Efeito | Por quê |
-|---|---|---|
-| Modificabilidade | Favorecida | Mudança em uma camada não propaga, desde que a interface se mantenha |
-| Desempenho | Comprometido | Cada requisição atravessa todas as camadas, somando latência |
-| Testabilidade | Favorecida | Camadas podem ser substituídas por dublês em teste |
-| Simplicidade operacional | Comprometida | Mais partes para implantar e monitorar |
+Uma tabela não decide a arquitetura sozinha. Por exemplo, escalar o catálogo separadamente só é útil se essa parte for um gargalo observado e se o custo de duplicar capacidade for relevante. A distribuição pode melhorar isolamento quando limites e automação funcionam; pode piorar o diagnóstico quando cada requisição exige seguir uma sequência longa de chamadas. A avaliação deve usar atributos concretos e medidas do sistema, como taxa de falhas, latência, tempo de implantação e frequência de mudanças [@bass2021software; @waseem2021design].
 
-## Quando usar e quando não usar
+Transações são outro ponto de decisão. Em um monólito, uma operação pode atualizar várias tabelas em uma transação local. Entre serviços, a equipe costuma coordenar etapas com mensagens, estados intermediários, repetição e compensação. O usuário pode ver “pedido pendente” enquanto os serviços concluem o fluxo. Essa consistência eventual é aceitável em alguns contextos, mas inadequada em outros, por exemplo quando uma regra exige confirmação imediata antes de liberar um recurso. O domínio deve definir o comportamento, incluindo o que acontece quando uma etapa falha [@richardson2018microservices].
 
-Feche com critérios de decisão acionáveis, na forma de condições verificáveis, não
-de recomendações vagas.
+## Quando usar e quando evitar
 
-**Considere usar quando:**
+Considere microsserviços quando há capacidades de negócio estáveis que podem ser isoladas, gargalos que justificam escalar partes específicas, equipes capazes de assumir operação de ponta a ponta e uma plataforma automatizada de implantação, monitoramento e segurança. Também ajuda ter contratos claros e uma razão observável para permitir que partes do produto evoluam em ritmos diferentes [@newman2021building; @balalaie2016microservices].
 
-- A condição concreta que torna esse estilo adequado
-- Outra condição
+Prefira começar com um monólito modular quando o produto ainda está descobrindo suas regras, a equipe é pequena, o tráfego não exige escala seletiva ou não existe capacidade para monitorar e implantar processos distribuídos. Um monólito modular pode manter limites de domínio claros e permitir extração futura quando houver evidência de que um limite precisa de implantação ou escala independente. Adiar a distribuição reduz custos operacionais enquanto a equipe aprende o domínio; não impede a evolução posterior [@bass2021software; @parnas1972modularization].
 
-**Evite quando:**
+Antes de separar um serviço, responda: qual capacidade de negócio ele representa? Quem será responsável por operá-lo? Quais dados ele possui? Qual contrato oferece? O que acontece se o consumidor estiver indisponível? Como são feitas autenticação, observação, implantação e recuperação? Qual indicador mostrará que a divisão trouxe benefício? Se as respostas dependem de comunicação coordenada a cada mudança, o limite pode estar no lugar errado.
 
-- A condição em que o custo supera o benefício
-- Outra condição
+Sinais para revisar a arquitetura incluem uma única funcionalidade exigindo alterações simultâneas em muitos serviços, chamadas síncronas em cadeia, dependência de acesso direto a bancos alheios, retentativas que duplicam efeitos, falhas difíceis de localizar ou equipes gastando mais tempo em infraestrutura do que no produto. Esses sintomas não provam que microsserviços são inadequados, mas indicam que os limites, os contratos ou a capacidade operacional precisam ser revistos [@dragoni2017microservices; @bushong2021mapping].
 
-**Sinais de que a escolha foi errada:**
+A decisão deve acompanhar a realidade da equipe e do produto. Comece pelo problema que se quer resolver, mantenha os limites de domínio explícitos e meça se a autonomia obtida compensa os custos distribuídos. Microsserviços são uma ferramenta de organização e entrega; a qualidade depende das fronteiras, dos contratos e das práticas que sustentam os serviços [@fowler2014microservices; @parnas1972modularization].
 
-- Sintoma observável que indica desalinhamento entre estilo e problema
+::: {.callout-note}
+## Notebook executável
+O notebook deste tópico implementa o fluxo de pedidos, produtos e pagamentos em Python com Flask. Acesse [notebook.ipynb](notebook.ipynb) ou [abra no Google Colab](https://colab.research.google.com/github/samuel8sousa/guia-arquitetura-de-software/blob/feat/microsservicos-conteudo/content/04-microsservicos/notebook.ipynb). O exemplo é didático e não deve ser usado como serviço de produção.
+:::
 
 ::: {.callout-note}
 ## Slides deste tópico
-A apresentação está em [`slides.html`](slides.html) — 16 slides para uma fala de
-20 minutos, com os mesmos exemplos e trade-offs deste texto.
+A apresentação está em [slides.html](slides.html), com 16 slides e os mesmos conceitos, exemplo e trade-offs deste texto.
 :::
 
 ## Áudio deste tópico {#audio}
 
 <audio controls preload="metadata">
-  <source src="assets/audio-arquitetura-camadas.wav" type="audio/wav">
+  <source src="assets/audio-microsservicos.wav" type="audio/wav">
   Seu navegador não consegue reproduzir áudio. Baixe o
-  [arquivo de áudio](assets/audio-arquitetura-camadas.wav).
+  [arquivo de áudio](assets/audio-microsservicos.wav).
 </audio>
 
 A [transcrição do áudio](assets/audio-transcricao.md) também está disponível.
 
 ## Referências
-
-As referências abaixo são geradas automaticamente a partir de `referencias.bib`.
-Não escreva esta lista à mão.
 
 ::: {#refs}
 :::
@@ -175,9 +126,5 @@ Não escreva esta lista à mão.
 ::: {.como-citar}
 **Como citar este tópico**
 
-Pedro Borges; Antonio Verissimo; Antonio Pedro; Samuel Oliveira; Felipe dos Santos; Prof. Matheus Barbosa. "Microsserviços".
-*Guia Aberto de Arquitetura de Software*, 2026. Disponível em:
-<https://ifpe-belojardim-es.github.io/guia-arquitetura-de-software/content/04-microsservicos/>. Licenciado sob CC BY-NC 4.0.
-
-Vários autores: separe por ponto e vírgula, na mesma ordem do `metadata.yaml`.
+Pedro Borges; Antonio Verissimo; Antonio Pedro; Samuel Oliveira; Felipe dos Santos; Prof. Matheus Barbosa. “Microsserviços”. *Guia Aberto de Arquitetura de Software*, 2026. Licenciado sob CC BY-NC 4.0.
 :::
