@@ -4,11 +4,6 @@ subtitle: "Como contribuir com o Guia Aberto de Arquitetura de Software"
 date: last-modified
 order: 1
 author:
-  - name: "Pedro Borges"
-  - name: "Antonio Verissimo"
-  - name: "Antonio Pedro"
-  - name: "Samuel Oliveira"
-  - name: "Felipe dos Santos"
   - name: "Prof. Matheus Barbosa"
 ---
 

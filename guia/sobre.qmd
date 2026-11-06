@@ -3,11 +3,6 @@ title: "Sobre o projeto"
 subtitle: "O que é o Guia Aberto de Arquitetura de Software"
 date: last-modified
 author:
-  - name: "Pedro Borges"
-  - name: "Antonio Verissimo"
-  - name: "Antonio Pedro"
-  - name: "Samuel Oliveira"
-  - name: "Felipe dos Santos"
   - name: "Prof. Matheus Barbosa"
 order: 2
 ---
