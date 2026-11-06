@@ -1,0 +1,119 @@
+# Metadados do tópico — preencha tudo. O CI valida os campos obrigatórios.
+# Este arquivo também alimenta a indexação por ferramentas de IA.
+
+numero: "01"
+slug: "pipe-and-filter"
+titulo: "Pipe and Filter"
+subtitulo: "Processamento de dados como fluxo sequencial de transformações independentes"
+resumo: >-
+  O estilo arquitetural Pipe and Filter organiza o processamento de dados como
+  uma cadeia de transformações independentes (filtros) conectadas por canais
+  (pipes). Cada filtro recebe uma entrada, aplica uma transformação e produz
+  uma saída, sem conhecer os filtros vizinhos. Este tópico analisa a estrutura,
+  os trade-offs e os critérios de decisão para adotar ou evitar esse estilo.
+
+# Um tópico pode ter vários autores — liste um item por pessoa, na ordem em que
+# devem ser creditados. Todos entram no crédito, na citação e na lista de
+# contribuidores do site.
+autores:
+  - nome: "Emerson Silva"
+    grupo: "Grupo 3"
+    github: "emersontecn"
+    orcid: ""
+  - nome: "Gustavo Henrique"
+    grupo: "Grupo 3"
+    github: "sig-afk"
+    orcid: ""
+  - nome: "José Victor"
+    grupo: "Grupo 3"
+    github: "Wjdups4964"
+    orcid: ""
+  - nome: "Randson Bredley"
+    grupo: "Grupo 3"
+    github: "randsonbredley"
+    orcid: ""
+  - nome: "Thiago Leal"
+    grupo: "Grupo 3"
+    github: "thiagoleal435"
+    orcid: ""
+  - nome: "Thiago Patriota"
+    grupo: "Grupo 3"
+    github: "ThiagoPatriotaDev"
+    orcid: ""
+
+status: "publicado"        # rascunho | em-revisao | publicado | modelo
+data_criacao: "2026-09-22"
+ultima_revisao: "2026-09-22"
+revisado_por:
+  - nome: "Ian Képler dos Santos Araújo"
+    grupo: "Grupo 2"
+    github: "iankepler5"
+
+  - nome: "João Gabriel Marcos da Silva"
+    grupo: "Grupo 2"
+    github: "Jgabriel1800"
+
+  - nome: "João Lucas da Silva Soares Oliveria"
+    grupo: "Grupo 2"
+    github: "jwaoluckas"
+
+  - nome: "David Soares da Silva"
+    grupo: "Grupo 2"
+    github: "DavidSoares18"
+
+  - nome: "Lucas Matheus"
+    grupo: "Grupo 2"
+    github: "teixeiralucs"
+
+  - nome: "Antonio Mario Jesus Vidal Leite"
+    grupo: "Grupo 2"
+    github: "amjvidal"
+
+# Estrutura pedagógica
+competencias:
+  - "Descrever a estrutura do estilo Pipe and Filter e identificar seus componentes"
+  - "Avaliar quando o estilo Pipe and Filter é adequado ao problema de processamento de dados"
+  - "Analisar os trade-offs entre desempenho, reusabilidade e complexidade no uso de Pipe and Filter"
+  - "Implementar um pipeline de transformações usando o padrão Pipe and Filter em Python"
+nivel_bloom: ["compreender", "aplicar", "analisar"]
+pre_requisitos: []
+topicos_relacionados: []
+palavras_chave: ["pipe and filter", "pipes and filters", "architectural style", "estilo arquitetural", "processamento de dados", "pipeline", "filtro", "transformação"]
+
+# Formatos entregues — o CI verifica a existência do que está marcado como true
+formatos:
+  texto: true
+  notebook:
+    entregue: true
+    colab_url: "https://colab.research.google.com/drive/1FqKE4d6d5e4zQp9AeZNTi8hFgcVFrHRc#scrollTo=pIsUXaD4-iqv"
+  audio_notebooklm:
+    entregue: true
+    arquivo: ""
+    url: "https://drive.google.com/drive/folders/15m0eOoOJiadYfk65PYidzkMVHeE4cfv9"
+    duracao_min: 10
+    transcricao: "assets/audio-transcricao.md"
+  gem_gemini:
+    entregue: true
+    url: "https://gemini.google.com/gem/1_pnI-y9HsHW7MAA5me6ZwmucbGpYFFi-?usp=sharing"
+    instrucoes: |
+      Você é um tutor de Arquitetura de Software especializado no estilo
+      arquitetural Pipe and Filter. Baseie todas as respostas exclusivamente no
+      texto e nas referências fornecidas. Cite sempre a referência no formato
+      [n]. Se a pergunta não for coberta pelo material, diga isso em vez de
+      improvisar. Explique os trade-offs entre desempenho, reusabilidade e
+      modificabilidade ao comparar Pipe and Filter com outros estilos.
+  slides:
+    entregue: true
+    num_slides: 20
+  # opcionais
+  video:
+    entregue: false
+    url: ""
+  podcast:
+    entregue: false
+    url: ""
+  mcp:
+    entregue: false
+    url: ""
+
+licenca: "CC-BY-NC-4.0"
