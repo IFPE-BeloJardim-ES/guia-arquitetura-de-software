@@ -1,0 +1,77 @@
+# Metadados do tópico — preencha tudo. O CI valida os campos obrigatórios.
+# Este arquivo também alimenta a indexação por ferramentas de IA.
+
+numero: "04"
+slug: "microsservicos"
+titulo: "Microsserviços"
+subtitulo: "Tópico 04 — Arquitetura de microsserviços"
+resumo: >-
+  Material em elaboração sobre arquitetura de microsserviços, com notebook
+  próprio e estrutura de texto, slides e áudio copiada do modelo.
+
+# Um tópico pode ter vários autores — liste um item por pessoa, na ordem em que
+# devem ser creditados. Todos entram no crédito, na citação e na lista de
+# contribuidores do site.
+autores:
+  - nome: "Pedro Borges"
+  - nome: "Antonio Verissimo"
+  - nome: "Antonio Pedro"
+  - nome: "Samuel Oliveira"
+  - nome: "Felipe dos Santos"
+  - nome: "Prof. Matheus Barbosa"
+
+status: "rascunho"        # rascunho | em-revisao | publicado | modelo
+data_criacao: "2026-08-30"
+ultima_revisao: "2026-08-30"
+revisado_por:
+  - "Nome do revisor par"
+  - "Nome do revisor de manutenção"
+
+# Estrutura pedagógica
+competencias:
+  - "Descreva em forma de verbo + objeto o que o leitor consegue fazer depois"
+  - "Ex: avaliar quando a decomposição em camadas prejudica desempenho"
+nivel_bloom: ["compreender", "analisar"]   # lembrar|compreender|aplicar|analisar|avaliar|criar
+pre_requisitos: []                          # slugs de outros tópicos
+topicos_relacionados: []
+palavras_chave: ["palavra-chave", "keyword em inglês"]
+
+# Formatos entregues — o CI verifica a existência do que está marcado como true
+formatos:
+  texto: true
+  notebook:
+    entregue: true
+    colab_url: "https://colab.research.google.com/..."
+  audio_notebooklm:
+    entregue: true
+    arquivo: "assets/audio-arquitetura-camadas.wav"   # ou deixe vazio e use url
+    url: ""
+    duracao_min: 10
+    transcricao: "assets/audio-transcricao.md"
+    origem: "Narração sintetizada em português brasileiro a partir do roteiro versionado."
+  gem_gemini:
+    entregue: true
+    url: "https://gemini.google.com/gem/1xG1FvWU5t9C_gJmn_z_Z0l1q2GqTHo5Y?usp=sharing"
+    instrucoes: |
+      Cole aqui as instruções exatas usadas para configurar a Gem, para que
+      qualquer pessoa possa recriá-la ou melhorá-la.
+
+      Ex: "Você é um tutor de Arquitetura de Software especializado em <tópico>.
+      Baseie todas as respostas exclusivamente no texto e nas referências
+      fornecidas. Cite sempre a referência no formato [n]. Se a pergunta não for
+      coberta pelo material, diga isso em vez de improvisar."
+  slides:
+    entregue: true
+    num_slides: 16
+  # opcionais
+  video:
+    entregue: false
+    url: ""
+  podcast:
+    entregue: false
+    url: ""
+  mcp:
+    entregue: false
+    url: ""
+
+licenca: "CC-BY-NC-4.0"
