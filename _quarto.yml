@@ -26,6 +26,9 @@ website:
             text: Sobre o projeto
       - text: Tópicos
         menu:
+          - href: content/01-pipe-and-filter/index.qmd
+            text: "01 — Pipe and Filter"
+
           - href: content/00-modelo/index.qmd
             text: "00 — Modelo"
           - href: content/03-mvc/index.qmd

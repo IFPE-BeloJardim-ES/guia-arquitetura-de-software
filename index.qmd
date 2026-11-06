@@ -20,12 +20,15 @@ concluídos e revisados. Para escrever um, comece pelo
 
 ## Tópicos
 
-### [00 — Tópico modelo](content/00-modelo/index.qmd)
+### [01 — Pipe and Filter](content/01-pipe-and-filter/index.qmd)
 
-Referência de estrutura e profundidade esperada. Copie esta pasta para começar um
-tópico novo.
+O estilo arquitetural Pipe and Filter organiza o processamento de dados como
+uma cadeia de transformações independentes conectadas por pipes.
 
-**Formatos:** texto · jupyter notebook · áudio · gem · slides
+**Autores:** Emerson Silva, Gustavo Henrique, José Victor, Randson Bredley, Thiago
+Leal e Thiago Patriota.
+
+**Formatos:** texto · notebook · áudio · gem · slides
 
 ### [03 — MVC (Model-View-Controller)](content/03-mvc/index.qmd)
 
@@ -47,5 +50,4 @@ Separação de responsabilidades entre domínio, apresentação e controle em si
 ## Como este site é feito
 
 O conteúdo é escrito uma vez, em Markdown, e os formatos derivam da mesma fonte. As citações `[1]`, `[2]` são geradas a partir de arquivos BibTeX, então nunca saem de sincronia com a bibliografia.
-
 
