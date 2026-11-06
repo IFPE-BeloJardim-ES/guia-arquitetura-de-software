@@ -1,0 +1,98 @@
+# Metadados do tópico — preencha tudo. O CI valida os campos obrigatórios.
+# Este arquivo também alimenta a indexação por ferramentas de IA.
+
+numero: "02"
+slug: "arquitetura-em-camadas"
+titulo: "Arquitetura em Camadas"
+subtitulo: "Conceitos, aplicabilidade e trade-offs do modelo de camadas"
+resumo: >-
+  Explora os princípios fundamentais da Arquitetura em Camadas (Layered Architecture). 
+  Entenda como a divisão estrutural interage para promover a separação de 
+  responsabilidades, facilitando a manutenção, o isolamento e a evolução do sistema.
+
+# Um tópico pode ter vários autores — liste um item por pessoa, na ordem em que
+# devem ser creditados. Todos entram no crédito, na citação e na lista de
+# contribuidores do site.
+autores:
+  - nome: "Maria Letícia de Sousa Barboza"
+    grupo: "Grupo 1" 
+    github: "omeIets" 
+    orcid: ""          
+  - nome: "João Henrique Lopes de Araújo Freire"
+    grupo: "Grupo 1"
+    github: "joaohenrique11z"
+    orcid: ""
+  - nome: "Pedro Henrique Reis Xavier"
+    grupo: "Grupo 1"
+    github: "xavier9190"
+    orcid: ""
+  - nome: "Wellison Danniel Soares Ponciano"
+    grupo: "Grupo 1"
+    github: "DannSrs"
+    orcid: ""
+  - nome: "Caio Vinícius Santana Gomes"
+    grupo: "Grupo 1"
+    github: "Caioxlw"
+    orcid: ""
+  - nome: "Ruan Henrique Pereira dos Santos"
+    grupo: "Grupo 1"
+    github: "RuanHD"
+    orcid: ""
+
+status: "publicado"        # rascunho | em-revisao | publicado | modelo
+data_criacao: "2026-09-19"
+ultima_revisao: "2026-09-19"
+revisado_por:
+  - ""
+
+# Estrutura pedagógica
+competencias:
+  - "compreender os princípios e responsabilidades da arquitetura em camadas"
+  - "identificar cenários onde a arquitetura em camadas é aplicável"
+  - "avaliar os trade-offs e desafios de manter a separação de interesses neste modelo"
+nivel_bloom: ["compreender", "analisar", "avaliar"]   # lembrar|compreender|aplicar|analisar|avaliar|criar
+pre_requisitos: []                          # slugs de outros tópicos
+topicos_relacionados: []
+palavras_chave: ["arquitetura em camadas", "layered architecture", "separação de interesses", "design estrutural"]
+
+# Formatos entregues — o CI verifica a existência do que está marcado como true
+formatos:
+  texto: true
+  notebook:
+    entregue: true
+    colab_url: "https://colab.research.google.com/drive/13LSKQhPEMDG7Mcd3dVn3kTvdY6LoCWUt?usp=sharing"
+  audio_notebooklm:
+    entregue: true
+    arquivo: ""   
+    url: "https://open.spotify.com/episode/6moSsNJjkyOJEPnRK5Wy7b?si=EVQa48X3T_-_SE3h2Grnuw"
+    duracao_min: 14
+    transcricao: "assets/audio-transcricao.md"
+  gem_gemini:
+    entregue: true
+    url: "https://gemini.google.com/gem/1krjUZgc8cYvjBu-8bu19-VkZMbJB6nb0?usp=sharing"
+    instrucoes: |
+      Você é um professor universitário amigável e um tutor de engenharia de software especializado no "Guia Aberto de Arquitetura de Software". Seu objetivo é ajudar estudantes a compreenderem o capítulo sobre "Arquitetura em Camadas" (Layered Architecture).
+
+      Base de Conhecimento:
+      Baseie TODAS as suas respostas estritamente no documento PDF fornecido sobre Arquitetura em Camadas. Se o aluno perguntar algo que não está no material, responda educadamente que o foco desta lição é apenas o que está coberto no guia e traga o assunto de volta para o padrão de camadas.
+
+      Regras Pedagógicas (MUITO IMPORTANTE):
+
+      Método Socrático: NUNCA dê a resposta pronta ou o código final se o aluno pedir ajuda com um exercício ou com o Jupyter Notebook. Em vez disso, faça perguntas que o guiem até a solução.
+
+      Sem Jargões Soltos: Se precisar usar termos como "Acoplamento", "Monolítico" ou "Cascading changes", explique-os brevemente no contexto da dúvida do aluno.
+
+      Foco Prático: Se o aluno perguntar "Para que serve a camada de domínio?", explique usando analogias do dia a dia ou o exemplo do sistema de Biblioteca/Tarefas citado no texto.
+
+      Tom de Voz: Seja encorajador, parabenize o aluno quando ele acertar um conceito e use formatação limpa (bullet points, negritos) para facilitar a leitura.
+
+      Idioma: Responda sempre em Português do Brasil.
+  slides:
+    entregue: true
+    num_slides: 17
+  # opcionais
+  podcast:
+    entregue: true
+    url: "https://open.spotify.com/episode/6moSsNJjkyOJEPnRK5Wy7b?si=EVQa48X3T_-_SE3h2Grnuw"
+
+licenca: "CC-BY-NC-4.0"

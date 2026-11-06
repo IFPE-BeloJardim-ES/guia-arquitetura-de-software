@@ -27,9 +27,26 @@ Divisão de responsabilidades entre provedores e solicitantes de serviços em si
 **Formatos:** [texto](content/04-cliente-servidor/index.qmd) · [notebook](content/04-cliente-servidor/notebook.ipynb) · [slides](content/04-cliente-servidor/slides.qmd)
 
 ### [00 — Tópico modelo](content/00-modelo/index.qmd)
+### [01 — Pipe and Filter](content/01-pipe-and-filter/index.qmd)
 
-Referência de estrutura e profundidade esperada. Copie esta pasta para começar um
-tópico novo.
+O estilo arquitetural Pipe and Filter organiza o processamento de dados como
+uma cadeia de transformações independentes conectadas por pipes.
+
+**Autores:** Emerson Silva, Gustavo Henrique, José Victor, Randson Bredley, Thiago
+Leal e Thiago Patriota.
+
+**Formatos:** texto · notebook · áudio · gem · slides
+
+### [03 — MVC (Model-View-Controller)](content/03-mvc/index.qmd)
+
+Separação de responsabilidades entre domínio, apresentação e controle em sistemas interativos e aplicações web.
+
+**Formatos:** texto · jupyter notebook · áudio · gem · slides
+
+### [02 — Arquitetura em Camadas](content/02-arquitetura-em-camadas/index.qmd)
+
+Conceitos, aplicabilidade e trade-offs do modelo de camadas: separação de
+interesses entre Apresentação, Negócio e Persistência.
 
 **Formatos:** texto · jupyter notebook · áudio · gem · slides
 
@@ -47,5 +64,4 @@ tópico novo.
 ## Como este site é feito
 
 O conteúdo é escrito uma vez, em Markdown, e os formatos derivam da mesma fonte. As citações `[1]`, `[2]` são geradas a partir de arquivos BibTeX, então nunca saem de sincronia com a bibliografia.
-
 

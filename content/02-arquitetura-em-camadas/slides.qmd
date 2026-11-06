@@ -1,0 +1,215 @@
+---
+title: "Arquitetura em Camadas"
+subtitle: "Conceitos, aplicabilidade e trade-offs do modelo de camadas"
+author:
+  - "Maria Barboza"
+  - "João Freire"
+  - "Ruan Santos"
+  - "Pedro Xavier"
+  - "Caio Gomes"
+  - "Wellison Ponciano"
+date: 2026-08-30
+date-modified: last-modified
+bibliography: referencias.bib
+format:
+  revealjs:
+    theme: default
+    lang: pt-BR
+    slide-number: c/t
+    slide-level: 2
+    incremental: false
+    code-overflow: wrap
+    link-external-newwindow: true
+    footer: "Guia Aberto de Arquitetura de Software · CC BY-NC 4.0"
+---
+
+## Roteiro
+
+1. O problema que veio antes da solução
+2. Definição e origem
+3. Estrutura e restrições
+4. Exemplo aplicado: sistema de tarefas
+5. A violação e sua consequência
+6. Trade-offs
+7. Quando usar / quando evitar
+
+## O problema veio antes
+
+No modelo cliente-servidor de duas camadas, a UI falava direto com o banco [@fowler2003patterns, cap. 1]:
+
+- Bom para exibir e editar dados simples
+- Sem lugar para regras de negócio: a lógica acabava dentro da tela
+- Resultado: código duplicado e manutenção difícil
+
+A saída: migrar para três camadas, com a Orientação a Objetos. Com a Web, bastou criar novas interfaces e reaproveitar o resto.
+
+::: {.notes}
+Essa foi a saída inicial da indústria antes das três camadas: acoplar a
+lógica na UI. Funcionava até o sistema crescer.
+:::
+
+## Definição
+
+**Arquitetura em Camadas**: organiza o software em divisões lógicas com
+responsabilidades isoladas — Apresentação, Domínio, Persistência.
+
+- Hierarquia rígida: cada camada só fala com a de baixo
+- Fluxo de controle unidirecional
+- Sem dependências circulares ou cruzadas
+- Origem: anos 1960, proposta por Dijkstra em 1968 [@valente2020engenharia]
+
+## As três camadas
+
+| Camada | Responsabilidade |
+|:---|:---|
+| **Apresentação** | Interface, entrada do usuário, requisições |
+| **Domínio** | Regras de negócio — o coração do sistema |
+| **Fonte de Dados** | Comunicação com banco de dados, mensageria, transações e serviços externos |
+
+: Fonte: [@fowler2003patterns, cap. 1]
+
+## Estrutura
+
+:::: {.columns}
+
+::: {.column width="60%"}
+```{mermaid}
+%%| fig-alt: "Diagrama de fluxo mostrando a camada de Apresentação delegando para o Domínio, que solicita dados para a Persistência. Há setas tracejadas indicando que o caminho inverso é proibido."
+flowchart TD
+    A[Apresentação<br/>Web / CLI / Mobile] -->|delega| B[Domínio<br/>Regras de negócio]
+    B -->|solicita dados| C[Persistência<br/>Repositórios]
+    C ==> D[(Banco de Dados)]
+    C -.->|proibido| B
+    B -.->|proibido| A
+```
+:::
+
+::: {.column width="40%"}
+<br/>
+<br/>
+Camadas **lógicas**, não físicas: podem rodar todas na mesma máquina ou
+distribuídas.
+:::
+
+::::
+
+## O que o estilo proíbe
+
+- Domínio nunca conhece a Apresentação
+- Persistência **nunca** conhece o Domínio
+- A dependência só aponta para baixo — o inverso gera ciclo
+- **Camadas fechadas** (*strict*): a requisição passa por todos os níveis — mais isolamento, mais código de repasse
+- **Camadas abertas** (*relaxed*): permitem "saltos", como a Apresentação consultar direto a Persistência numa leitura simples
+
+::: {.notes}
+A violação que demonstramos é exatamente o sentido ascendente: a Persistência
+tentando chamar o Domínio.
+:::
+
+## Exemplo aplicado
+
+Sistema de gerenciamento de tarefas, em três camadas:
+
+- `TarefaRepository` — Persistência, guarda em memória, não valida nada
+- `TarefaService` — Domínio, dono das regras (título obrigatório, prioridade
+  válida)
+- `PresentationCLI` — Apresentação, só fala com `TarefaService`
+
+## A implementação correta
+
+```python
+class TarefaService:
+    def __init__(self, repositorio: TarefaRepository):  # dep. descendente — ok
+        self._repo = repositorio
+
+class PresentationCLI:
+    def __init__(self, service: TarefaService):          # dep. descendente — ok
+        self._service = service
+```
+
+As setas apontam só para baixo: Apresentação → Domínio → Persistência.
+
+::: {.notes}
+Consequência prática: cada camada pode ser testada com um dublê da camada
+abaixo, sem precisar carregar o sistema inteiro.
+:::
+
+## A violação
+
+```python
+# ANTIPADRÃO: Persistência → Domínio (dependência ascendente)
+class TarefaRepositoryViolador(TarefaRepository):
+    def __init__(self, servico_notificacao=None):
+        super().__init__()
+        self._servico = servico_notificacao  # Persistência conhece o Domínio
+
+    def salvar(self, dados):
+        tarefa_id = super().salvar(dados)
+        self._servico.listar_pendentes()     # camada inferior invoca camada superior
+        return tarefa_id
+```
+
+Resultado: ciclo — nenhum dos dois pode existir sem o outro.
+
+## A consequência mensurável
+
+Inspecionamos o código-fonte das classes de Persistência e contamos referências a classes de Domínio:
+
+```
+TarefaRepository          Refs ao Domínio: nenhuma  → respeita o estilo
+TarefaRepositoryViolador  Refs ao Domínio: salvar:TarefaService → VIOLA o estilo
+```
+
+O ciclo prova o custo: instanciar um exige instanciar o outro.
+
+## Trade-offs
+
+Nenhum estilo é melhor em abstrato: cada um favorece certos atributos ao custo
+de outros [@richards2020fundamentals, cap. 10].
+
+- **Separar por responsabilidade** → menos carga mental, manutenção mais fácil, testabilidade, simplicidade e reuso [@bass2021software, cap. 8; @parnas1972modularization; @buschmann1996pattern, cap. 2]
+- **Empacotar tudo em um único deploy** → reimplantar tudo, escalar tudo junto, mudanças em cascata [@bass2021software, cap. 5; @fowler2003patterns, cap. 1; @belle2021layered]
+
+::: {.notes}
+Distinguir as duas decisões é a chave: camadas lógicas não são unidades de
+implantação. Os benefícios vêm da separação; a maior parte dos custos vem do
+monólito.
+:::
+
+## Trade-offs em uma tabela {.smaller .scrollable}
+
+{{< include _trade-offs.md >}}
+
+::: {.notes}
+Esta tabela vem do mesmo `_trade-offs.md` incluído no index.qmd — editar em um
+lugar atualiza texto e slides.
+:::
+
+## Architecture Sinkhole
+
+Requisições que atravessam Apresentação → Negócio → Persistência **sem lógica
+nenhuma**, só repassando dados [@richards2020fundamentals, cap. 10].
+
+- Regra 80-20: alguns repasses são inevitáveis
+- Mais de ~20% das requisições → o estilo não se ajusta ao problema
+- Camada **aberta** reduz a latência, mas enfraquece o isolamento
+
+## Quando usar
+
+- Regras de negócio complexas, independentes de tela e banco (ex.: crédito, folha de pagamento) [@sommerville2011engenharia, cap. 6]
+- Prazo e orçamento curtos, ou evolução incerta (ex.: MVPs) [@richards2020fundamentals, cap. 10]
+- Equipe organizada por especialidade (front, back, banco)
+- Várias interfaces sobre a mesma lógica (Web, app, API) [@fowler2015presentation]
+
+## Quando evitar
+
+- Partes que precisam escalar ou ir ao ar separadamente (ex.: streaming) [@richards2020fundamentals, cap. 10]
+- Cada milissegundo conta (ex.: alta frequência, sensores em tempo real) [@bass2021software, cap. 9]
+- Protótipo ou algo muito simples (ex.: scripts, CLI) [@sommerville2011engenharia, cap. 6]
+
+**Sinais de escolha errada:** mais de 20% de *sinkholes* [@belle2021layered], mudanças simples em cascata, violação constante do isolamento, entregas travadas pelo deploy do monólito.
+
+## Referências {.smaller}
+
+::: {#refs}
+:::
