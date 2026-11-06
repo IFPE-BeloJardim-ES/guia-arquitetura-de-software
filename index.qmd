@@ -4,11 +4,6 @@ subtitle: "Um guia colaborativo, em português, sobre como sistemas de software 
 toc: false
 number-sections: false
 author:
-  - name: "Pedro Borges"
-  - name: "Antonio Verissimo"
-  - name: "Antonio Pedro"
-  - name: "Samuel Oliveira"
-  - name: "Felipe dos Santos"
   - name: "Prof. Matheus Barbosa"
 ---
 
@@ -25,16 +20,6 @@ concluídos e revisados. Para escrever um, comece pelo
 
 ## Tópicos
 
-### [04 — Microsserviços](content/04-microsservicos/index.qmd)
-
-Material do tópico de microsserviços: texto, notebook, áudio, Gem e slides.
-### [04 — Arquitetura Cliente-Servidor](content/04-cliente-servidor/index.qmd)
-
-Divisão de responsabilidades entre provedores e solicitantes de serviços em sistemas distribuídos.
-
-**Formatos:** [texto](content/04-cliente-servidor/index.qmd) · [notebook](content/04-cliente-servidor/notebook.ipynb) · [slides](content/04-cliente-servidor/slides.qmd)
-
-### [00 — Tópico modelo](content/00-modelo/index.qmd)
 ### [01 — Pipe and Filter](content/01-pipe-and-filter/index.qmd)
 
 O estilo arquitetural Pipe and Filter organiza o processamento de dados como
@@ -45,18 +30,31 @@ Leal e Thiago Patriota.
 
 **Formatos:** texto · notebook · áudio · gem · slides
 
+### [02 — Arquitetura em Camadas](content/02-arquitetura-em-camadas/index.qmd)
+
+Conceitos, aplicabilidade e trade-offs do modelo de camadas: separação de
+interesses entre Apresentação, Negócio e Persistência.
+
+**Formatos:** texto · jupyter notebook · áudio · gem · slides
+
 ### [03 — MVC (Model-View-Controller)](content/03-mvc/index.qmd)
 
 Separação de responsabilidades entre domínio, apresentação e controle em sistemas interativos e aplicações web.
 
 **Formatos:** texto · jupyter notebook · áudio · gem · slides
 
-### [02 — Arquitetura em Camadas](content/02-arquitetura-em-camadas/index.qmd)
+### [04 — Arquitetura Cliente-Servidor](content/04-cliente-servidor/index.qmd)
 
-Conceitos, aplicabilidade e trade-offs do modelo de camadas: separação de
-interesses entre Apresentação, Negócio e Persistência.
+Divisão de responsabilidades entre provedores e solicitantes de serviços em sistemas distribuídos.
 
-**Formatos:** [texto](content/04-microsservicos/index.qmd) · [jupyter notebook](content/04-microsservicos/notebook.ipynb) · [áudio](content/04-microsservicos/assets/audio-arquitetura-camadas.wav) · [gem](https://gemini.google.com/gem/1xG1FvWU5t9C_gJmn_z_Z0l1q2GqTHo5Y?usp=sharing) · [slides](content/04-microsservicos/slides.html)
+**Formatos:** [texto](content/04-cliente-servidor/index.qmd) · [notebook](content/04-cliente-servidor/notebook.ipynb) · [slides](content/04-cliente-servidor/slides.qmd)
+
+### [05 — Microsserviços](content/05-microsservicos/index.qmd)
+
+Serviços independentes organizados por capacidades de negócio: limites de
+domínio, comunicação entre serviços, propriedade de dados e custos da distribuição.
+
+**Formatos:** [texto](content/05-microsservicos/index.qmd) · [jupyter notebook](content/05-microsservicos/notebook.ipynb) · [áudio](content/05-microsservicos/assets/audio-microsservicos.wav) · [gem](https://gemini.google.com/gem/1xG1FvWU5t9C_gJmn_z_Z0l1q2GqTHo5Y?usp=sharing) · [slides](content/05-microsservicos/slides.qmd)
 
 ## O que cada tópico entrega
 

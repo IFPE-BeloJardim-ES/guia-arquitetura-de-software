@@ -39,21 +39,6 @@ Prof. Matheus Barbosa
 </a>
 </td>
 <td align="center" width="150">
-<a href="https://github.com/omeIets">
-<img src="https://github.com/omeIets.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Maria Letícia de Sousa Barboza no GitHub"><br>
-Maria Letícia de Sousa Barboza
-</a>
-</td>
-<td align="center" width="150">
-<a href="https://github.com/joaohenrique11z">
-<img src="https://github.com/joaohenrique11z.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de João Henrique Lopes de Araújo Freire no GitHub"><br>
-João Henrique Lopes de Araújo Freire
-</a>
-</td>
-<td align="center" width="150">
-<a href="https://github.com/RuanHD">
-<img src="https://github.com/RuanHD.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Ruan Henrique Pereira dos Santos no GitHub"><br>
-Ruan Henrique Pereira dos Santos
 <a href="https://github.com/emersontecn">
 <img src="https://github.com/emersontecn.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Emerson Silva no GitHub"><br>
 Emerson Silva
@@ -69,6 +54,69 @@ Gustavo Henrique
 <a href="https://github.com/Wjdups4964">
 <img src="https://github.com/Wjdups4964.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de José Victor no GitHub"><br>
 José Victor
+</a>
+</td>
+</tr>
+<tr>
+<td align="center" width="150">
+<a href="https://github.com/randsonbredley">
+<img src="https://github.com/randsonbredley.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Randson Bredley no GitHub"><br>
+Randson Bredley
+</a>
+</td>
+<td align="center" width="150">
+<a href="https://github.com/thiagoleal435">
+<img src="https://github.com/thiagoleal435.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Thiago Leal no GitHub"><br>
+Thiago Leal
+</a>
+</td>
+<td align="center" width="150">
+<a href="https://github.com/ThiagoPatriotaDev">
+<img src="https://github.com/ThiagoPatriotaDev.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Thiago Patriota no GitHub"><br>
+Thiago Patriota
+</a>
+</td>
+<td align="center" width="150">
+<a href="https://github.com/omeIets">
+<img src="https://github.com/omeIets.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Maria Letícia de Sousa Barboza no GitHub"><br>
+Maria Letícia de Sousa Barboza
+</a>
+</td>
+</tr>
+<tr>
+<td align="center" width="150">
+<a href="https://github.com/joaohenrique11z">
+<img src="https://github.com/joaohenrique11z.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de João Henrique Lopes de Araújo Freire no GitHub"><br>
+João Henrique Lopes de Araújo Freire
+</a>
+</td>
+<td align="center" width="150">
+<a href="https://github.com/xavier9190">
+<img src="https://github.com/xavier9190.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Pedro Henrique Reis Xavier no GitHub"><br>
+Pedro Henrique Reis Xavier
+</a>
+</td>
+<td align="center" width="150">
+<a href="https://github.com/DannSrs">
+<img src="https://github.com/DannSrs.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Wellison Danniel Soares Ponciano no GitHub"><br>
+Wellison Danniel Soares Ponciano
+</a>
+</td>
+<td align="center" width="150">
+<a href="https://github.com/Caioxlw">
+<img src="https://github.com/Caioxlw.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Caio Vinícius Santana Gomes no GitHub"><br>
+Caio Vinícius Santana Gomes
+</a>
+</td>
+</tr>
+<tr>
+<td align="center" width="150">
+<a href="https://github.com/RuanHD">
+<img src="https://github.com/RuanHD.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Ruan Henrique Pereira dos Santos no GitHub"><br>
+Ruan Henrique Pereira dos Santos
+</a>
+</td>
+<td align="center" width="150">
 <a href="https://github.com/amjvidal">
 <img src="https://github.com/amjvidal.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Antonio Mário Jesus Vidal Leite no GitHub"><br>
 Antonio Mário Jesus Vidal Leite
@@ -89,36 +137,6 @@ Ian Képler dos Santos Araújo
 </tr>
 <tr>
 <td align="center" width="150">
-<a href="https://github.com/xavier9190">
-<img src="https://github.com/xavier9190.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Pedro Henrique Reis Xavier no GitHub"><br>
-Pedro Henrique Reis Xavier
-</a>
-</td>
-<td align="center" width="150">
-<a href="https://github.com/Caioxlw">
-<img src="https://github.com/Caioxlw.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Caio Vinícius Santana Gomes no GitHub"><br>
-Caio Vinícius Santana Gomes
-</a>
-</td>
-<td align="center" width="150">
-<a href="https://github.com/DannSrs">
-<img src="https://github.com/DannSrs.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Wellison Danniel Soares Ponciano no GitHub"><br>
-Wellison Danniel Soares Ponciano
-<a href="https://github.com/randsonbredley">
-<img src="https://github.com/randsonbredley.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Randson Bredley no GitHub"><br>
-Randson Bredley
-</a>
-</td>
-<td align="center" width="150">
-<a href="https://github.com/thiagoleal435">
-<img src="https://github.com/thiagoleal435.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Thiago Leal no GitHub"><br>
-Thiago Leal
-</a>
-</td>
-<td align="center" width="150">
-<a href="https://github.com/ThiagoPatriotaDev">
-<img src="https://github.com/ThiagoPatriotaDev.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Thiago Patriota no GitHub"><br>
-Thiago Patriota
 <a href="https://github.com/Jgabriel1800">
 <img src="https://github.com/Jgabriel1800.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de João Gabriel Marcos da Silva no GitHub"><br>
 João Gabriel Marcos da Silva
@@ -135,6 +153,34 @@ João Lucas da Silva Soares Oliveira
 <img src="https://github.com/teixeiralucs.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Lucas Matheus Elias Silva Teixeira dos Santos no GitHub"><br>
 Lucas Matheus Elias Silva Teixeira dos Santos
 </a>
+</td>
+<td align="center" width="150">
+<a href="https://github.com/EdsonCavalcanteValenca">
+<img src="https://github.com/EdsonCavalcanteValenca.png?size=100" width="100" height="100" style="border-radius:50%" alt="Foto de perfil de Edson Cavalcante Valença no GitHub"><br>
+Edson Cavalcante Valença
+</a>
+</td>
+</tr>
+<tr>
+<td align="center" width="150">
+Matheus Emanuel
+</td>
+<td align="center" width="150">
+Pedro Borges
+</td>
+<td align="center" width="150">
+Antonio Verissimo
+</td>
+<td align="center" width="150">
+Antonio Pedro
+</td>
+</tr>
+<tr>
+<td align="center" width="150">
+Samuel Oliveira
+</td>
+<td align="center" width="150">
+Felipe dos Santos
 </td>
 </tr>
 </table>
