@@ -1,160 +1,417 @@
 ---
-title: "Tópico modelo"
-subtitle: "Estrutura e profundidade esperadas de uma contribuição"
+title: "Rastreabilidade entre requisitos e arquitetura"
+subtitle: "Relações, técnicas e acompanhamento das decisões arquiteturais"
 author:
-  - name: "Nome Completo do Autor"
-  - name: "Nome Completo da Segunda Autora"
-date: 2026-08-30
+  - name: "Agdo José Samuel Sousa de oliveira"
+  - name: "Antonio Carlos Verissimo de Souza"
+  - name: "Pedro Henrique Borges Silva"
+  - name: "Felipe dos Santos Silva"
+  - name: "Antonio Pedro Guimarães Santos de Macedo"
+date: 2026-11-14
 date-modified: last-modified
 bibliography: referencias.bib
 citation:
   type: webpage
   container-title: "Guia Aberto de Arquitetura de Software"
 license: "CC BY-NC 4.0"
-keywords: ["palavra-chave", "keyword"]
+keywords: ["rastreabilidade", "requisitos", "arquitetura de software", "decisões arquiteturais"]
 ---
 
 ::: {.meta-topico}
 <dl>
 <dt>Competências</dt>
-<dd>Avaliar quando um estilo arquitetural é adequado ao problema</dd>
+<dd>Compreender e aplicar a rastreabilidade entre requisitos, elementos arquiteturais e artefatos do desenvolvimento de software.</dd>
 <dt>Pré-requisitos</dt>
-<dd>Nenhum</dd>
+<dd>Engenharia de requisitos e fundamentos de arquitetura de software.</dd>
 <dt>Formatos</dt>
 <dd>
-[texto]{.formato} [notebook](notebook.ipynb){.formato} [áudio]{.formato} [gem]{.formato} [slides](slides.qmd){.formato}
+[texto]{.formato} [notebook](notebook.ipynb){.formato} [áudio](assets/audio/){.formato} [gem](GEM_GEMINI.md){.formato} [slides](slides.qmd){.formato}
 </dd>
 </dl>
 :::
 
-::: {.callout-note}
-## Como usar esta página
-Esta é a página modelo do projeto. A estrutura abaixo é obrigatória; o conteúdo é
-ilustrativo e deve ser substituído. Copie a pasta `content/00-modelo/` inteira,
-renomeie para `content/NN-seu-topico/` e substitua tudo — inclusive
-`metadata.yaml`, `referencias.bib`, etc.
-:::
-
 ## Definição e contexto
 
-Abra definindo o conceito com precisão, em uma ou duas frases, antes de qualquer
-digressão histórica. O leitor que chegou aqui de uma busca precisa saber em dez
-segundos se está na página certa.
+A rastreabilidade de requisitos consiste em estabelecer e acompanhar relações entre os 
+requisitos de um sistema e outros artefatos produzidos durante o desenvolvimento, como 
+modelos de arquitetura. Essas relações permitem compreender como os requisitos estão 
+representados no sistema e apoiam atividades de manutenção e evolução do software [@ballarin2023influence, p. 705].
 
-Depois, situe o problema. Todo estilo arquitetural existe porque alguma
-dificuldade concreta apareceu antes dele: acoplamento excessivo, impossibilidade
-de evoluir partes independentes, custo de coordenação entre equipes. Nomeie essa
-dificuldade. Um texto que apresenta a solução sem apresentar o problema ensina a
-decorar, não a decidir.
+A necessidade de rastreabilidade aumenta conforme os sistemas se tornam mais complexos. 
+Durante o desenvolvimento, os requisitos são transformados em diferentes representações, 
+como modelos arquiteturais e código, tornando mais difícil identificar as relações entre 
+aquilo que foi especificado e os elementos que foram desenvolvidos. Ballarín et al. (2023) 
+destacam especialmente a importância de identificar os vínculos entre requisitos e modelos de 
+arquitetura, pois essas relações ajudam os engenheiros a compreender o sistema durante a 
+manutenção e a localizar partes que podem apresentar problemas [@ballarin2023influence, p. 705].
 
-O critério de decomposição modular proposto por Parnas [@parnas1972modularization]
-é um bom exemplo de como uma decisão arquitetural nasce de um problema observado:
-a dificuldade de modificar sistemas cujos módulos foram divididos por etapas de
-processamento em vez de por informação escondida.
+Nesse contexto, a rastreabilidade também pode apoiar a análise de mudanças. 
+Ao manter relações entre requisitos e elementos arquiteturais, torna-se possível investigar 
+quais partes do sistema estão relacionadas a determinado requisito e, consequentemente, quais 
+elementos podem precisar ser analisados quando esse requisito é alterado. 
+O estudo de Ballarín et al. (2023) evidencia ainda que a linguagem utilizada para representar 
+a arquitetura pode influenciar a eficácia da recuperação dessas relações entre requisitos e arquitetura [@ballarin2023influence, p. 705].
 
-::: {.callout-tip}
-## Sobre as citações
-Cite com `[@chave2023]`, que o Quarto converte em `[1]`, `[2]` automaticamente e
-usa para montar a lista de referências no fim da página. Nunca escreva `[1]` na
-mão: a numeração muda quando você insere uma citação nova, e o vínculo com a
-bibliografia se perde.
+Assim, a rastreabilidade não consiste apenas em registrar requisitos, mas em manter 
+relações que permitam acompanhar sua representação ao longo do desenvolvimento e da manutenção do software. 
+No estudo analisado, diferentes linguagens arquiteturais apresentaram desempenhos distintos 
+na recuperação dessas relações, mostrando que a forma como a arquitetura é representada também pode 
+influenciar a rastreabilidade [@ballarin2023influence, pp. 705–706].
 
-Para citar uma seção específica de um livro longo, use
-`[@bass2021software, cap. 13]` — isso é obrigatório em livros de referência.
-:::
+## Conceitos fundamentais de rastreabilidade
 
-## Estrutura e componentes
+A rastreabilidade pode ser compreendida por diferentes perspectivas, considerando a direção em que 
+os relacionamentos são acompanhados e os níveis de desenvolvimento envolvidos. 
+Essas classificações ajudam a entender como os requisitos se conectam aos demais elementos de um sistema.
 
-Descreva as partes que compõem o estilo e como se relacionam. Esta seção precisa
-de **pelo menos um diagrama seu** — não uma imagem copiada de um livro.
+### Rastreabilidade para frente (Forward Traceability)
 
-Diagramas podem ser feitos em Mermaid direto no texto, o que tem a vantagem de
-ficarem versionados como código:
+A rastreabilidade para frente permite acompanhar um requisito até os elementos desenvolvidos a partir dele. 
+Dessa forma, é possível identificar quais componentes, funcionalidades e partes da arquitetura estão relacionados 
+a determinada necessidade do sistema.
 
-```{mermaid}
-%%| label: fig-estrutura
-%%| fig-cap: "Componentes do estilo e a direção das dependências permitidas."
-flowchart TD
-    A[Componente de interface] --> B[Componente de aplicação]
-    B --> C[Componente de domínio]
-    C --> D[(Armazenamento)]
-```
+Por exemplo, um requisito que estabelece a necessidade de autenticação de usuários pode ser relacionado 
+ao componente responsável pelo login e aos elementos arquiteturais que dão suporte a essa funcionalidade.
 
-Ao descrever a estrutura, seja explícito sobre **o que é proibido**, não apenas
-sobre o que é permitido. Um estilo arquitetural se define tanto pelas conexões que
-autoriza quanto pelas que veda — e é a violação dessas restrições que degrada a
-arquitetura ao longo do tempo [@bass2021software, cap. 1].
+### Rastreabilidade para trás (Backward Traceability)
+
+A rastreabilidade para trás realiza o caminho inverso, permitindo identificar 
+qual requisito deu origem a determinado componente, funcionalidade ou decisão arquitetural.
+
+Essa relação ajuda a compreender a finalidade dos elementos desenvolvidos e 
+verificar se eles possuem uma justificativa nos requisitos definidos. 
+Também permite identificar funcionalidades implementadas que não possuem uma necessidade documentada correspondente.
+
+### Rastreabilidade vertical e horizontal
+A rastreabilidade também pode ser classificada de acordo com os níveis e artefatos relacionados.
+
+- Vertical: estabelece relações entre diferentes níveis de desenvolvimento, como requisitos, arquitetura, 
+  projeto detalhado e implementação. Permite acompanhar como uma necessidade inicial é representada nas 
+  diferentes etapas de construção do software.
+
+- Horizontal: estabelece relações entre elementos de um mesmo nível ou entre artefatos relacionados, 
+  permitindo identificar dependências e conexões entre requisitos, componentes ou funcionalidades.
+
+Essas duas perspectivas são complementares e ajudam a compreender tanto a evolução de um requisito 
+quanto suas relações com outros elementos do sistema.
+
+### Relações entre requisitos e outros artefatos
+
+Os requisitos não existem de forma isolada durante o desenvolvimento. Eles precisam estar relacionados 
+aos artefatos que representam sua implementação, especialmente aos modelos de arquitetura e ao código-fonte.
+
+Ballarín et al. (2023) destacam justamente a importância de estabelecer relações entre requisitos e 
+modelos arquiteturais, permitindo identificar quais elementos da arquitetura estão associados a 
+determinadas necessidades do sistema. Os autores também consideram o código-fonte como outro tipo de 
+artefato que pode estar relacionado aos requisitos [@ballarin2023influence, p. 705].
+
+Essa relação permite compreender como uma necessidade especificada se transforma em elementos concretos 
+do software. Por exemplo, um requisito relacionado ao processamento de pagamentos pode estar associado 
+a um componente arquitetural responsável por essa função e aos elementos de implementação correspondentes.
+
+Dessa maneira, a rastreabilidade mantém uma ligação entre o que foi solicitado e os elementos desenvolvidos, 
+contribuindo para a compreensão, a manutenção e a evolução do software [@ballarin2023influence, p. 705].
+
+
+<!-- ===================================================== -->
+<!-- PESSOA 2 - RASTREABILIDADE E ARQUITETURA                -->
+<!-- Responsável: conectar requisitos e decisões arquiteturais. -->
+<!-- ===================================================== -->
+
+## Rastreabilidade entre requisitos e arquitetura
+
+<!-- PESSOA 2: desenvolver esta seção.
+
+Deve abordar:
+- Como os requisitos influenciam a arquitetura do software.
+- Como decisões arquiteturais atendem aos requisitos.
+- Relação entre requisitos funcionais e não funcionais.
+- Como identificar quais componentes atendem a cada requisito.
+- Como acompanhar mudanças nos requisitos e seus impactos
+  sobre a arquitetura.
+- Importância de manter justificativas das decisões arquiteturais.
+
+Utilizar o artigo principal Ballarín et al. (2023) como referência central.
+-->
+
+### Relação entre requisitos e elementos arquiteturais
+
+<!-- PESSOA 2: apresentar como os requisitos se relacionam com
+decisões arquiteturais, componentes, interfaces e outros elementos.
+
+Exemplo ilustrativo:
+
+Requisito
+    ↓
+Decisão arquitetural
+    ↓
+Componente
+    ↓
+Interface
+
+Explicar cada relação e sua importância.
+-->
+
+### Estrutura dos relacionamentos
+
+<!-- PESSOA 2: elaborar pelo menos um diagrama autoral.
+
+O diagrama deve representar o caminho entre um requisito
+e os elementos arquiteturais relacionados.
+
+Salvar em:
+assets/imagens/rastreabilidade-requisitos-arquitetura.svg
+
+Inserir a imagem nesta seção utilizando:
+
+![Relação entre requisitos e elementos arquiteturais.](assets/imagens/rastreabilidade-requisitos-arquitetura.svg){#fig-rastreabilidade fig-cap="Representação da relação entre requisitos e arquitetura."}
+-->
+
+### Análise de impacto das mudanças
+
+<!-- PESSOA 2: explicar como a rastreabilidade permite identificar
+quais decisões, componentes e interfaces podem ser afetados
+quando um requisito é alterado.
+
+Apresentar pelo menos um exemplo de alteração de requisito
+e suas possíveis consequências arquiteturais.
+-->
+
+<!-- ===================================================== -->
+<!-- PESSOA 3 - TÉCNICAS DE RASTREABILIDADE                  -->
+<!-- Responsável: métodos, links e ferramentas.              -->
+<!-- ===================================================== -->
+
+## Técnicas para estabelecer e manter a rastreabilidade
+
+<!-- PESSOA 3: desenvolver esta seção.
+
+Deve abordar:
+- Como estabelecer relacionamentos entre artefatos.
+- Como registrar e identificar links de rastreabilidade.
+- Como manter os relacionamentos atualizados.
+- Como identificar links inválidos ou desatualizados.
+- Como consultar os relacionamentos durante mudanças.
+
+Diferenciar conceitos de rastreabilidade das técnicas
+utilizadas para implementá-la.
+-->
+
+### Matrizes de rastreabilidade
+
+<!-- PESSOA 3: explicar o funcionamento de uma matriz
+de rastreabilidade e apresentar um exemplo.
+
+A matriz deve relacionar identificadores de requisitos
+com decisões arquiteturais e componentes.
+
+Exemplo de estrutura:
+
+| Requisito | Decisão arquitetural | Componente |
+|---|---|---|
+| REQ-01 | DA-01 | Componente A |
+| REQ-02 | DA-02 | Componente B |
+
+Explicar como interpretar e atualizar os relacionamentos.
+-->
+
+### Modelos e links de rastreabilidade
+
+<!-- PESSOA 3: explicar os modelos de representação
+dos relacionamentos e os diferentes tipos de links.
+
+Apresentar exemplos de relações entre requisitos,
+modelos arquiteturais, código e testes.
+-->
+
+### Ferramentas de apoio
+
+<!-- PESSOA 3: pesquisar ferramentas utilizadas
+para gerenciamento de requisitos e rastreabilidade.
+
+Apresentar:
+- Nome da ferramenta.
+- Finalidade.
+- Principais funcionalidades.
+- Como auxilia na manutenção dos relacionamentos.
+
+Não fazer uma lista de ferramentas sem explicar
+sua utilidade no contexto do tema.
+-->
+
+<!-- ===================================================== -->
+<!-- PESSOA 4 - EXEMPLO APLICADO E NOTEBOOK                  -->
+<!-- Responsável: caso prático e implementação executável.   -->
+<!-- ===================================================== -->
 
 ## Exemplo aplicado
 
-Traga um caso concreto e conecte-o ao notebook. O texto explica o raciocínio; o
-notebook mostra o código rodando. Os dois precisam falar do mesmo exemplo — se o
-texto discute um sistema de pedidos e o notebook implementa uma calculadora, a
-contribuição volta na revisão.
+<!-- PESSOA 4: desenvolver esta seção.
 
-Um bom exemplo aplicado mostra três coisas:
+Escolher um sistema simples para demonstrar rastreabilidade.
+O exemplo deve mostrar a relação entre requisitos,
+decisões arquiteturais, componentes e testes.
 
-1. **A implementação correta** — o conceito funcionando
-2. **A violação** — o que acontece quando a restrição do estilo é quebrada
-3. **A consequência mensurável** — o custo dessa violação, em acoplamento,
-   tempo de build, dificuldade de teste ou desempenho
+O exemplo precisa ser o mesmo utilizado no notebook.
+-->
+
+### Contextualização do sistema
+
+<!-- PESSOA 4: apresentar o sistema escolhido,
+seu objetivo e os requisitos que serão acompanhados.
+
+Identificar os requisitos com códigos, como:
+REQ-01, REQ-02 e REQ-03.
+-->
+
+### Aplicação da rastreabilidade
+
+<!-- PESSOA 4: demonstrar passo a passo:
+
+1. Identificação dos requisitos.
+2. Definição das decisões arquiteturais.
+3. Associação dos requisitos aos componentes.
+4. Registro dos relacionamentos.
+5. Identificação dos testes relacionados.
+6. Análise de impacto diante de uma mudança.
+
+Utilizar tabelas e diagramas para facilitar a compreensão.
+-->
+
+### Cenário de alteração de requisito
+
+<!-- PESSOA 4: demonstrar uma situação em que um requisito
+é alterado e explicar como os relacionamentos permitem
+identificar os elementos arquiteturais afetados.
+
+Comparar a situação com e sem rastreabilidade.
+-->
+
+### Demonstração executável
+
+<!-- PESSOA 4: desenvolver o notebook.ipynb.
+
+O notebook deve reproduzir o mesmo cenário explicado no texto.
+
+Deve conter:
+- Apresentação do problema.
+- Dados ou requisitos utilizados.
+- Construção da matriz de rastreabilidade.
+- Consulta dos relacionamentos.
+- Simulação de alteração de requisito.
+- Identificação dos elementos afetados.
+- Resultados e conclusão.
+
+Testar a execução completa no Google Colab.
+-->
 
 ::: {.callout-note}
-## Exemplo executável
-O notebook deste tópico está em
-[`notebook.ipynb`](notebook.ipynb) e pode ser aberto direto no
-[Google Colab](https://colab.research.google.com/).
+## Notebook deste tópico
 
-O notebook precisa rodar de ponta a ponta em ambiente limpo. Teste no Colab antes
-de abrir o PR — funcionar na sua máquina não é suficiente.
+O notebook está disponível em [`notebook.ipynb`](notebook.ipynb) e pode ser executado pelo Google Colab.
+
+O texto e o notebook devem utilizar o mesmo exemplo, os mesmos identificadores e os mesmos relacionamentos.
 :::
 
-## Trade-offs
+<!-- ===================================================== -->
+<!-- PESSOA 5 - TRADE-OFFS, DECISÃO E APRESENTAÇÃO           -->
+<!-- Responsável: avaliação crítica e integração final.     -->
+<!-- ===================================================== -->
 
-Esta é a seção que separa um texto útil de um resumo de Wikipédia. Nenhum estilo
-arquitetural é melhor que outro em abstrato: cada um favorece certos atributos de
-qualidade ao custo de outros [@richards2020fundamentals].
+## Trade-offs da rastreabilidade
 
-Seja específico quanto à dimensão. "É mais escalável" não diz nada — escalável em
-quê? Número de requisições simultâneas? Número de desenvolvedores trabalhando em
-paralelo? Volume de dados?
+<!-- PESSOA 5: desenvolver esta seção.
 
-| Atributo | Efeito | Por quê |
-|---|---|---|
-| Modificabilidade | Favorecida | Mudança em uma camada não propaga, desde que a interface se mantenha |
-| Desempenho | Comprometido | Cada requisição atravessa todas as camadas, somando latência |
-| Testabilidade | Favorecida | Camadas podem ser substituídas por dublês em teste |
-| Simplicidade operacional | Comprometida | Mais partes para implantar e monitorar |
+Discutir os benefícios e custos de manter rastreabilidade
+durante o desenvolvimento do software.
 
-## Quando usar e quando não usar
+Abordar:
+- Melhor análise de impacto versus custo de manutenção.
+- Maior controle das mudanças versus esforço de documentação.
+- Facilidade de auditoria versus necessidade de atualização.
+- Automação dos relacionamentos versus possíveis falsos links.
+- Visibilidade arquitetural versus complexidade de gerenciamento.
 
-Feche com critérios de decisão acionáveis, na forma de condições verificáveis, não
-de recomendações vagas.
+Utilizar situações práticas, não apenas afirmações genéricas.
+-->
 
-**Considere usar quando:**
+### Comparação dos principais trade-offs
 
-- A condição concreta que torna esse estilo adequado
-- Outra condição
+<!-- PESSOA 5: elaborar uma tabela comparativa contendo:
+aspecto, benefício e custo ou desafio.
 
-**Evite quando:**
+Explicar os impactos de cada aspecto no desenvolvimento.
+-->
 
-- A condição em que o custo supera o benefício
-- Outra condição
+## Quando utilizar rastreabilidade
 
-**Sinais de que a escolha foi errada:**
+<!-- PESSOA 5: desenvolver esta seção.
 
-- Sintoma observável que indica desalinhamento entre estilo e problema
+Apresentar critérios objetivos para decidir quando
+a rastreabilidade é importante.
+
+### Considere utilizar quando:
+- Existem requisitos complexos ou interdependentes.
+- Mudanças podem afetar diversos componentes.
+- É necessário justificar decisões arquiteturais.
+- O sistema exige auditoria ou comprovação de requisitos.
+
+### Avalie a necessidade quando:
+- O projeto possui escopo muito pequeno.
+- A quantidade de artefatos é reduzida.
+- O custo de manutenção dos relacionamentos
+  pode superar seus benefícios.
+
+### Sinais de problemas:
+- Links desatualizados.
+- Requisitos sem elementos relacionados.
+- Decisões arquiteturais sem justificativa.
+- Alterações sem análise de impacto.
+-->
+
+## Conclusão
+
+<!-- PESSOA 5: elaborar a conclusão após receber as contribuições.
+
+Retomar:
+- Importância da rastreabilidade.
+- Relação entre requisitos e arquitetura.
+- Benefícios para manutenção e evolução.
+- Principais desafios.
+- Importância de escolher técnicas adequadas ao contexto.
+
+Não introduzir conceitos novos nesta seção.
+-->
+
+<!-- ===================================================== -->
+<!-- PESSOA 5 - INTEGRAÇÃO DOS MATERIAIS                     -->
+<!-- Responsável por slides, referências e revisão final.    -->
+<!-- ===================================================== -->
 
 ::: {.callout-note}
 ## Slides deste tópico
-A apresentação está em [`slides.qmd`](slides.qmd) — 16 slides para uma fala de
-20 minutos, com os mesmos exemplos e trade-offs deste texto.
+
+A apresentação está disponível em [`slides.qmd`](slides.qmd).
+
+Os slides devem apresentar os mesmos conceitos, diagramas e exemplos desenvolvidos no texto e no notebook.
+
+A Pessoa 5 ficará responsável pela organização e revisão da apresentação, garantindo a participação dos cinco integrantes.
 :::
 
 ## Referências
 
-As referências abaixo são geradas automaticamente a partir de `referencias.bib`.
-Não escreva esta lista à mão.
+As referências são geradas automaticamente a partir de `referencias.bib`.
+
+<!-- PESSOA 5: integrar as referências enviadas pelos demais integrantes.
+
+Cada pessoa deve informar:
+- Autor e ano.
+- Título da publicação.
+- DOI ou URL, quando disponível.
+- Identificador da citação utilizado no texto.
+
+Não remover referências utilizadas por outros integrantes.
+-->
 
 ::: {#refs}
 :::
@@ -162,9 +419,5 @@ Não escreva esta lista à mão.
 ::: {.como-citar}
 **Como citar este tópico**
 
-Nome Completo do Autor; Nome Completo da Segunda Autora. "Tópico modelo".
-*Guia Aberto de Arquitetura de Software*, 2026. Disponível em:
-<https://ifpe-belojardim-es.github.io/guia-arquitetura-de-software/content/00-modelo/>. Licenciado sob CC BY-NC 4.0.
-
-Vários autores: separe por ponto e vírgula, na mesma ordem do `metadata.yaml`.
+[Nome dos cinco autores, na ordem definida no metadata.yaml]. "Rastreabilidade entre requisitos e arquitetura". *Guia Aberto de Arquitetura de Software*, 2026. Licenciado sob CC BY-NC 4.0.
 :::

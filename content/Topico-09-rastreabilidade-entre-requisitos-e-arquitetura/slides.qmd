@@ -1,10 +1,14 @@
+
 ---
-title: "Tópico modelo"
-subtitle: "Estrutura e profundidade esperadas de uma contribuição"
+title: "Rastreabilidade entre Requisitos e Arquitetura"
+subtitle: "Relações, técnicas e acompanhamento das decisões arquiteturais"
 author:
-  - "Nome Completo do Autor"
-  - "Nome Completo da Segunda Autora"
-date: 2026-08-30
+  - "Nome do Integrante 1"
+  - "Nome do Integrante 2"
+  - "Nome do Integrante 3"
+  - "Nome do Integrante 4"
+  - "Nome do Integrante 5"
+date: 2026-11-14
 bibliography: referencias.bib
 format:
   revealjs:
@@ -18,144 +22,382 @@ format:
     footer: "Guia Aberto de Arquitetura de Software · CC BY-NC 4.0"
 ---
 
-## Como usar este modelo {.smaller}
+<!-- ================================================== -->
+<!-- PESSOA 5 - CAPA E ORGANIZAÇÃO INICIAL               -->
+<!-- ================================================== -->
 
-Estes slides são o **apoio de fala** do tópico, não o texto projetado. Substitua
-tudo, mantendo três regras:
+## Rastreabilidade entre Requisitos e Arquitetura
 
-- Um slide, uma ideia. Se precisa de dois parágrafos, é fala, não slide
-- Entre 12 e 20 slides, para uma apresentação de 20 minutos
-- O que for prosa compartilhada com o `index.qmd` entra por
-  `{{{< include _arquivo.md >}}}`, nunca por copiar e colar
+### Relações, técnicas e acompanhamento das decisões arquiteturais
+
+**Guia Aberto de Arquitetura de Software**
 
 ::: {.notes}
-Notas do apresentador ficam aqui e não aparecem na projeção. Use-as para o que
-você vai falar, liberando o slide do texto corrido.
+Apresentar o tema, os integrantes e a proposta da apresentação.
 :::
 
 ## Roteiro
 
-1. O problema que veio antes da solução
-2. Definição e origem
-3. Estrutura e restrições
-4. Exemplo aplicado e a violação
-5. Trade-offs
-6. Critérios de decisão
+1. Problema e fundamentos da rastreabilidade
+2. Relação entre requisitos e arquitetura
+3. Técnicas de rastreabilidade
+4. Exemplo aplicado
+5. Trade-offs e critérios de decisão
 
-## O problema veio antes
+## O problema da falta de rastreabilidade
 
-Todo estilo arquitetural nasce de uma dificuldade concreta:
+Durante o desenvolvimento de software, os requisitos são transformados em
+modelos, componentes e funcionalidades.
 
-- Acoplamento que trava a evolução
-- Impossibilidade de mudar partes de forma independente
-- Custo de coordenação entre equipes
-
-::: {.notes}
-Abrir pelo problema, não pela solução. Quem começa pela solução ensina a decorar.
-:::
-
-## Definição
-
-> Enuncie o conceito em uma ou duas frases, com precisão, antes de qualquer
-> digressão histórica.
-
-Se a plateia não souber em dez segundos do que se trata, o slide falhou.
-
-## De onde vem a ideia
-
-O critério de decomposição modular de Parnas [@parnas1972modularization]:
-
-- Dividir por **informação escondida**, não por etapa de processamento
-- Módulo é unidade de **decisão de projeto**, não de fluxo de execução
-
-Cite a fonte original, nunca o post que a resume.
-
-## Estrutura
-
-```{mermaid}
-flowchart TD
-    A[Componente de interface] --> B[Componente de aplicação]
-    B --> C[Componente de domínio]
-    C --> D[(Armazenamento)]
-```
-
-Pelo menos um diagrama seu — não uma imagem tirada de livro.
-
-## O que o estilo proíbe
-
-Um estilo se define tanto pelas conexões que autoriza quanto pelas que
-veda [@bass2021software, cap. 1].
-
-- Interface não fala com armazenamento
-- Domínio não conhece a interface
-- A degradação começa quando essas restrições são negociadas "só desta vez"
-
-## Exemplo aplicado
-
-O mesmo caso do texto e do notebook. Três coisas a mostrar:
-
-1. A implementação correta
-2. A violação da restrição
-3. A consequência mensurável
-
-## A violação
-
-```python
-# atalho: a interface conversa direto com o banco
-def listar_pedidos(cliente_id):
-    return db.query("SELECT * FROM pedidos WHERE cliente = ?", cliente_id)
-```
-
-Funciona hoje. O problema aparece na segunda regra de negócio que precisar do
-mesmo dado.
-
-## A consequência mensurável
-
-Sem número, é opinião. Meça em alguma dimensão:
-
-- Acoplamento aferente/eferente
-- Tempo de build
-- Quantidade de dublês necessários para testar
-- Latência por requisição
-
-## Trade-offs
-
-Nenhum estilo é melhor que outro em abstrato: cada um favorece atributos de
-qualidade ao custo de outros [@richards2020fundamentals].
-
-## Trade-offs em uma tabela {.smaller}
-
-{{< include _trade-offs.md >}}
+- Nem sempre é fácil identificar quais elementos atendem a cada requisito.
+- Uma alteração pode afetar diferentes partes do sistema.
+- A falta de relacionamentos dificulta a análise de impacto e a manutenção.
 
 ::: {.notes}
-Esta tabela vem do mesmo `_trade-offs.md` incluído no index.qmd — editar em um
-lugar atualiza texto e slides.
+Imagine que um sistema possui um requisito de autenticação de usuários.
+Com o passar do tempo, essa funcionalidade pode envolver diferentes
+componentes da arquitetura e partes do código.
+
+Se surgir a necessidade de modificar a autenticação, como saber quais
+elementos precisam ser revisados?
+
+Sem relações bem estabelecidas entre os requisitos e os artefatos do
+sistema, essa identificação pode se tornar difícil.
+
+É esse problema que torna a rastreabilidade necessária.
 :::
 
-## Seja específico quanto à dimensão
+## O que é rastreabilidade?
 
-"É mais escalável" não diz nada.
+É a capacidade de estabelecer e acompanhar relações entre os requisitos
+e os diferentes artefatos produzidos durante o desenvolvimento de software.
 
-- Escalável em requisições simultâneas?
-- Em desenvolvedores trabalhando em paralelo?
-- Em volume de dados?
+```text
+      REQUISITO
+          |
+          v
+      ARQUITETURA
+          |
+          v
+     IMPLEMENTAÇÃO
+          |
+          v
+        TESTES
+```
 
-## Quando usar
+- Identifica onde os requisitos estão representados.
+- Permite acompanhar sua realização no sistema.
+- Apoia a manutenção e a análise de mudanças.
 
-- A condição concreta que torna o estilo adequado
-- Outra condição verificável
+**Referência:** Ballarín et al. (2023).
 
-Critérios acionáveis, não recomendações vagas.
+::: {.notes}
+A rastreabilidade permite acompanhar o caminho percorrido por um requisito
+durante o desenvolvimento.
 
-## Quando evitar
+Como podemos observar, um requisito pode estar relacionado a uma decisão
+arquitetural, a componentes implementados e aos testes responsáveis por
+verificar seu funcionamento.
 
-- A condição em que o custo supera o benefício
-- Outra condição
+O artigo de Ballarín e seus colaboradores destaca justamente a importância
+das relações entre requisitos e modelos arquiteturais, considerando também
+a influência das linguagens utilizadas para representar a arquitetura.
 
-**Sinais de que a escolha foi errada:** o sintoma observável que indica
-desalinhamento entre estilo e problema.
+Portanto, não basta registrar o que o sistema precisa fazer. É importante
+conseguir identificar como essas necessidades estão representadas nos
+artefatos produzidos.
+:::
+
+## Tipos de rastreabilidade
+
+**Forward Traceability — Para frente**
+
+```text
+Requisito ──────────> Implementação
+```
+Permite identificar o que foi desenvolvido a partir de um requisito.
+
+**Backward Traceability — Para trás**
+
+```text
+Implementação ──────> Requisito
+```
+Permite identificar qual requisito deu origem a determinado elemento.
+
+**Vertical Traceability — Vertical**
+
+```text
+Requisitos
+    |
+Arquitetura
+    |
+Implementação
+```
+Relaciona artefatos de diferentes níveis de desenvolvimento.
+
+**Horizontal Traceability — Horizontal**
+
+```text
+Requisito A <──────> Requisito B
+```
+Relaciona elementos de um mesmo nível ou artefatos correspondentes.
+
+::: {.notes}
+Existem diferentes perspectivas para compreender as relações de
+rastreabilidade.
+
+Na rastreabilidade para frente, partimos de um requisito para identificar
+os elementos desenvolvidos a partir dele.
+
+Na rastreabilidade para trás, fazemos o caminho inverso, buscando descobrir
+qual requisito está relacionado a determinado componente.
+
+Já a rastreabilidade vertical conecta diferentes níveis do desenvolvimento,
+como requisitos, arquitetura e implementação.
+
+A horizontal estabelece relações entre elementos de um mesmo nível ou
+artefatos correspondentes.
+
+Essas perspectivas se complementam e ajudam a compreender melhor as
+dependências existentes no sistema.
+
+Com esses conceitos estabelecidos, podemos avançar para entender como
+essas relações são organizadas e mantidas na prática.
+:::
+
+<!-- ================================================== -->
+<!-- PESSOA 2 - REQUISITOS E ARQUITETURA                  -->
+<!-- ================================================== -->
+
+## Requisitos e arquitetura
+
+**PESSOA 2: desenvolver este slide.**
+
+Explicar por que os requisitos precisam estar relacionados
+aos modelos e elementos arquiteturais.
+
+- Requisitos representam necessidades do sistema.
+- A arquitetura organiza os elementos que atendem a essas necessidades.
+- Decisões arquiteturais precisam estar relacionadas aos requisitos correspondentes.
+
+Referência: Ballarín et al. (2023).
+
+::: {.notes}
+Explicar como uma necessidade especificada pode influenciar
+a organização dos componentes e as decisões arquiteturais.
+:::
+
+## Como os requisitos se conectam à arquitetura?
+
+**PESSOA 2: desenvolver este slide.**
+
+Criar um diagrama autoral que represente os relacionamentos.
+
+Exemplo inicial:
+
+```text
+REQ-01: Autenticação de usuários
+                |
+                v
+DEC-01: Utilizar autenticação centralizada
+                |
+                v
+        Serviço de Autenticação
+                |
+                v
+       Componente de Login
+```
+
+Explicar como cada elemento está relacionado ao requisito.
+
+::: {.notes}
+Não basta apresentar o diagrama. Explicar o significado de cada ligação
+e como ela ajuda a compreender a arquitetura.
+:::
+
+## Análise de impacto das mudanças
+
+**PESSOA 2: desenvolver este slide.**
+
+Apresentar um cenário de alteração:
+
+- Um requisito de segurança é modificado.
+- O requisito está relacionado a uma decisão arquitetural.
+- A decisão está relacionada a determinados componentes.
+- A rastreabilidade permite identificar quais elementos precisam ser revisados.
+
+```text
+Requisito alterado
+        |
+        v
+Decisão arquitetural
+        |
+        v
+Componentes afetados
+        |
+        v
+Revisão e atualização
+```
+
+::: {.notes}
+Explicar como os relacionamentos ajudam a localizar os elementos
+que podem ser afetados por uma mudança.
+:::
+
+<!-- ================================================== -->
+<!-- PESSOA 3 - TÉCNICAS                                 -->
+<!-- ================================================== -->
+
+## Técnicas de rastreabilidade
+
+**PESSOA 3: desenvolver este slide.**
+
+Apresentar como os relacionamentos podem ser registrados
+e mantidos durante o desenvolvimento.
+
+Pontos para abordar:
+
+- Identificação dos requisitos.
+- Criação de links entre artefatos.
+- Registro dos relacionamentos.
+- Atualização dos vínculos após mudanças.
+- Verificação de relações inválidas ou desatualizadas.
+
+::: {.notes}
+Explicar as técnicas sem repetir a definição de rastreabilidade.
+O foco é mostrar como colocar o conceito em prática.
+:::
+
+## Matrizes, links e ferramentas
+
+**PESSOA 3: desenvolver este slide.**
+
+Apresentar um exemplo de matriz:
+
+| Requisito | Decisão | Componente |
+|---|---|---|
+| REQ-01 | DEC-01 | Login |
+| REQ-02 | DEC-02 | Pagamentos |
+| REQ-03 | DEC-03 | Estoque |
+
+Apresentar também ferramentas de apoio ao gerenciamento
+e acompanhamento desses relacionamentos.
+
+::: {.notes}
+Explicar como consultar a matriz e identificar os elementos relacionados.
+Apresentar ferramentas apenas quando houver relação direta com o tema.
+:::
+
+<!-- ================================================== -->
+<!-- PESSOA 4 - EXEMPLO APLICADO                          -->
+<!-- ================================================== -->
+
+## Exemplo aplicado: sistema escolhido
+
+**PESSOA 4: desenvolver este slide.**
+
+Apresentar o sistema utilizado no notebook.
+
+Deve conter:
+
+- Contexto do sistema.
+- Problema que será resolvido.
+- Requisitos identificados.
+- Elementos arquiteturais envolvidos.
+
+::: {.notes}
+Apresentar o cenário antes de mostrar o funcionamento.
+Utilizar exatamente o mesmo exemplo do notebook.
+:::
+
+## Demonstração prática
+
+**PESSOA 4: desenvolver este slide.**
+
+Demonstrar:
+
+1. Identificação de um requisito.
+2. Associação com uma decisão arquitetural.
+3. Relacionamento com um componente.
+4. Consulta da rastreabilidade.
+5. Alteração do requisito.
+6. Identificação dos elementos afetados.
+
+Apresentar capturas ou resultados reais da execução do notebook.
+
+::: {.notes}
+Executar ou demonstrar os resultados do notebook.
+Mostrar o que acontece quando um requisito é alterado.
+Comparar o cenário com e sem os relacionamentos registrados.
+:::
+
+<!-- ================================================== -->
+<!-- PESSOA 5 - TRADE-OFFS E DECISÃO                      -->
+<!-- ================================================== -->
+
+## Trade-offs da rastreabilidade
+
+**PESSOA 5: desenvolver este slide.**
+
+Apresentar os principais benefícios e custos:
+
+| Benefício | Custo ou desafio |
+|---|---|
+| Melhor análise de impacto | Manutenção dos relacionamentos |
+| Maior controle das mudanças | Esforço de documentação |
+| Melhor compreensão arquitetural | Necessidade de atualização |
+| Facilidade de auditoria | Custo de gerenciamento |
+| Maior visibilidade | Complexidade de manutenção |
+
+::: {.notes}
+Discutir que a rastreabilidade oferece benefícios, mas também exige
+esforço para estabelecer e manter os relacionamentos.
+:::
+
+## Quando utilizar e quando evitar
+
+**PESSOA 5: desenvolver este slide.**
+
+**Considere utilizar quando:**
+
+- O sistema possui muitos requisitos e componentes.
+- Alterações podem afetar diferentes partes da arquitetura.
+- É necessário justificar decisões arquiteturais.
+- Existe necessidade de auditoria e acompanhamento.
+
+**Avalie a necessidade quando:**
+
+- O projeto é muito pequeno.
+- Existem poucos artefatos e dependências.
+- O custo de manutenção dos relacionamentos supera seus benefícios.
+
+::: {.notes}
+Apresentar critérios objetivos para a adoção da rastreabilidade.
+Evitar afirmar que ela é obrigatória ou vantajosa em qualquer projeto.
+:::
+
+## Conclusão
+
+**PESSOA 5: desenvolver este slide após a integração do grupo.**
+
+Retomar os principais pontos:
+
+- A rastreabilidade conecta requisitos aos artefatos do software.
+- A relação com a arquitetura facilita a compreensão do sistema.
+- Os relacionamentos apoiam a análise de impacto e a manutenção.
+- A escolha das técnicas deve considerar o contexto do projeto.
+
+::: {.notes}
+Finalizar reforçando a importância de manter relações compreensíveis
+e atualizadas entre requisitos e arquitetura.
+:::
 
 ## Referências {.smaller}
+
+**PESSOA 5: revisar a lista após receber as referências de todos.**
+
+- Ballarín et al. (2023) — artigo científico principal.
+- Livros e artigos complementares utilizados no guia.
 
 ::: {#refs}
 :::

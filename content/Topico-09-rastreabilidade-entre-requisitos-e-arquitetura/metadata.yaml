@@ -1,7 +1,7 @@
 # Metadados do tópico — preencha tudo. O CI valida os campos obrigatórios.
 # Este arquivo também alimenta a indexação por ferramentas de IA.
 
-numero: "00"
+numero: "09"
 slug: "modelo"
 titulo: "Tópico modelo"
 subtitulo: "Estrutura e profundidade esperadas de uma contribuição"
@@ -13,17 +13,29 @@ resumo: >-
 # devem ser creditados. Todos entram no crédito, na citação e na lista de
 # contribuidores do site.
 autores:
-  - nome: "Nome Completo do Autor"
-    grupo: "Grupo 0" # opcional
-    github: "usuario-github" # opcional
-    orcid: ""          # opcional
-  - nome: "Nome Completo da Segunda Autora"
-    grupo: "Grupo 0"
-    github: "outro-usuario-github"
+  - nome: "Agdo José Samuel Sousa de oliveira"
+    grupo: ""
+    github: ""
+    orcid: ""
+  - nome: "Antonio Carlos Verissimo de Souza"
+    grupo: ""
+    github: ""
+    orcid: ""
+  - nome: "Pedro Henrique Borges Silva"
+    grupo: ""
+    github: ""
+    orcid: ""
+  - nome: "Felipe dos Santos Silva"
+    grupo: ""
+    github: ""
+    orcid: ""
+  - nome: "Antonio Pedro Guimarães Santos de Macedo"
+    grupo: ""
+    github: ""
     orcid: ""
 
 status: "modelo"        # rascunho | em-revisao | publicado | modelo
-data_criacao: "2026-08-30"
+data_criacao: "2026-11-18"
 ultima_revisao: "2026-08-30"
 revisado_por:
   - "Nome do revisor par"
