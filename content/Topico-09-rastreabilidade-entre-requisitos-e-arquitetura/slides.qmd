@@ -197,42 +197,47 @@ Explique que a seta não é decorativa. "Por que o cache existe?" → por causa 
 
 ## Técnicas de rastreabilidade
 
-**PESSOA 3: desenvolver este slide.**
-
-Apresentar como os relacionamentos podem ser registrados
-e mantidos durante o desenvolvimento.
-
-Pontos para abordar:
-
-- Identificação dos requisitos.
-- Criação de links entre artefatos.
-- Registro dos relacionamentos.
-- Atualização dos vínculos após mudanças.
-- Verificação de relações inválidas ou desatualizadas.
+- **Vínculo** = origem + tipo + destino, com justificativa,
+  versão e situação.
+- **Tipos** dão semântica: `satisfaz`, `implementa`,
+  `verifica` e `depende`.
+- **Captura** registra durante a criação; **recuperação**
+  reconstrói o link depois, a partir dos artefatos.
+- **Manutenção** contínua ou sob demanda, disparada por
+  mudanças em requisitos, decisões, componentes ou testes.
+- **Verificação** por cobertura nos dois sentidos,
+  integridade referencial e atualidade do vínculo.
 
 ::: {.notes}
-Explicar as técnicas sem repetir a definição de rastreabilidade.
-O foco é mostrar como colocar o conceito em prática.
+Não repetir a definição de rastreabilidade: o foco é o como.
+Perguntar à turma quem atualiza a matriz quando REQ-04 muda.
+Um vínculo sem justificativa e sem responsável não sobrevive
+à primeira mudança.
 :::
 
 ## Matrizes, links e ferramentas
 
-**PESSOA 3: desenvolver este slide.**
+| Requisito | Decisões | Componentes | Teste |
+|---|---|---|---|
+| REQ-01 | DA-01, DA-04 | COMP-01, COMP-02, COMP-06 | TST-01 |
+| REQ-02 | DA-01, DA-02 | COMP-01, COMP-02, COMP-03 | TST-02 |
+| REQ-03 | DA-03 | COMP-04, COMP-05 | TST-03 |
+| REQ-04 | DA-02, DA-04 | COMP-02, COMP-03, COMP-06 | TST-04 |
+| REQ-05 | DA-05 | COMP-01, COMP-06 | TST-05 |
 
-Apresentar um exemplo de matriz:
+Ler a linha responde "o que muda se este requisito mudar";
+ler a coluna responde "por que este elemento existe".
 
-| Requisito | Decisão | Componente |
-|---|---|---|
-| REQ-01 | DEC-01 | Login |
-| REQ-02 | DEC-02 | Pagamentos |
-| REQ-03 | DEC-03 | Estoque |
-
-Apresentar também ferramentas de apoio ao gerenciamento
-e acompanhamento desses relacionamentos.
+Ferramentas: DOORS e Requisite Pro (gestão), Trace
+Maintainer (manutenção), RETRO (recuperação) e a própria
+matriz em planilha ou notebook (baixo custo).
 
 ::: {.notes}
-Explicar como consultar a matriz e identificar os elementos relacionados.
-Apresentar ferramentas apenas quando houver relação direta com o tema.
+Percorrer a linha de REQ-04 e a coluna de COMP-02 na tabela.
+Mostrar que a ferramenta só ajuda depois que o modelo de
+informação, os identificadores e o responsável pela
+atualização estão definidos. Evitar listar ferramentas sem
+ligar cada uma à atividade que ela apoia.
 :::
 
 <!-- ================================================== -->
