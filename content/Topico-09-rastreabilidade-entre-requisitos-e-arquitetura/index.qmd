@@ -120,67 +120,46 @@ contribuindo para a compreensão, a manutenção e a evolução do software [@ba
 
 ## Rastreabilidade entre requisitos e arquitetura
 
-<!-- PESSOA 2: desenvolver esta seção.
+A arquitetura de software não é construída de forma independente dos requisitos. Requisitos funcionais definem o que o sistema deve fazer; requisitos não funcionais, expressos como atributos de qualidade, definem como o sistema deve se comportar em termos de desempenho, segurança, modificabilidade e outros critérios. As decisões arquiteturais são tomadas justamente para satisfazer esses requisitos, e a rastreabilidade entre requisitos e arquitetura é o que permite verificar se essa satisfação realmente ocorre [@ballarin2023influence, p. 705].
 
-Deve abordar:
-- Como os requisitos influenciam a arquitetura do software.
-- Como decisões arquiteturais atendem aos requisitos.
-- Relação entre requisitos funcionais e não funcionais.
-- Como identificar quais componentes atendem a cada requisito.
-- Como acompanhar mudanças nos requisitos e seus impactos
-  sobre a arquitetura.
-- Importância de manter justificativas das decisões arquiteturais.
+Ballarín et al. (2023) destacam que identificar os vínculos entre requisitos e modelos arquiteturais é crítico para localizar partes não confiáveis do sistema e reduzir a taxa esperada de defeitos durante o desenvolvimento e a manutenção [@ballarin2023influence, p. 705]. Nesse sentido, a rastreabilidade não é um exercício burocrático: ela permite que a equipe saiba por que um componente existe e o que pode quebrar quando um requisito muda.
 
-Utilizar o artigo principal Ballarín et al. (2023) como referência central.
--->
+Um ponto central do artigo é que a linguagem utilizada para representar a arquitetura influencia a eficácia da rastreabilidade. Os autores compararam onze linguagens arquiteturais e observaram que linguagens de propósito geral, como UML, Y_DON, SDL e ArchiMate, obtiveram os melhores resultados na recuperação de vínculos com requisitos, com precisão média de 0,51 e recall de 0,38 [@ballarin2023influence, pp. 705–706]. Isso mostra que a escolha da linguagem não é neutra: ela facilita ou dificulta a manutenção dos vínculos ao longo do tempo.
 
 ### Relação entre requisitos e elementos arquiteturais
 
-<!-- PESSOA 2: apresentar como os requisitos se relacionam com
-decisões arquiteturais, componentes, interfaces e outros elementos.
+Um requisito funcional isolado não determina sozinho a arquitetura. O que impulsiona decisões arquiteturais são, em grande parte, os atributos de qualidade associados a esses requisitos. A cadeia de relação pode ser representada como:
 
-Exemplo ilustrativo:
+Requisito → Atributo de qualidade → Decisão arquitetural → Componente → Interface
 
-Requisito
-    ↓
-Decisão arquitetural
-    ↓
-Componente
-    ↓
-Interface
+Considere o requisito REQ-04 do exemplo aplicado deste tópico: "a disponibilidade deve ser respondida em até 2 segundos para 95% das consultas". O atributo de qualidade associado é desempenho. A decisão arquitetural DA-04 — manter cache de leitura para horários disponíveis, invalidado após gravação — existe para satisfazer esse requisito. A decisão se materializa nos componentes COMP-02 (Serviço de Disponibilidade) e COMP-06 (Autenticação e Cache). Essa cadeia mostra que a decisão arquitetural não surge do nada: ela responde a um requisito e a um atributo de qualidade [@bass2021software].
 
-Explicar cada relação e sua importância.
--->
 
 ### Estrutura dos relacionamentos
 
-<!-- PESSOA 2: elaborar pelo menos um diagrama autoral.
-
-O diagrama deve representar o caminho entre um requisito
-e os elementos arquiteturais relacionados.
-
-Salvar em:
-assets/imagens/rastreabilidade-requisitos-arquitetura.svg
-
-Inserir a imagem nesta seção utilizando:
+A figura abaixo ilustra a cadeia de rastreabilidade para o requisito REQ-04. O requisito de desempenho leva à decisão DA-04, que por sua vez se materializa nos componentes COMP-02 e COMP-06.
 
 ![Relação entre requisitos e elementos arquiteturais.](assets/imagens/rastreabilidade-requisitos-arquitetura.svg){#fig-rastreabilidade fig-cap="Representação da relação entre requisitos e arquitetura."}
--->
+
+Se o requisito mudar, a rastreabilidade permite localizar exatamente esses dois componentes como candidatos à revisão, sem depender de busca textual ou memória da equipe. Ballarín et al. (2023) reforçam que a manutenção desses vínculos é especialmente crítica porque os artefatos estão em constante mudança e a recuperação manual é propensa a erros [@ballarin2023influence, p. 705].
 
 ### Análise de impacto das mudanças
 
-<!-- PESSOA 2: explicar como a rastreabilidade permite identificar
-quais decisões, componentes e interfaces podem ser afetados
-quando um requisito é alterado.
+A rastreabilidade só se prova útil quando um requisito muda. Considere a alteração do REQ-04:
 
-Apresentar pelo menos um exemplo de alteração de requisito
-e suas possíveis consequências arquiteturais.
--->
+- Antes: "a disponibilidade deve ser respondida em até 2 segundos para 95% das consultas".
+- Depois: "a disponibilidade deve ser respondida em até 500 ms para 99% das consultas".
 
-<!-- ===================================================== -->
-<!-- PESSOA 3 - TÉCNICAS DE RASTREABILIDADE                  -->
-<!-- Responsável: métodos, links e ferramentas.              -->
-<!-- ===================================================== -->
+Com a matriz de rastreabilidade registrada (REQ-04 → DA-02, DA-04 → COMP-02, COMP-03, COMP-06 → TST-04), a equipe identifica exatamente quais elementos precisam ser revisados:
+
+- DA-02 (índice do repositório): pode precisar de ajuste no índice por profissional e horário.
+- DA-04 (cache): a política de invalidação pode ser insuficiente para 500 ms.
+- COMP-02 (Serviço de Disponibilidade): a estratégia de leitura precisa ser reavaliada.
+- COMP-03 (Repositório de Consultas): o índice pode não ser suficiente.
+- COMP-06 (Cache): o tempo de resposta do cache entra no orçamento de 500 ms.
+- TST-04: o limiar do teste de desempenho precisa ser atualizado.
+
+Sem a rastreabilidade, a equipe poderia alterar apenas o componente mais óbvio (COMP-02) e esquecer o cache ou o índice, resultando em um sistema que falha no novo requisito de desempenho. A volatilidade de requisitos é uma realidade em projetos de software, e a falta de visibilidade sobre essas dependências leva a retrabalho e degradação arquitetural [@volatilidade2019]. A rastreabilidade não elimina a mudança, mas torna seu custo visível e gerenciável.
 
 ## Técnicas para estabelecer e manter a rastreabilidade
 

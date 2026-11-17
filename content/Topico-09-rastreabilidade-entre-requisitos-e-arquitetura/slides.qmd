@@ -4,7 +4,7 @@ title: "Rastreabilidade entre Requisitos e Arquitetura"
 subtitle: "Relações, técnicas e acompanhamento das decisões arquiteturais"
 author:
   - "Nome do Integrante 1"
-  - "Nome do Integrante 2"
+  - "Antonio Carlos"
   - "Nome do Integrante 3"
   - "Nome do Integrante 4"
   - "Nome do Integrante 5"
@@ -171,77 +171,24 @@ essas relações são organizadas e mantidas na prática.
 
 ## Requisitos e arquitetura
 
-**PESSOA 2: desenvolver este slide.**
-
-Explicar por que os requisitos precisam estar relacionados
-aos modelos e elementos arquiteturais.
-
-- Requisitos representam necessidades do sistema.
-- A arquitetura organiza os elementos que atendem a essas necessidades.
-- Decisões arquiteturais precisam estar relacionadas aos requisitos correspondentes.
-
-Referência: Ballarín et al. (2023).
+- Requisitos funcionais: **o que** o sistema faz.
+- Atributos de qualidade (RNFs): **como** o sistema se comporta.
+- Decisões arquiteturais existem para **satisfazer** requisitos e atributos de qualidade.
+- Ballarín et al. (2023): a linguagem arquitetural escolhida influencia a capacidade de rastrear requisitos.
 
 ::: {.notes}
-Explicar como uma necessidade especificada pode influenciar
-a organização dos componentes e as decisões arquiteturais.
+Não basta listar requisitos. A arquitetura precisa materializar esses requisitos em componentes e decisões. A escolha da linguagem já começa a facilitar ou dificultar a rastreabilidade futura.
 :::
 
 ## Como os requisitos se conectam à arquitetura?
 
-**PESSOA 2: desenvolver este slide.**
+![](assets/imagens/rastreabilidade-requisitos-arquitetura.svg){fig-align="center" height="200px"}
 
-Criar um diagrama autoral que represente os relacionamentos.
-
-Exemplo inicial:
-
-```text
-REQ-01: Autenticação de usuários
-                |
-                v
-DEC-01: Utilizar autenticação centralizada
-                |
-                v
-        Serviço de Autenticação
-                |
-                v
-       Componente de Login
-```
-
-Explicar como cada elemento está relacionado ao requisito.
+- **REQ-04 → DA-04**: a decisão existe para satisfazer o atributo de qualidade.
+- **DA-04 → COMP-02 / COMP-06**: a decisão se materializa nesses componentes.
 
 ::: {.notes}
-Não basta apresentar o diagrama. Explicar o significado de cada ligação
-e como ela ajuda a compreender a arquitetura.
-:::
-
-## Análise de impacto das mudanças
-
-**PESSOA 2: desenvolver este slide.**
-
-Apresentar um cenário de alteração:
-
-- Um requisito de segurança é modificado.
-- O requisito está relacionado a uma decisão arquitetural.
-- A decisão está relacionada a determinados componentes.
-- A rastreabilidade permite identificar quais elementos precisam ser revisados.
-
-```text
-Requisito alterado
-        |
-        v
-Decisão arquitetural
-        |
-        v
-Componentes afetados
-        |
-        v
-Revisão e atualização
-```
-
-::: {.notes}
-Explicar como os relacionamentos ajudam a localizar os elementos
-que podem ser afetados por uma mudança.
+Explique que a seta não é decorativa. "Por que o cache existe?" → por causa de DA-04. "Por que DA-04 existe?" → por causa de REQ-04. A rastreabilidade é a cadeia de respostas a essas perguntas.
 :::
 
 <!-- ================================================== -->
