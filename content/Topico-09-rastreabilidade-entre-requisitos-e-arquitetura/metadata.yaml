@@ -2,12 +2,13 @@
 # Este arquivo também alimenta a indexação por ferramentas de IA.
 
 numero: "09"
-slug: "modelo"
-titulo: "Tópico modelo"
-subtitulo: "Estrutura e profundidade esperadas de uma contribuição"
+slug: "rastreabilidade-entre-requisitos-e-arquitetura"
+titulo: "Rastreabilidade entre requisitos e arquitetura"
+subtitulo: "Relações, técnicas e acompanhamento das decisões arquiteturais"
 resumo: >-
-  Descreva o tópico em 2 ou 3 frases, como um abstract. Este texto aparece no
-  cartão da home e nos metadados Open Graph.
+  Apresenta como relacionar requisitos, atributos de qualidade, decisões,
+  componentes e testes. Inclui um exemplo executável de uma clínica e uma
+  análise de impacto para uma mudança de desempenho.
 
 # Um tópico pode ter vários autores — liste um item por pessoa, na ordem em que
 # devem ser creditados. Todos entram no crédito, na citação e na lista de
@@ -34,7 +35,7 @@ autores:
     github: ""
     orcid: ""
 
-status: "modelo"        # rascunho | em-revisao | publicado | modelo
+status: "em-revisao"        # rascunho | em-revisao | publicado | modelo
 data_criacao: "2026-11-18"
 ultima_revisao: "2026-08-30"
 revisado_por:
@@ -43,12 +44,12 @@ revisado_por:
 
 # Estrutura pedagógica
 competencias:
-  - "Descreva em forma de verbo + objeto o que o leitor consegue fazer depois"
-  - "Ex: avaliar quando a decomposição em camadas prejudica desempenho"
-nivel_bloom: ["compreender", "analisar"]   # lembrar|compreender|aplicar|analisar|avaliar|criar
+  - "Construir uma matriz de rastreabilidade entre requisitos e arquitetura"
+  - "Analisar o impacto arquitetural de uma mudança de requisito"
+nivel_bloom: ["compreender", "aplicar", "analisar"]   # lembrar|compreender|aplicar|analisar|avaliar|criar
 pre_requisitos: []                          # slugs de outros tópicos
 topicos_relacionados: []
-palavras_chave: ["palavra-chave", "keyword em inglês"]
+palavras_chave: ["rastreabilidade", "requisitos", "arquitetura de software", "análise de impacto"]
 
 # Formatos entregues — o CI verifica a existência do que está marcado como true
 formatos:
