@@ -246,6 +246,11 @@ sua utilidade no contexto do tema.
 
 ## Exemplo aplicado
 
+Este exemplo usa uma clínica ambulatorial que precisa organizar o agendamento
+de consultas. O mesmo conjunto de IDs, nomes e relações aparece no
+[`notebook.ipynb`](notebook.ipynb), para que a matriz possa ser executada e
+consultada sem uma tradução entre o texto e o código.
+
 <!-- PESSOA 4: desenvolver esta seção.
 
 Escolher um sistema simples para demonstrar rastreabilidade.
@@ -257,6 +262,38 @@ O exemplo precisa ser o mesmo utilizado no notebook.
 
 ### Contextualização do sistema
 
+O sistema da clínica recebe pedidos de consulta, verifica a disponibilidade do
+profissional, confirma o horário e envia uma notificação ao paciente. O recorte
+é pequeno, mas contém requisitos funcionais e não funcionais com impactos
+arquiteturais diferentes.
+
+| ID | Tipo | Requisito | Atributo de qualidade |
+|---|---|---|---|
+| REQ-01 | Funcional | O paciente deve consultar horários disponíveis por especialidade. | Usabilidade |
+| REQ-02 | Funcional | O paciente deve solicitar uma consulta e receber confirmação. | Modificabilidade |
+| REQ-03 | Funcional | O sistema deve enviar confirmação por e-mail após o agendamento. | Interoperabilidade |
+| REQ-04 | Não funcional | A disponibilidade deve ser respondida em até 2 segundos para 95% das consultas. | Desempenho |
+| REQ-05 | Não funcional | Apenas pacientes autenticados podem criar, alterar ou cancelar consultas. | Segurança |
+
+As decisões arquiteturais e os componentes relacionados são:
+
+| ID | Decisão arquitetural | Componentes envolvidos |
+|---|---|---|
+| DA-01 | Separar o caso de uso de agenda em um serviço de aplicação com uma porta de disponibilidade. | COMP-01, COMP-02 |
+| DA-02 | Persistir consultas em um repositório relacional com índice por profissional e horário. | COMP-03 |
+| DA-03 | Publicar um evento `ConsultaAgendada` e delegar a notificação a um adaptador de e-mail. | COMP-04, COMP-05 |
+| DA-04 | Manter cache de leitura para horários disponíveis, invalidado após gravação. | COMP-02, COMP-06 |
+| DA-05 | Proteger a API com autenticação baseada em token e autorização por paciente. | COMP-01, COMP-06 |
+
+| ID | Componente |
+|---|---|
+| COMP-01 | API de Agendamento |
+| COMP-02 | Serviço de Disponibilidade |
+| COMP-03 | Repositório de Consultas |
+| COMP-04 | Publicador de Eventos |
+| COMP-05 | Adaptador de E-mail |
+| COMP-06 | Autenticação e Cache |
+
 <!-- PESSOA 4: apresentar o sistema escolhido,
 seu objetivo e os requisitos que serão acompanhados.
 
@@ -265,6 +302,32 @@ REQ-01, REQ-02 e REQ-03.
 -->
 
 ### Aplicação da rastreabilidade
+
+A matriz abaixo registra links explícitos de realização (`realiza`) entre cada
+requisito, decisão, componente e teste. `TST-01` a `TST-05` são testes de
+aceitação, e não apenas testes unitários: cada um verifica o comportamento que
+justifica a relação arquitetural.
+
+| Requisito | Decisão arquitetural | Componentes | Teste |
+|---|---|---|---|
+| REQ-01 | DA-01, DA-04 | COMP-01, COMP-02, COMP-06 | TST-01 |
+| REQ-02 | DA-01, DA-02 | COMP-01, COMP-02, COMP-03 | TST-02 |
+| REQ-03 | DA-03 | COMP-04, COMP-05 | TST-03 |
+| REQ-04 | DA-02, DA-04 | COMP-02, COMP-03, COMP-06 | TST-04 |
+| REQ-05 | DA-05 | COMP-01, COMP-06 | TST-05 |
+
+| ID | Test de aceitação |
+|---|---|
+| TST-01 | Para uma especialidade com horários cadastrados, a consulta retorna os horários disponíveis. |
+| TST-02 | Ao solicitar um horário livre, o sistema grava a consulta e retorna confirmação. |
+| TST-03 | Após uma consulta confirmada, o evento é publicado e o e-mail é enviado. |
+| TST-04 | Em uma carga representativa, pelo menos 95% das consultas de disponibilidade terminam em até 2 segundos. |
+| TST-05 | Uma requisição sem token válido é rejeitada e uma requisição autenticada do próprio paciente é autorizada. |
+
+O grafo correspondente é: `REQ-02 -> DA-01 -> COMP-02 -> TST-02`. A consulta
+para frente começa em `REQ-02` e alcança os elementos que podem mudar; a
+consulta para trás começa em `COMP-02` e mostra que sua existência é justificada
+por `REQ-01`, `REQ-02` e `REQ-04`.
 
 <!-- PESSOA 4: demonstrar passo a passo:
 
@@ -280,6 +343,20 @@ Utilizar tabelas e diagramas para facilitar a compreensão.
 
 ### Cenário de alteração de requisito
 
+O cliente altera `REQ-04`: a disponibilidade, antes respondida em até 2
+segundos para 95% das consultas, passa a ser respondida em até 500 ms para
+99% das consultas. O ID é preservado porque o requisito evoluiu.
+
+A consulta de impacto percorre `REQ-04 -> DA-02, DA-04 -> COMP-02, COMP-03,
+COMP-06 -> TST-04`. A análise deve revisar o índice do `COMP-03`, a política
+de invalidação do cache no `COMP-06`, a estratégia de leitura do `COMP-02` e o
+limiar medido pelo `TST-04`. `DA-01`, `COMP-01` e `TST-02` não precisam ser
+alterados diretamente, embora continuem sendo pontos de regressão.
+
+Sem a matriz, a equipe poderia esquecer o cache ou o teste de desempenho ao
+procurar apenas referências textuais. Com os links, a mudança produz um
+conjunto de impacto verificável.
+
 <!-- PESSOA 4: demonstrar uma situação em que um requisito
 é alterado e explicar como os relacionamentos permitem
 identificar os elementos arquiteturais afetados.
@@ -288,6 +365,11 @@ Comparar a situação com e sem rastreabilidade.
 -->
 
 ### Demonstração executável
+
+O notebook cria os mesmos registros, monta a matriz, consulta rastreabilidade
+para frente e para trás e simula a alteração de `REQ-04`. Ele verifica com
+`assert` que os impactos encontrados são exatamente `DA-02`, `DA-04`,
+`COMP-02`, `COMP-03`, `COMP-06` e `TST-04`.
 
 <!-- PESSOA 4: desenvolver o notebook.ipynb.
 
