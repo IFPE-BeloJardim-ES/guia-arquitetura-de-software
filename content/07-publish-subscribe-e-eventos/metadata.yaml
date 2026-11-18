@@ -1,0 +1,108 @@
+numero: "07"
+slug: "publish-subscribe-e-eventos"
+titulo: "Publish-Subscribe e Arquitetura Baseada em Eventos"
+subtitulo: "Componentes que reagem a fatos sem precisar saber quem os anunciou"
+resumo: >-
+  Publish-subscribe é a forma de comunicação em que um componente publica um
+  evento e quem assinou aquele tipo de evento é avisado, sem que o publicador
+  saiba quem são os assinantes. A arquitetura baseada em eventos organiza o
+  sistema inteiro em torno desse mecanismo. O tópico mostra, com uma loja virtual
+  executável, o que se ganha em extensibilidade, tempo de resposta e isolamento
+  de falhas, e o que se paga em consistência eventual, entregas duplicadas,
+  ordem trocada e rastreabilidade.
+
+autores:
+  - nome: "Antonio Mário Jesus Vidal Leite"
+    grupo: "Grupo 3"
+    github: "amjvidal"
+    orcid: ""
+  - nome: "David Soares da Silva"
+    grupo: "Grupo 3"
+    github: "DavidSoares18"
+    orcid: ""
+  - nome: "Ian Képler dos Santos Araújo"
+    grupo: "Grupo 3"
+    github: "iankepler5"
+    orcid: ""
+  - nome: "João Gabriel Marcos da Silva"
+    grupo: "Grupo 3"
+    github: "Jgabriel1800"
+    orcid: ""
+  - nome: "João Lucas da Silva Soares Oliveira"
+    grupo: "Grupo 3"
+    github: "jwaoluckas"
+    orcid: ""
+  - nome: "Lucas Matheus Elias Silva Teixeira dos Santos"
+    grupo: "Grupo 3"
+    github: "teixeiralucs"
+    orcid: ""
+
+status: "em-revisao"
+data_criacao: "2026-11-17"
+ultima_revisao: "2026-11-17"
+revisado_por: []
+
+competencias:
+  - "Explicar o papel de evento, publicador, broker e assinante e as restrições que o estilo impõe a cada um"
+  - "Distinguir publish-subscribe do padrão Observer usando os desacoplamentos de espaço, tempo e sincronização"
+  - "Decidir o que deve ser publicado como evento e o que deve continuar como chamada direta"
+  - "Proteger assinantes contra entrega duplicada e fora de ordem com receptor idempotente e versão do evento"
+  - "Avaliar os trade-offs do estilo em extensibilidade, tempo de resposta, consistência e rastreabilidade"
+nivel_bloom: ["compreender", "aplicar", "analisar", "avaliar"]
+pre_requisitos: ["cliente-servidor", "microsservicos"]
+topicos_relacionados: ["03-mvc", "microsservicos"]
+palavras_chave:
+  - "publish-subscribe"
+  - "pub/sub"
+  - "arquitetura baseada em eventos"
+  - "event-driven architecture"
+  - "invocação implícita"
+  - "broker de mensagens"
+  - "consistência eventual"
+  - "receptor idempotente"
+  - "dead letter"
+
+formatos:
+  texto: true
+  notebook:
+    entregue: true
+    colab_url: "https://colab.research.google.com/github/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/07-publish-subscribe-e-eventos/notebook.ipynb"
+  audio_notebooklm:
+    entregue: false
+    arquivo: ""
+    url: ""
+    duracao_min: 0
+    transcricao: ""
+  gem_gemini:
+    entregue: false
+    url: ""
+    instrucoes: |
+      Você é tutor do tópico "Publish-Subscribe e Arquitetura Baseada em Eventos"
+      do Guia Aberto de Arquitetura de Software. Sua base de conhecimento é
+      exclusivamente o texto do tópico (index.qmd), o notebook e as referências
+      listadas nele.
+
+      Regras:
+      - Responda em português do Brasil, de forma direta e didática.
+      - Use o exemplo da loja virtual do texto (PedidoCriado, notificação,
+        fidelidade, painel, nota fiscal) sempre que ele ajudar a explicar.
+      - Quando afirmar algo técnico, diga de qual referência do tópico isso vem.
+      - Se a pergunta não for coberta pelo material, diga isso claramente em vez
+        de improvisar.
+      - Não dê a resposta pronta dos exercícios da seção "Para pensar" do
+        notebook; faça perguntas que levem o aluno a chegar nela.
+  slides:
+    entregue: true
+    num_slides: 19
+    arquivo: "slides.qmd"
+  video:
+    entregue: false
+    url: ""
+  podcast:
+    entregue: false
+    url: ""
+  mcp:
+    entregue: false
+    url: ""
+
+licenca: "CC-BY-NC-4.0"

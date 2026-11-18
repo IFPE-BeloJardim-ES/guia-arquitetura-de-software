@@ -56,6 +56,18 @@ domínio, comunicação entre serviços, propriedade de dados e custos da distri
 
 **Formatos:** [texto](content/05-microsservicos/index.qmd) · [jupyter notebook](content/05-microsservicos/notebook.ipynb) · [áudio](content/05-microsservicos/assets/audio-microsservicos.wav) · [gem](https://gemini.google.com/gem/1xG1FvWU5t9C_gJmn_z_Z0l1q2GqTHo5Y?usp=sharing) · [slides](content/05-microsservicos/slides.qmd)
 
+### [07 — Publish-Subscribe e Arquitetura Baseada em Eventos](content/07-publish-subscribe-e-eventos/index.qmd)
+
+Componentes que reagem a eventos sem saber quem os publicou: o que se ganha em
+extensibilidade e isolamento de falhas, e o que se paga em consistência eventual,
+entregas duplicadas e rastreabilidade.
+
+**Autores:** Antonio Mário Jesus Vidal Leite, David Soares da Silva, Ian Képler dos
+Santos Araújo, João Gabriel Marcos da Silva, João Lucas da Silva Soares Oliveira e
+Lucas Matheus Elias Silva Teixeira dos Santos.
+
+**Formatos:** [texto](content/07-publish-subscribe-e-eventos/index.qmd) · [jupyter notebook](content/07-publish-subscribe-e-eventos/notebook.ipynb) · [slides](content/07-publish-subscribe-e-eventos/slides.qmd)
+
 ## O que cada tópico entrega
 
 | Formato | O que é |
@@ -70,4 +82,3 @@ domínio, comunicação entre serviços, propriedade de dados e custos da distri
 ## Como este site é feito
 
 O conteúdo é escrito uma vez, em Markdown, e os formatos derivam da mesma fonte. As citações `[1]`, `[2]` são geradas a partir de arquivos BibTeX, então nunca saem de sincronia com a bibliografia.
-
