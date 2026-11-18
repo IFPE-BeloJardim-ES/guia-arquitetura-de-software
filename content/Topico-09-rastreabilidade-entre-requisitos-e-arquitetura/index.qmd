@@ -25,7 +25,7 @@ keywords: ["rastreabilidade", "requisitos", "arquitetura de software", "decisõe
 <dd>Engenharia de requisitos e fundamentos de arquitetura de software.</dd>
 <dt>Formatos</dt>
 <dd>
-[texto]{.formato} [notebook](notebook.ipynb){.formato} [áudio](assets/audio/){.formato} [gem](GEM_GEMINI.md){.formato} [slides](slides.qmd){.formato}
+[texto]{.formato} [notebook](notebook.ipynb){.formato} [slides](slides.qmd){.formato} [áudio pendente]{.formato} [Gem pendente]{.formato}
 </dd>
 </dl>
 :::
@@ -454,49 +454,33 @@ O texto e o notebook devem utilizar o mesmo exemplo, os mesmos identificadores e
 :::
 
 
+<!-- ===================================================== -->
+<!-- PESSOA 5 - TRADE-OFFS, ADOÇÃO E CONCLUSÃO              -->
+<!-- ===================================================== -->
+
+## Trade-offs da rastreabilidade
+
+A rastreabilidade ajuda a responder o que pode ser afetado por uma mudança e por que um elemento arquitetural existe. Esse benefício depende de manter as relações confiáveis: uma matriz desatualizada pode orientar a equipe para o conjunto errado de artefatos. Estudos empíricos associam a rastreabilidade à corretude e à manutenibilidade, enquanto o trabalho de criar e manter vínculos compõe seu custo [@charalampidou2021empirical; @ingram2012cost]. Em um experimento controlado com tarefas de manutenção em dois projetos, participantes com rastreabilidade concluíram as tarefas mais rapidamente e com mais acerto; o resultado reforça seu benefício potencial, sem medir o caso da clínica [@egyed2015developers].
+
 ### Comparação dos principais trade-offs
 
+{{< include _trade-offs.md >}}
 
+Na clínica, a alteração de `REQ-04` de 2 segundos em 95% das consultas para 500 ms em 99% mostra os dois lados. A matriz localiza `DA-02`, `DA-04`, `COMP-02`, `COMP-03`, `COMP-06` e `TST-04` como candidatos à revisão. A equipe ainda precisa verificar quais decisões e componentes exigem mudança, atualizar o critério de `TST-04` e confirmar se os vínculos continuam válidos. Como `COMP-02` também aparece em `REQ-01` e `REQ-02`, mudanças nele podem pedir regressão de `TST-01` e `TST-02`. A matriz reduz a busca inicial, mas não substitui a análise técnica.
+
+O estudo de Ballarín et al. (2023) investiga a recuperação automatizada de vínculos entre requisitos e elementos de modelos arquiteturais. A qualidade dos resultados variou conforme a linguagem arquitetural no caso industrial estudado; por isso, sugestões por similaridade devem ser tratadas como candidatas à validação, antes de entrar na matriz do projeto [@ballarin2023influence]. Essa é uma decisão de uso para o exemplo da clínica, não uma avaliação da clínica realizada pelos autores.
 
 ## Quando utilizar rastreabilidade
 
-<!-- PESSOA 5: desenvolver esta seção.
+Vale registrar vínculos quando uma mudança em um requisito pode alcançar vários componentes ou quando o mesmo componente atende a requisitos diferentes. Também é útil quando a equipe precisa justificar decisões, verificar cobertura por testes ou prestar contas de como um requisito foi realizado. No exemplo, `COMP-02` participa de três requisitos; a consulta reversa torna visível essa dependência antes de alterar o serviço.
 
-Apresentar critérios objetivos para decidir quando
-a rastreabilidade é importante.
+Para um projeto pequeno, uma matriz enxuta pode bastar: uma linha por requisito, IDs estáveis e colunas para decisões, componentes e teste, como no notebook. A equipe deve definir quem atualiza a linha após cada mudança e revisar os vínculos na mesma revisão do artefato alterado. Se uma coluna não responde a uma pergunta real de manutenção, seu custo pode superar o benefício. Conforme crescem os artefatos e as consultas, ferramentas de busca e verificação podem reduzir o trabalho manual [@ingram2012cost; @gotel2012traceability].
 
-### Considere utilizar quando:
-- Existem requisitos complexos ou interdependentes.
-- Mudanças podem afetar diversos componentes.
-- É necessário justificar decisões arquiteturais.
-- O sistema exige auditoria ou comprovação de requisitos.
-
-### Avalie a necessidade quando:
-- O projeto possui escopo muito pequeno.
-- A quantidade de artefatos é reduzida.
-- O custo de manutenção dos relacionamentos
-  pode superar seus benefícios.
-
-### Sinais de problemas:
-- Links desatualizados.
-- Requisitos sem elementos relacionados.
-- Decisões arquiteturais sem justificativa.
-- Alterações sem análise de impacto.
--->
+Sinais de degradação são links para IDs inexistentes ou versões antigas, requisitos sem decisão ou teste associado, decisões sem justificativa e alterações aprovadas sem consulta de impacto. Esses sinais pedem revisão da matriz e do processo de atualização antes que a equipe confie novamente nas respostas [@gotel2012traceability].
 
 ## Conclusão
 
-<!-- PESSOA 5: elaborar a conclusão após receber as contribuições.
-
-Retomar:
-- Importância da rastreabilidade.
-- Relação entre requisitos e arquitetura.
-- Benefícios para manutenção e evolução.
-- Principais desafios.
-- Importância de escolher técnicas adequadas ao contexto.
-
-Não introduzir conceitos novos nesta seção.
--->
+Relacionar requisitos, decisões, componentes e testes permite localizar candidatos à revisão quando o sistema evolui. No caso da clínica, a mudança de `REQ-04` mostra o valor de consultar a matriz para frente e depois verificar outros requisitos ligados aos componentes encontrados. O resultado só é útil se os vínculos tiverem IDs compreensíveis, justificativa e manutenção após mudanças. A escolha entre uma matriz simples e apoio automatizado deve acompanhar a quantidade de artefatos, a frequência das alterações e as perguntas que a equipe precisa responder.
 
 <!-- ===================================================== -->
 <!-- PESSOA 5 - INTEGRAÇÃO DOS MATERIAIS                     -->
@@ -508,25 +492,12 @@ Não introduzir conceitos novos nesta seção.
 
 A apresentação está disponível em [`slides.qmd`](slides.qmd).
 
-Os slides devem apresentar os mesmos conceitos, diagramas e exemplos desenvolvidos no texto e no notebook.
-
-A Pessoa 5 ficará responsável pela organização e revisão da apresentação, garantindo a participação dos cinco integrantes.
+Os slides retomam os conceitos e o exemplo de agendamento usados no texto e no notebook. Cada integrante deve revisar suas próprias notas de fala antes da apresentação.
 :::
 
 ## Referências
 
 As referências são geradas automaticamente a partir de `referencias.bib`.
-
-<!-- PESSOA 5: integrar as referências enviadas pelos demais integrantes.
-
-Cada pessoa deve informar:
-- Autor e ano.
-- Título da publicação.
-- DOI ou URL, quando disponível.
-- Identificador da citação utilizado no texto.
-
-Não remover referências utilizadas por outros integrantes.
--->
 
 ::: {#refs}
 :::
@@ -534,5 +505,5 @@ Não remover referências utilizadas por outros integrantes.
 ::: {.como-citar}
 **Como citar este tópico**
 
-[Nome dos cinco autores, na ordem definida no metadata.yaml]. "Rastreabilidade entre requisitos e arquitetura". *Guia Aberto de Arquitetura de Software*, 2026. Licenciado sob CC BY-NC 4.0.
+Agdo José Samuel Sousa de oliveira, Antonio Carlos Verissimo de Souza, Pedro Henrique Borges Silva, Felipe dos Santos Silva e Antonio Pedro Guimarães Santos de Macedo. "Rastreabilidade entre requisitos e arquitetura". *Guia Aberto de Arquitetura de Software*, 2026. Licenciado sob CC BY-NC 4.0.
 :::

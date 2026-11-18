@@ -76,7 +76,7 @@ formatos:
       coberta pelo material, diga isso em vez de improvisar."
   slides:
     entregue: true
-    num_slides: 16
+    num_slides: 18
   # opcionais
   video:
     entregue: false

@@ -1,0 +1,26 @@
+.reveal #title-slide h1 {
+  font-size: 2em;
+}
+
+.reveal #title-slide .quarto-title-authors {
+  display: block;
+  margin-top: 1.2em;
+  font-size: 0.65em;
+  line-height: 1.4;
+}
+
+.reveal #title-slide .quarto-title-author,
+.reveal #title-slide .quarto-title-author-name {
+  display: inline;
+  width: auto;
+  margin: 0;
+}
+
+.reveal #title-slide .quarto-title-author:not(:last-child)::after {
+  content: " · ";
+}
+
+.reveal #title-slide .date {
+  margin-top: 1.2em;
+  font-size: 0.65em;
+}
