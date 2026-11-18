@@ -1,0 +1,252 @@
+---
+title: "Transações Distribuídas: 2PC e Saga"
+subtitle: "A dança caótica do \"ou tudo, ou nada\""
+author:
+  - "Thiago Leal"
+  - "Emerson Silva"
+  - "José Victor"
+  - "Randson Bredley"
+  - "Thiago Patriota"
+  - "Gustavo Henrique"
+date: 2026-11-17
+date-modified: last-modified
+bibliography: referencias.bib
+format:
+  revealjs:
+    theme: black
+    lang: pt-BR
+    slide-number: c/t
+    slide-level: 2
+    incremental: false
+    code-overflow: wrap
+    link-external-newwindow: true
+    footer: "Guia Aberto de Arquitetura de Software · CC BY-NC 4.0"
+    transition: slide
+    highlight-style: dracula
+    css: slides.css
+---
+
+## Roteiro
+
+1. O problema antes da solução
+2. Definição: transação distribuída e BASE vs ACID
+3. Estrutura do 2PC (o General Rigoroso) e o que ele proíbe
+4. Estrutura da Saga (a Bailarina Flexível) e o que ela proíbe
+5. Exemplo aplicado: compra do tênis e violação sem compensação
+6. Consequência mensurável e dados empíricos sob contenção
+7. Trade-offs e critérios de decisão
+
+## O problema antes da solução
+
+No **monólito**, um único banco relacional resolve tudo com ACID (`BEGIN TRANSACTION` / `ROLLBACK`).
+
+Nos **microsserviços**, cada serviço é dono do seu próprio banco:
+
+- **Estoque** guarda os itens numa ponta
+- **Pagamento** processa o cartão na outra
+- **Frete** calcula a entrega em um terceiro serviço
+
+> **O desafio:** como garantir que o estoque só seja baixado se o pagamento aprovar, sem um banco único para dar `ROLLBACK`? [@fan2020twopc, p. 1]
+
+::: {.notes}
+Abrir pela analogia do grupo de amigos comprando ingressos e transporte via PIX: se a internet de um cai na hora de pagar, todos precisam cancelar para ninguém ficar sozinho na porta do evento.
+:::
+
+## Definição do conceito
+
+> **Transação distribuída** é uma operação de negócio que altera dados em vários serviços independentes e precisa terminar com todos de acordo: **ou todas as mudanças valem, ou nenhuma vale** [@fan2020twopc, p. 1].
+
+Duas famílias disputam o problema:
+
+- **2PC (*Two-Phase Commit*)**: impõe o acordo na hora, com travas distribuídas
+- **Saga**: executa passos locais e desfaz depois o que deu errado [@garciamolina1987sagas]
+
+## ACID vs. BASE no mundo distribuído
+
+- **ACID (2PC clássico)**: garante consistência forte, mas segura travas (*locks*) do começo ao fim e colapsa sob alta disputa [@fan2020twopc, p. 2]
+- **BASE (Saga / aplicações em nuvem)**: troca consistência imediata por **alta disponibilidade** e **consistência eventual** [@fan2020twopc, p. 3]
+
+| Abordagem | Metáfora | Mecanismo central |
+|---|---|---|
+| **2PC** | General Rigoroso | Coordenador central + travas em duas fases |
+| **Saga** | Bailarina Flexível | Transações locais + compensação inversa |
+
+## 2PC: o General Rigoroso
+
+Dois papéis: **Coordenador** (o General) e **Participantes** (os serviços).
+
+1. **Fase 1 — *Prepare* (votação):** o coordenador consulta todos; cada serviço **trava seus recursos** e vota *sim* ou *não*
+2. **Fase 2 — *Commit* (execução):** se todos votam *sim*, efetivam; se um vota *não* (ou some), todos fazem *abort*
+
+- **Calcanhar de Aquiles**: basta um participante lento para segurar as travas de todo o grupo
+
+::: {.notes}
+No 2PC, o rigor do monolito é forçado sobre a rede: quem votou "sim" fica bloqueado aguardando o veredito final do coordenador.
+:::
+
+## Protocolo 2PC em ação {.smaller}
+
+```{mermaid}
+%%| fig-height: 4.6
+%%{init: {"theme": "light", "sequence": {"mirrorActors": false, "actorMargin": 35, "messageMargin": 20, "boxMargin": 6, "noteMargin": 6, "width": 125, "height": 36}, "themeVariables": {"primaryTextColor": "#ffffff", "textColor": "#ffffff", "actorBkg": "#1e293b", "actorBorder": "#38bdf8", "actorTextColor": "#ffffff", "signalColor": "#38bdf8", "signalTextColor": "#ffffff", "noteBkgColor": "#ffffff", "noteBorderColor": "#818cf8", "noteTextColor": "#ffffff", "labelBoxBkgColor": "#1e293b", "labelBoxBorderColor": "#38bdf8", "labelTextColor": "#ffffff", "edgeLabelBackground": "transparent"}} }%%
+sequenceDiagram
+    participant C as Coordenador
+    participant E as Estoque
+    participant P as Pagamento
+    participant F as Frete
+    Note over C,F: Fase 1 — Prepare (recursos travados)
+    C->>E: reservar tênis?
+    C->>P: cobrar cartão?
+    C->>F: gerar etiqueta?
+    E-->>C: sim
+    P-->>C: sim
+    F-->>C: sim
+    Note over C,F: Fase 2 — Commit (travas liberadas ao final)
+    C->>E: efetive
+    C->>P: efetive
+    C->>F: efetive
+```
+
+## O que o 2PC proíbe
+
+Restrições estritas do protocolo:
+
+- **Efetivar ou liberar a trava antes da decisão**: quem votou "sim" aguarda bloqueado o veredito do coordenador
+- **Decidir sem todos os votos**: um único "não" ou um participante silencioso derruba a transação inteira
+- **Ignorar latência externa**: qualquer atraso em um serviço propaga bloqueio para toda a cadeia
+
+## Saga: a Bailarina Flexível
+
+Em vez de travar tudo de uma vez, divide a operação em **transações locais** (`T1`, `T2`, `T3`), cada uma com sua **compensação** (`C1`, `C2`) [@garciamolina1987sagas; @richardson2018microservices, cap. 4]:
+
+- **Coreografia**: serviços reagem a eventos dos demais, sem chefe central
+- **Orquestração**: um orquestrador central dita os passos e comanda o resgate em caso de falha
+
+::: {.notes}
+Se o último passo falha, a Saga executa as compensações dos passos já confirmados em ordem inversa.
+:::
+
+## Fluxo da Saga e compensação
+
+```{mermaid}
+%%{init: {"theme": "dark", "themeVariables": {"edgeLabelBackground": "transparent", "labelTextColor": "#ffffff"}} }%%
+flowchart LR
+    T1["T1 Estoque<br/><i>reserva o tênis</i>"] -->|evento| T2["T2 Pagamento<br/><i>cobra o cartão</i>"]
+    T2 -->|evento| T3["T3 Frete<br/><i>gera a etiqueta</i>"]
+    T3 -.->|falhou| C2["C2 Pagamento<br/><i>estorna valor</i>"]
+    C2 -.->|ordem inversa| C1["C1 Estoque<br/><i>devolve à prateleira</i>"]
+
+    style T1 fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#f8fafc
+    style T2 fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#f8fafc
+    style T3 fill:#1e293b,stroke:#818cf8,stroke-width:2px,color:#f8fafc
+    style C2 fill:#4c0519,stroke:#fb7185,stroke-width:2px,color:#ffe4e6
+    style C1 fill:#4c0519,stroke:#fb7185,stroke-width:2px,color:#ffe4e6
+    linkStyle 3,4 stroke:#fb7185,stroke-width:3px,stroke-dasharray:5 4
+```
+
+- **Linhas contínuas**: caminho feliz com travas curtas e locais
+- **Linhas tracejadas**: compensação em ordem inversa quando o Frete falha
+
+## O que a Saga proíbe
+
+- **Passo sem compensação definida**: todo efeito externo precisa de seu "desfazer" antes de ir para produção
+- **Compensação não idempotente**: repetir a chamada não pode estornar duas vezes; usa-se o ID da transação para descartar duplicatas [@fan2020twopc, p. 10]
+- **Mexer no banco alheio**: cada transação local só altera os dados do seu serviço
+- **Tratar estado intermediário como definitivo**: "reservado" ainda não é "vendido"
+
+## Exemplo aplicado: compra do tênis {.smaller}
+
+Três serviços: **Estoque** $\rightarrow$ **Pagamento** $\rightarrow$ **Frete** (elo lento e instável). Implementação correta em Python:
+
+```python
+PASSOS = [(reservar, devolver), (cobrar, estornar), (etiquetar, None)]
+
+def saga(loja, pedido, compensar=True):
+    feitos = []                                  # compensações dos passos concluídos
+    try:
+        for passo, desfazer in PASSOS:
+            passo(loja, pedido)
+            feitos.append(desfazer)
+    except Falha:
+        if compensar:
+            for desfazer in reversed(feitos):    # desfaz em ordem inversa
+                desfazer(loja, pedido)
+        return "cancelado"
+    return "confirmado"
+```
+
+## A violação na prática: Saga sem compensação
+
+O que ocorre ao rodar `saga(loja, pedido, compensar=False)`?
+
+- O serviço de **Frete** falha e o pedido retorna `"cancelado"`
+- Ninguém avisa o **Pagamento** para estornar nem o **Estoque** para devolver o tênis
+- Um teste simples (`assert status == "cancelado"`) **não detecta o erro**
+- **Resultado**: **pedidos zumbis** — cliente cobrado sem envio e estoque preso
+
+## Consequência mensurável (simulação) {.smaller}
+
+Simulação de **200 pedidos** com falha no Frete em **60** deles:
+
+| Versão | Pedidos confirmados | Estoque preso | Cobrado a mais |
+|---|---|---|---|
+| **Saga com compensação** | 140 | 0 | R$ 0 |
+| **Saga sem compensação** | 140 | **60** | **R$ 6.000** |
+| **2PC** | 140 | 0 | R$ 0 |
+
+Disputa concorrente pelo **mesmo tênis em promoção**:
+
+| Pedidos concorrentes | 2PC (pedidos/s) | Saga (pedidos/s) | 2PC (latência) | Saga (latência) |
+|---|---|---|---|---|
+| 1 | 6,2 | 9,5 | 160 ms | 106 ms |
+| 5 | 6,2 | 43,9 | 749 ms | 111 ms |
+| 20 | 6,2 | **115,6** | 2.196 ms | **138 ms** |
+
+## Evidência empírica sob contenção {.smaller}
+
+Dados reais medidos por Fan et al. [@fan2020twopc, pp. 15-18] em e-commerce (pedido, estoque e conta):
+
+| Threads simultâneas | Banco local (ref.) | 2PC | 2PC* (SAOL) | Commit rate (2PC) |
+|---|---|---|---|---|
+| 50 | 843,9 TPS | 603,4 TPS | 703,7 TPS | 0,98 |
+| 100 | 838,1 TPS | 390,6 TPS | 670,3 TPS | 0,89 |
+| 300 | 811,5 TPS | 92,6 TPS | 401,5 TPS | 0,31 |
+| 500 | 769,3 TPS | **12,7 TPS** | **304,6 TPS** | **0,03** |
+
+- Sob alta disputa, o **2PC** tradicional bloqueia *threads* e colapsa (`0,03` de *commit*)
+- O **2PC\*** substitui travas síncronas por bloqueio otimista assíncrono secundário (**SAOL**) e compensação assíncrona
+
+## Balanço de trade-offs {.smaller}
+
+| Atributo (e a dimensão) | 2PC | Saga | Por quê |
+|---|---|---|---|
+| **Consistência** (concordância imediata) | Favorecida | Comprometida | 2PC é atômico; Saga tem janela eventual entre passos e compensações [@fan2020twopc, p. 3; @richardson2018microservices, cap. 4] |
+| **Vazão sob contenção** (disputa nos mesmos dados) | Comprometida | Favorecida | 2PC segura travas até a decisão; Saga usa travas locais curtas |
+| **Latência** (tempo de resposta) | Comprometida | Depende da carga | No 2PC, segue o participante mais lento e cresce com a disputa |
+| **Disponibilidade** (serviço lento ou fora) | Comprometida | Favorecida | Participante lerdo trava o 2PC [@fan2020twopc, p. 2]; na Saga, falha vira compensação |
+| **Esforço de código** (por operação) | Favorecido | Comprometido | 2PC fica no *middleware*; Saga exige escrever e tornar idempotente cada compensação |
+
+## Critérios de decisão: quando usar
+
+- **Use 2PC (ou variação otimizada) quando:**
+  - Todos os serviços suportam o protocolo na mesma rede de baixa latência
+  - A cadeia é curta (2 ou 3 serviços) e a disputa pelos mesmos dados é baixa (até ~50 *threads*)
+  - O negócio proíbe exibir qualquer estado intermediário (ex.: sistema financeiro fechado)
+
+- **Use Saga quando:**
+  - Cada passo possui uma compensação clara e idempotente
+  - Há APIs externas ou lentas na cadeia (Correios, *gateways* de pagamento)
+  - O negócio aceita consistência eventual e há alta concorrência nos mesmos itens
+
+## Critérios de decisão: quando evitar e sinais de alerta
+
+- **Evite 2PC** com participantes externos fora do seu controle, cadeias longas ou alta contenção (taxa de *commit* cai para `0,03` em 500 *threads*) [@fan2020twopc, pp. 15-18]
+- **Evite Saga** quando há passos irreversíveis (ex.: e-mail enviado, transferência sem estorno) ou exigência legal de atomicidade imediata
+- **Sinais de escolha errada:**
+  - No 2PC: taxa de *commit* despenca com a carga e coordenador estoura *timeout*
+  - Na Saga: chamados de *"cobrado, mas sem pedido"* ou fila de compensações falhas crescendo
+
+## Referências {.smaller}
+
+::: {#refs}
+:::
