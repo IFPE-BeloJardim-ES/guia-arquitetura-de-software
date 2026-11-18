@@ -1,0 +1,146 @@
+---
+title: "Notações Arquiteturais"
+subtitle: "Guia de Arquitetura de Software"
+author: "Edson Cavalcante Valença & Matheus Emanuel"
+format: revealjs
+---
+
+## O Problema: Por que Padronizar Notações?
+
+- Diagramas informais ("caixas e setas") geram ambiguidade semântica
+- Diferentes públicos exigem diferentes recortes do mesmo sistema
+- Misturar negócio, código e infraestrutura em um único diagrama inviabiliza a leitura
+- **Necessidade:** Linguagens visuais com níveis claros de abstração e propósito definido
+
+---
+
+## Ponto de Vista vs. Visão (ISO/IEC/IEEE 42010)
+
+- **Ponto de Vista (*Viewpoint*):** Convenções, regras e público-alvo para tratar um tipo de preocupação arquitetural
+- **Visão (*View*):** A representação concreta de um sistema construída segundo um ponto de vista [@iso2022architecture]
+- Separação de preocupações reduz a sobrecarga cognitiva das equipes
+
+---
+
+## Modelo de Visões 4+1 (Kruchten)
+
+- Proposto por Philippe Kruchten para organizar decisões arquiteturais complexas [@kruchten1995architectural]
+- Divide a arquitetura em **4 visões técnicas** integradas por **cenários (+1)**
+- Cada visão responde a um grupo específico de interesses no projeto
+
+---
+
+## As 4 Visões Técnicas do Modelo 4+1
+
+- **Visão Lógica:** Abstrações do domínio, entidades e requisitos funcionais
+- **Visão de Desenvolvimento:** Organização estática de módulos, pacotes e repositórios
+- **Visão de Processos:** Concorrência, threads, sincronização e desempenho em execução
+- **Visão Física:** Mapeamento do software sobre servidores, nós e topologia de rede
+
+---
+
+## O "+1": O Papel dos Cenários
+
+- Casos de uso críticos que atravessam as quatro visões técnicas
+- Validam fluxos ponta a ponta antes e depois da implementação
+- Garantem coerência entre estrutura estática, execução concorrente e infraestrutura
+
+---
+
+## Visão Geral do Modelo 4+1
+
+```{mermaid}
+%%| label: fig-slides-4-mais-1
+%%| fig-cap: "Integração das quatro visões pelos cenários no Modelo 4+1."
+flowchart TD
+    VL["Visão Lógica"]
+    VD["Visão de Desenvolvimento"]
+    VP["Visão de Processos"]
+    VF["Visão Física"]
+    CEN["+1: Cenários Críticos"]
+
+    CEN <--> VL
+    CEN <--> VD
+    CEN <--> VP
+    CEN <--> VF
+```
+
+---
+
+## Modelo C4: Mapas com Zoom Arquitetural
+
+- Criado por Simon Brown para simplificar a comunicação visual de sistemas [@brown2018visualising]
+- Estrutura hierárquica em 4 níveis: **Contexto, Contêineres, Componentes e Código**
+- Ênfase em rótulos explícitos: nome, tipo, tecnologia e responsabilidade em cada elemento
+
+---
+
+## Níveis 1 e 2 do Modelo C4
+
+- **Nível 1 — Contexto do Sistema:** Foco nas *personas* e sistemas externos; ideal para públicos não técnicos
+- **Nível 2 — Contêineres:** Aplicações web, mobile, APIs, filas e bancos de dados implantáveis
+- Define fronteiras de execução, armazenamento e protocolos de comunicação
+
+---
+
+## Níveis 3 e 4 do Modelo C4
+
+- **Nível 3 — Componentes:** Agrupamentos lógicos internos a um contêiner (serviços, controladores, adaptadores)
+- **Nível 4 — Código:** Classes, interfaces e detalhes de implementação
+- **Boa prática:** Gerar o Nível 4 automaticamente via ferramentas, evitando manutenção manual
+
+---
+
+## Exemplo Estrutural no Modelo C4
+
+```{mermaid}
+%%| label: fig-slides-c4
+%%| fig-cap: "Representação de Contêineres e integrações no Modelo C4."
+flowchart LR
+    User(("Usuário\n[Pessoa]"))
+    SPA["Portal Web\n[React]"]
+    API["API Central\n[Node.js]"]
+    DB[("Banco de Dados\n[PostgreSQL]")]
+
+    User -->|"HTTPS"| SPA
+    SPA -->|"JSON / REST"| API
+    API -->|"SQL / TCP"| DB
+```
+
+---
+
+## Diagramas de Componentes (UML)
+
+- Foco em **modularidade, encapsulamento e substituibilidade** [@fowler2003uml]
+- Oculta a implementação interna atrás de contratos explícitos na fronteira do módulo
+- Essencial para governança de dependências em sistemas modulares
+
+---
+
+## Interfaces Fornecidas e Requeridas (UML)
+
+- **Interface Fornecida (*Lollipop*):** Serviços que o componente disponibiliza ao ambiente
+- **Interface Requerida (*Socket*):** Dependências externas exigidas pelo componente para operar
+- **Portas e Conectores:** Acoplam contratos compatíveis sem expor detalhes internos
+
+---
+
+## Como Combinar as Três Notações na Prática
+
+- **C4 (Níveis 1 e 2):** Alinhamento global de contexto, tecnologias e contêineres
+- **Componentes UML / C4 (Nível 3):** Contratos internos, portas e inversão de dependências
+- **4+1 (Processos e Física):** Concorrência, tolerância a falhas e topologia de implantação
+
+---
+
+## Trade-offs e Análise Comparativa
+
+{{< include _trade-offs.md >}}
+
+---
+
+## Conclusão e Boas Práticas
+
+- Escolha a notação pelo **público-alvo** e pela **decisão arquitetural** que precisa ser comunicada
+- Sempre inclua **legenda, protocolos e responsabilidades** nos diagramas
+- Prefira **Architecture-as-Code** (Mermaid, PlantUML, Structurizr) para evitar documentação obsoleta
