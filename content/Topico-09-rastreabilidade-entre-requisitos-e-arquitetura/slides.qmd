@@ -199,8 +199,8 @@ Explique que a seta não é decorativa. "Por que o cache existe?" → por causa 
 
 - **Vínculo** = origem + tipo + destino, com justificativa,
   versão e situação.
-- **Tipos** dão semântica: `satisfaz`, `implementa`,
-  `verifica` e `depende`.
+- **Tipos** dão semântica: `DA-04` satisfaz `REQ-04`;
+  `TST-04` verifica `REQ-04`.
 - **Captura** registra durante a criação; **recuperação**
   reconstrói o link depois, a partir dos artefatos.
 - **Manutenção** contínua ou sob demanda, disparada por
@@ -209,10 +209,16 @@ Explique que a seta não é decorativa. "Por que o cache existe?" → por causa 
   integridade referencial e atualidade do vínculo.
 
 ::: {.notes}
-Não repetir a definição de rastreabilidade: o foco é o como.
-Perguntar à turma quem atualiza a matriz quando REQ-04 muda.
-Um vínculo sem justificativa e sem responsável não sobrevive
-à primeira mudança.
+Não repetir a definição: explicar como se registra e mantém um vínculo.
+O verbo segue a seta do vínculo: DA-04 → REQ-04 significa que a decisão
+procura satisfazer o requisito. A consulta pode percorrer o vínculo ao
+contrário, partindo de REQ-04. Perguntar quem revisa os registros quando
+o limite muda para 500 ms em 99% das consultas.
+
+No estudo de Ballarín et al. (2023), a similaridade textual entre requisitos
+e elementos de modelos arquiteturais recupera vínculos candidatos; a linguagem
+usada no modelo influencia o resultado. A equipe precisa validar os candidatos
+antes de registrá-los como vínculos confirmados [@ballarin2023influence].
 :::
 
 ## Matrizes, links e ferramentas
@@ -225,19 +231,25 @@ Um vínculo sem justificativa e sem responsável não sobrevive
 | REQ-04 | DA-02, DA-04 | COMP-02, COMP-03, COMP-06 | TST-04 |
 | REQ-05 | DA-05 | COMP-01, COMP-06 | TST-05 |
 
-Ler a linha responde "o que muda se este requisito mudar";
-ler a coluna responde "por que este elemento existe".
+`REQ-04` aponta candidatos à revisão; `COMP-02` aparece
+em `REQ-01`, `REQ-02` e `REQ-04`.
 
-Ferramentas: DOORS e Requisite Pro (gestão), Trace
-Maintainer (manutenção), RETRO (recuperação) e a própria
-matriz em planilha ou notebook (baixo custo).
+Gestão: DOORS · manutenção: Trace Maintainer ·
+recuperação: RETRO · registro simples: planilha/notebook.
 
 ::: {.notes}
-Percorrer a linha de REQ-04 e a coluna de COMP-02 na tabela.
-Mostrar que a ferramenta só ajuda depois que o modelo de
-informação, os identificadores e o responsável pela
-atualização estão definidos. Evitar listar ferramentas sem
-ligar cada uma à atividade que ela apoia.
+Percorrer a linha de REQ-04: DA-02, DA-04, COMP-02, COMP-03,
+COMP-06 e TST-04 são candidatos à revisão quando o limite muda
+para 500 ms em 99% das consultas. A matriz não afirma que todos
+precisam ser alterados. Para a consulta reversa, localizar COMP-02
+nas células da coluna "Componentes": ele aparece nas linhas de
+REQ-01, REQ-02 e REQ-04. Revisar também a necessidade de regressão
+dos testes ligados aos outros requisitos desse componente.
+
+O notebook guarda associações por requisito; a tabela não prova uma
+ligação direta entre cada decisão e cada componente da mesma linha.
+Ferramentas apoiam o registro e a busca depois que a equipe define
+identificadores, tipos de vínculo e responsáveis pela atualização.
 :::
 
 <!-- ================================================== -->
