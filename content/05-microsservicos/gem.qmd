@@ -1,0 +1,5 @@
+---
+title: "Gem do projeto"
+---
+
+Acesse a [Gem pública do projeto no Gemini](https://gemini.google.com/gem/1xG1FvWU5t9C_gJmn_z_Z0l1q2GqTHo5Y?usp=sharing).

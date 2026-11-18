@@ -4,7 +4,10 @@ project:
   render:
     - "index.qmd"
     - "guia/**"
-    - "content/**"
+    # Tópicos 01 em diante. A pasta 00-modelo é só o modelo para copiar e não
+    # é publicada no site.
+    - "content/0[1-9]-*/**"
+    - "content/[1-9][0-9]-*/**"
 
 website:
   title: "Guia Aberto de Arquitetura de Software"
@@ -26,6 +29,16 @@ website:
             text: Sobre o projeto
       - text: Tópicos
         menu:
+          - href: content/01-pipe-and-filter/index.qmd
+            text: "01 — Pipe and Filter"
+          - href: content/02-arquitetura-em-camadas/index.qmd
+            text: "02 — Arquitetura em Camadas"
+          - href: content/03-mvc/index.qmd
+            text: "03 — MVC"
+          - href: content/04-cliente-servidor/index.qmd
+            text: "04 — Arquitetura Cliente-Servidor"
+          - href: content/05-microsservicos/index.qmd
+            text: "05 — Microsserviços"
           - href: content/00-modelo/index.qmd
             text: "00. Modelo de Tópico"
           - href: content/04-notacoes-arquiteturais/index.qmd

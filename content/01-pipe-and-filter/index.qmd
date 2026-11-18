@@ -1,0 +1,169 @@
+---
+title: "Pipe and Filter"
+subtitle: "Processamento de dados como fluxo sequencial de transformações independentes"
+author:
+  - name:
+      literal: "Emerson Silva"
+  - name:
+      literal: "Gustavo Henrique"
+  - name:
+      literal: "José Victor"
+  - name:
+      literal: "Randson Bredley"
+  - name:
+      literal: "Thiago Leal"
+  - name:
+      literal: "Thiago Patriota"
+appendix-cite-as: display
+date: 2026-09-22
+date-modified: last-modified
+bibliography: referencias.bib
+citation:
+  type: webpage
+  container-title: "Guia Aberto de Arquitetura de Software"
+license: "CC BY-NC 4.0"
+keywords: ["pipe and filter", "pipes and filters", "estilo arquitetural", "pipeline"]
+---
+
+::: {.meta-topico}
+<dl>
+<dt>Competências</dt>
+<dd>Descrever a estrutura do estilo Pipe and Filter e avaliar quando adotá-lo</dd>
+<dt>Pré-requisitos</dt>
+<dd>Nenhum</dd>
+<dt>Formatos</dt>
+<dd>
+[notebook](notebook.ipynb){.formato} [áudio](https://drive.google.com/drive/folders/15m0eOoOJiadYfk65PYidzkMVHeE4cfv9){.formato} [gem](https://gemini.google.com/gem/1_pnI-y9HsHW7MAA5me6ZwmucbGpYFFi-?usp=sharing){.formato} [slides](slides.qmd){.formato}
+</dd>
+</dl>
+:::
+
+## Definição e contexto
+
+**Pipe and Filter** (pipes e filtros) é um estilo arquitetural em que o sistema é uma cadeia de etapas independentes, os *filtros*, cada uma transformando o fluxo de dados que recebe e passando o resultado adiante por *pipes*, canais que apenas transportam os dados [@shaw1996software, cap. 2; @buschmann1996pattern, cap. 2].
+
+Imagine uma fábrica de suco natural dos sonhos. Em uma ponta entram caminhões cheios de laranjas inteiras, com terra, folhas e tudo mais. Na outra sai só o néctar engarrafado, geladinho e pronto para beber. Nada disso vira caos porque a fábrica é uma linha de montagem: cada máquina faz uma única coisa muito bem e entrega o resultado à próxima por uma esteira. Ninguém na espremedora precisa saber quem lavou a laranja, nem como o suco será engarrafado. No software, essa é a essência do Pipe and Filter. Vamos destrinchar como essa belezinha funciona?
+
+Antes, o problema. Sem esse estilo, o mesmo trabalho costuma virar um script de 600 linhas que lê, limpa, filtra, calcula e formata tudo no mesmo lugar: a fábrica em que uma única máquina gigante lava, espreme e engarrafa. A dificuldade tem nome, **acoplamento excessivo entre etapas**. Trocar o formato de saída obriga a mexer em quem lê, testar um pedaço exige rodar tudo, nenhuma etapa evolui sozinha e o arquivo inteiro precisa caber na memória, mesmo quando só interessa uma linha por vez. Não por acaso, o estilo ficou famoso no Unix, onde pipes ligam programas pequenos em cadeia, como em `cat log | grep ERROR | sort` [@ritchie1974unix].
+
+O critério de decomposição modular de Parnas é um bom exemplo de como uma decisão arquitetural nasce de um problema observado: a dificuldade de modificar sistemas cujos módulos foram divididos por etapas de processamento, em vez de por informação escondida [@parnas1972modularization]. O Pipe and Filter é justamente uma aposta consciente na divisão por etapas. Ela só se sustenta porque as etapas precisam saber uma da outra apenas o formato dos dados, e o preço dessa aposta aparece na seção de trade-offs.
+
+## Estrutura e componentes
+
+Voltando à fábrica de suco, o estilo tem quatro componentes. Dois deles são os extremos da cadeia, onde o sistema encontra o mundo de fora; os outros dois são o que há no meio e o que liga tudo.
+
+- **Fonte:** É onde o fluxo nasce. Só tem saída: não recebe nada de nenhum pipe. A fonte lê a realidade (um arquivo, uma fila, um sensor) e a transforma em fluxo no formato combinado, entregando **um item por vez** em vez de despejar a carga inteira de uma só vez. Na fábrica, é o caminhão de laranjas. No exemplo aplicado, é a `fonte(n)`, que emite uma linha de log de cada vez.
+- **Filtro:** É a máquina da linha de montagem. Tem entrada e saída, e faz **uma única transformação**: descartar itens, converter o formato, enriquecer o dado. Não sabe quem veio antes nem quem vem depois; conhece apenas o formato do que recebe e do que entrega. Na fábrica, são a lavadora e a espremedora. No exemplo aplicado, `so_erros` descarta as linhas que não são de erro e `extrai_ms` converte cada linha em um númer- 
+- **Pipe:** Pipe É a esteira. Liga a saída de um componente à entrada do seguinte, em **um único sentido**, e não transforma nada: no máximo guarda os dados por um instante (um *buffer*), para a máquina rápida não afogar a lenta. Ele também é o contrato do estilo, porque o formato dos dados que passa por ele é o único combinado entre as etapas. No Unix, o pipe é o `|`. No exemplo aplicado, é o próprio encadeamento dos geradores, e como cada linha passa sozinha, nem buffer há.
+- **Sumidouro:** É onde o fluxo termina. Só tem entrada: não passa nada adiante por pipe algum. O sumidouro consome o fluxo e entrega o resultado ao mundo de fora, seja gravando um arquivo, imprimindo um relatório ou devolvendo um número. Na fábrica, é a engarrafadora. No código do exemplo aplicado, `media` cumpre as duas últimas caixas do diagrama de uma vez: calcula e entrega.
+
+Um detalhe que surpreende: com geradores, quem dá o ritmo é o sumidouro. Montar a cadeia não executa nada; só quando o sumidouro pede o primeiro item é que o pedido sobe de filtro em filtro até a fonte, e cada item desce a cadeia inteira antes de o próximo ser pedido. É por isso que o pico de memória do exemplo aplicado fica em zero.
+
+```{mermaid}
+%%| label: fig-pipeline
+%%| fig-cap: "Estrutura do estilo. Linhas contínuas: fluxo permitido. Linhas tracejadas em vermelho, marcadas com X: conexões proibidas."
+flowchart LR
+    F[(Fonte: log)] -->|pipe| A[Filtro: só erros]
+    A -->|pipe| B[Filtro: extrai latência]
+    B -->|pipe| C[Filtro: calcula média]
+    C -->|pipe| S[Sumidouro: relatório]
+    A -.->|X chamada direta| C
+    E[(Estado compartilhado)] -.->|X| A
+    E -.->|X| B
+    linkStyle 4,5,6 stroke:#d33,stroke-width:2px,stroke-dasharray:5 4
+```
+
+Um estilo se define tanto pelas conexões que autoriza quanto pelas que veda, e é a violação dessas restrições que degrada a arquitetura com o tempo [@bass2021software, cap. 1]. Na fábrica, seriam as gambiarras. Aqui está o que o Pipe and Filter proíbe:
+
+- **Chamada direta entre filtros.** O operador da espremedora não sai gritando ordens para a engarrafadora; quem liga as duas é a esteira.
+- **Estado compartilhado.** Nada de um quadro de avisos que todas as máquinas leem e escrevem por fora das esteiras (variável global, banco "de apoio"). Se a informação importa, ela viaja no fluxo.
+- **Combinados além do formato dos dados.** Os filtros só acordam entre si como é o dado que passa pelo pipe, e mais nada.
+- **Segurar o fluxo.** Nenhuma máquina espera o caminhão inteiro ser descarregado para começar a lavar: se dá para processar item a item, processa.
+
+## Exemplo aplicado
+
+Na nossa fábrica, o caminhão de laranjas agora é um arquivo de log com milhões de linhas, e queremos saber a **latência média das requisições que deram erro**. São três etapas: filtrar só as linhas de erro, extrair a latência de cada uma e calcular a média.
+
+::: {.callout-note title="Exemplo executável"}
+O notebook deste tópico está em [`notebook.ipynb`](notebook.html) e pode ser aberto direto no [Google Colab](https://colab.research.google.com/drive/1FqKE4d6d5e4zQp9AeZNTi8hFgcVFrHRc#scrollTo=pIsUXaD4-iqv). Ele implementa este mesmo exemplo, do log, e reproduz a tabela abaixo. A `fonte`, que gera as linhas de log, está lá.
+:::
+
+**1. A implementação correta.** Cada filtro é um gerador Python, e o "pipe" é o próprio encadeamento: cada linha atravessa a cadeia inteira antes de a próxima entrar. Os dados fluem, um item de cada vez, e cada filtro só conhece o formato do que recebe e do que entrega.
+
+```python
+def so_erros(linhas):
+    for l in linhas:
+        if " ERROR " in l:
+            yield l
+
+def extrai_ms(linhas):
+    for l in linhas:
+        yield int(l.rsplit(" ", 1)[1][:-2])
+
+def media(valores):
+    total = n = 0
+    for v in valores:
+        total += v
+        n += 1
+    return total / n
+
+resultado = media(extrai_ms(so_erros(fonte(1_000_000))))
+```
+
+**2. A violação.** As três etapas continuam separadas, mas agora cada uma espera a anterior terminar e guarda tudo numa lista. Parece inofensivo, e é aí que mora o perigo: a regra do fluxo incremental foi quebrada, e nenhum teste de resultado vai reclamar, porque a resposta continua certa.
+
+```python
+todas = list(fonte(1_000_000))                       # tudo na memória
+erros = [l for l in todas if " ERROR " in l]         # mais uma cópia
+ms = [int(l.rsplit(" ", 1)[1][:-2]) for l in erros]  # e mais outra
+resultado = sum(ms) / len(ms)
+```
+
+**3. A consequência mensurável.** Medimos o pico de memória (`tracemalloc`, Python 3.13) das duas versões, com os mesmos dados:
+
+| Linhas no log | Pipeline (fluxo) | Violação (listas) | Resultado |
+|---|---|---|---|
+| 1 milhão | menos de 0,01 MB | 94,5 MB | igual (451,91) |
+| 2 milhões | menos de 0,01 MB | 189,4 MB | igual (451,55) |
+
+O resultado é o mesmo e o tempo também (cerca de 9 s por milhão de linhas nas duas versões, dominado pela geração dos dados). O que muda é a memória: no pipeline ela fica constante, porque só uma linha existe por vez; na violação, ela cresce na mesma proporção do log. Com um log de 100 milhões de linhas, a primeira versão roda e a segunda derruba o servidor. Os valores exatos variam com a versão do Python e a máquina, mas o comportamento (constante *versus* proporcional) não varia.
+
+## Trade-offs
+
+Nenhum estilo arquitetural é melhor que outro em abstrato: cada um favorece certos atributos de qualidade ao custo de outros [@richards2020fundamentals, cap. 11]. A fábrica de suco é ótima para encher milhares de garrafas por hora, mas péssima para quem quer **um único copo agora**, porque esse copo também precisa passar por todas as máquinas. Por isso, em cada linha da tabela, o atributo vem com a dimensão em que ele é medido.
+
+{{< include _trade-offs.md >}}
+
+A linha do acoplamento é o alerta de Parnas em ação: dividir o sistema por etapas de processamento espalha o formato dos dados por vários módulos, e uma mudança nele atinge todos ao mesmo tempo [@parnas1972modularization]. Em uma frase, o Pipe and Filter troca a resposta rápida de um item por volume processado com folga, e troca a liberdade de formato por independência entre as etapas.
+
+## Quando usar e quando não usar
+
+Antes de montar a esteira, passe pelo checklist abaixo. Cada item é uma condição que dá para verificar, no papel ou no código.
+
+**Considere usar quando:**
+
+- **O diagrama só tem setas de ida.** Dá para desenhar o trabalho como uma sequência de transformações, sem nenhuma seta de volta e sem ramificações que dependam do estado do sistema (ETL, processamento de logs, compiladores, tratamento de imagem ou áudio).
+- **Cada etapa se testa sozinha.** Você consegue escrever o teste de cada etapa com uma lista de entrada e uma de saída esperada, sem montar mais nada.
+- **A entrada pode ser maior que a memória.** O maior arquivo ou fluxo esperado se aproxima da RAM disponível, ou o tamanho é imprevisível (logs, cargas de arquivos, *streams*).
+- **O que importa é o volume, não o tempo de um item.** O requisito é do tipo "processar 10 milhões de linhas por noite", e não "responder em 200 ms".
+- **Você já sabe que vai pedir mais um filtro.** As regras de limpeza ou transformação mudam com frequência, e inserir ou trocar uma etapa é rotina.
+
+**Evite quando:**
+
+- **Há um requisito de tempo de resposta por item.** O tempo somado das etapas, mais a passagem pelos pipes, já se aproxima do limite combinado (por exemplo, uma ação de usuário que deve responder em 200 ms).
+- **Alguma etapa só emite o primeiro resultado depois de ler tudo.** Ordenar, agrupar ou remover duplicatas no conjunto inteiro segura o fluxo e anula o ganho de memória. Uma etapa assim é uma barreira, e se for a regra e não a exceção, o estilo não serve.
+- **Uma etapa precisa saber o que outra decidiu.** Se a informação não cabe no dado que passa pelo pipe, o estado compartilhado, que o estilo proíbe, vai aparecer.
+- **É preciso desfazer tudo se uma etapa falhar.** Quando existe um requisito de "tudo ou nada" cobrindo várias etapas (uma transação financeira, por exemplo), o pipeline não oferece esse controle de graça.
+
+**Sinais de que a escolha foi errada:**
+
+- **O pico de memória cresce com o tamanho da entrada.** É a violação do exemplo aplicado: alguma etapa virou barreira ou está guardando tudo em lista.
+- **Os filtros ganham parâmetros "de contexto".** Eles só existem para dizer o que aconteceu em outra etapa.
+- **Surge variável global ou banco de apoio.** Filtros diferentes passam a ler e escrever o mesmo lugar, por fora dos pipes.
+- **O profiler aponta a conversão de dados entre etapas.** A maior parte do tempo vai para interpretar e reformatar o que passa pelo pipe, e pouco para a transformação em si.
+- **Mudar o formato dos dados altera quase todos os filtros.** Conte os arquivos alterados no PR: se são quase todos, o acoplamento pelo formato (tabela de trade-offs) passou do ponto.
+
+## Referências
+
+::: {#refs}
+:::
