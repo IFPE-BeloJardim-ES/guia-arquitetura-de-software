@@ -1,4 +1,3 @@
-
 ---
 title: "Rastreabilidade entre Requisitos e Arquitetura"
 subtitle: "Relações, técnicas e acompanhamento das decisões arquiteturais"
