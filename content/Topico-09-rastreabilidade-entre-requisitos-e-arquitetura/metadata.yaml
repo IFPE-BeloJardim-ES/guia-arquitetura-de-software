@@ -1,0 +1,91 @@
+# Metadados do tópico — preencha tudo. O CI valida os campos obrigatórios.
+# Este arquivo também alimenta a indexação por ferramentas de IA.
+
+numero: "09"
+slug: "rastreabilidade-entre-requisitos-e-arquitetura"
+titulo: "Rastreabilidade entre requisitos e arquitetura"
+subtitulo: "Relações, técnicas e acompanhamento das decisões arquiteturais"
+resumo: >-
+  Apresenta como relacionar requisitos, atributos de qualidade, decisões,
+  componentes e testes. Inclui um exemplo executável de uma clínica e uma
+  análise de impacto para uma mudança de desempenho.
+
+# Um tópico pode ter vários autores — liste um item por pessoa, na ordem em que
+# devem ser creditados. Todos entram no crédito, na citação e na lista de
+# contribuidores do site.
+autores:
+  - nome: "Agdo José Samuel Sousa de oliveira"
+    grupo: ""
+    github: ""
+    orcid: ""
+  - nome: "Antonio Carlos Verissimo de Souza"
+    grupo: ""
+    github: ""
+    orcid: ""
+  - nome: "Pedro Henrique Borges Silva"
+    grupo: ""
+    github: ""
+    orcid: ""
+  - nome: "Felipe dos Santos Silva"
+    grupo: ""
+    github: ""
+    orcid: ""
+  - nome: "Antonio Pedro Guimarães Santos de Macedo"
+    grupo: ""
+    github: ""
+    orcid: ""
+
+status: "em-revisao"        # rascunho | em-revisao | publicado | modelo
+data_criacao: "2026-11-18"
+ultima_revisao: "2026-08-30"
+revisado_por:
+  - "Nome do revisor par"
+  - "Nome do revisor de manutenção"
+
+# Estrutura pedagógica
+competencias:
+  - "Construir uma matriz de rastreabilidade entre requisitos e arquitetura"
+  - "Analisar o impacto arquitetural de uma mudança de requisito"
+nivel_bloom: ["compreender", "aplicar", "analisar"]   # lembrar|compreender|aplicar|analisar|avaliar|criar
+pre_requisitos: []                          # slugs de outros tópicos
+topicos_relacionados: []
+palavras_chave: ["rastreabilidade", "requisitos", "arquitetura de software", "análise de impacto"]
+
+# Formatos entregues — o CI verifica a existência do que está marcado como true
+formatos:
+  texto: true
+  notebook:
+    entregue: true
+    colab_url: "https://colab.research.google.com/..."
+  audio_notebooklm:
+    entregue: true
+    arquivo: "assets/audio-notebooklm.m4a"   # ou deixe vazio e use url
+    url: ""
+    duracao_min: 12
+    transcricao: "assets/audio-transcricao.md"
+  gem_gemini:
+    entregue: true
+    url: "https://gemini.google.com/gem/..."
+    instrucoes: |
+      Cole aqui as instruções exatas usadas para configurar a Gem, para que
+      qualquer pessoa possa recriá-la ou melhorá-la.
+
+      Ex: "Você é um tutor de Arquitetura de Software especializado em <tópico>.
+      Baseie todas as respostas exclusivamente no texto e nas referências
+      fornecidas. Cite sempre a referência no formato [n]. Se a pergunta não for
+      coberta pelo material, diga isso em vez de improvisar."
+  slides:
+    entregue: true
+    num_slides: 16
+  # opcionais
+  video:
+    entregue: false
+    url: ""
+  podcast:
+    entregue: false
+    url: ""
+  mcp:
+    entregue: false
+    url: ""
+
+licenca: "CC-BY-NC-4.0"
