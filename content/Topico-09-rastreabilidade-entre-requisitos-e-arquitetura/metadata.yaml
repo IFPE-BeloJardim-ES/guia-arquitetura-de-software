@@ -59,7 +59,7 @@ formatos:
     colab_url: "https://colab.research.google.com/..."
   audio_notebooklm:
     entregue: true
-    arquivo: "assets/audio-notebooklm.m4a"   # ou deixe vazio e use url
+    arquivo: "assets/audio/Rastreabilidade_entre_requisitos_e_arquitetura_de_software.m4a"
     url: ""
     duracao_min: 12
     transcricao: "assets/audio-transcricao.md"

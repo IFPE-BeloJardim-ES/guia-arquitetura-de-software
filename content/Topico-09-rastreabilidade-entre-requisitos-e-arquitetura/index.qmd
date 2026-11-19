@@ -25,194 +25,186 @@ keywords: ["rastreabilidade", "requisitos", "arquitetura de software", "decisõe
 <dd>Engenharia de requisitos e fundamentos de arquitetura de software.</dd>
 <dt>Formatos</dt>
 <dd>
-[texto]{.formato} [notebook](notebook.ipynb){.formato} [áudio](assets/audio/){.formato} [gem](GEM_GEMINI.md){.formato} [slides](slides.qmd){.formato}
+[texto]{.formato} [notebook](notebook.ipynb){.formato} [áudio](assets/audio/Rastreabilidade_entre_requisitos_e_arquitetura_de_software.m4a){.formato} [gem](GEM_GEMINI.md){.formato} [slides](slides.qmd){.formato}
 </dd>
 </dl>
 :::
 
 ## Definição e contexto
 
-A rastreabilidade de requisitos consiste em estabelecer e acompanhar relações entre 
-os requisitos de um sistema e os artefatos produzidos durante seu desenvolvimento, como modelos 
-de arquitetura e código-fonte. Essas relações permitem compreender como cada necessidade está 
+A rastreabilidade de requisitos consiste em estabelecer e acompanhar relações entre
+os requisitos de um sistema e os artefatos produzidos durante seu desenvolvimento, como modelos
+de arquitetura e código-fonte. Essas relações permitem compreender como cada necessidade está
 representada no software e facilitam sua manutenção e evolução [@ballarin2023influence, p. 705].
 
-Sua importância aumenta conforme os sistemas se tornam mais complexos. 
-Durante o desenvolvimento, os requisitos são transformados em diferentes representações, dificultando 
-a identificação dos elementos que atendem a cada necessidade. Nesse contexto, a rastreabilidade ajuda 
+Sua importância aumenta conforme os sistemas se tornam mais complexos.
+Durante o desenvolvimento, os requisitos são transformados em diferentes representações, dificultando
+a identificação dos elementos que atendem a cada necessidade. Nesse contexto, a rastreabilidade ajuda
 a preservar essas conexões e a localizar partes do sistema relacionadas a determinado requisito [@ballarin2023influence, p. 705].
 
-Além disso, Ballarín et al. (2023) demonstram que a linguagem utilizada para representar 
-a arquitetura influencia a recuperação dessas relações. Portanto, não basta registrar 
-os requisitos: é necessário utilizar representações que permitam identificar e acompanhar 
+Além disso, Ballarín et al. (2023) demonstram que a linguagem utilizada para representar
+a arquitetura influencia a recuperação dessas relações. Portanto, não basta registrar
+os requisitos: é necessário utilizar representações que permitam identificar e acompanhar
 seus vínculos ao longo do desenvolvimento [@ballarin2023influence, pp. 705–706].
 
 ## Conceitos fundamentais de rastreabilidade
 
-A rastreabilidade pode ser compreendida por diferentes perspectivas, considerando a direção em que 
-os relacionamentos são acompanhados e os níveis de desenvolvimento envolvidos. 
+A rastreabilidade pode ser compreendida por diferentes perspectivas, considerando a direção em que
+os relacionamentos são acompanhados e os níveis de desenvolvimento envolvidos.
 Essas classificações ajudam a entender como os requisitos se conectam aos demais elementos de um sistema.
 
 ### Rastreabilidade para frente (Forward Traceability)
 
-A rastreabilidade para frente permite acompanhar um requisito até os elementos desenvolvidos a partir dele. 
-Dessa forma, é possível identificar quais componentes, funcionalidades e partes da arquitetura estão relacionados 
+A rastreabilidade para frente permite acompanhar um requisito até os elementos desenvolvidos a partir dele.
+Dessa forma, é possível identificar quais componentes, funcionalidades e partes da arquitetura estão relacionados
 a determinada necessidade do sistema.
 
-Por exemplo, um requisito que estabelece a necessidade de autenticação de usuários pode ser relacionado 
+Por exemplo, um requisito que estabelece a necessidade de autenticação de usuários pode ser relacionado
 ao componente responsável pelo login e aos elementos arquiteturais que dão suporte a essa funcionalidade.
 
 ### Rastreabilidade para trás (Backward Traceability)
 
-A rastreabilidade para trás realiza o caminho inverso, permitindo identificar 
+A rastreabilidade para trás realiza o caminho inverso, permitindo identificar
 qual requisito deu origem a determinado componente, funcionalidade ou decisão arquitetural.
 
-Essa relação ajuda a compreender a finalidade dos elementos desenvolvidos e 
-verificar se eles possuem uma justificativa nos requisitos definidos. 
+Essa relação ajuda a compreender a finalidade dos elementos desenvolvidos e
+verificar se eles possuem uma justificativa nos requisitos definidos.
 Também permite identificar funcionalidades implementadas que não possuem uma necessidade documentada correspondente.
 
 ### Rastreabilidade vertical e horizontal
 A rastreabilidade também pode ser classificada de acordo com os níveis e artefatos relacionados.
 
-- Vertical: estabelece relações entre diferentes níveis de desenvolvimento, como requisitos, arquitetura, 
-  projeto detalhado e implementação. Permite acompanhar como uma necessidade inicial é representada nas 
+- Vertical: estabelece relações entre diferentes níveis de desenvolvimento, como requisitos, arquitetura,
+  projeto detalhado e implementação. Permite acompanhar como uma necessidade inicial é representada nas
   diferentes etapas de construção do software.
 
-- Horizontal: estabelece relações entre elementos de um mesmo nível ou entre artefatos relacionados, 
+- Horizontal: estabelece relações entre elementos de um mesmo nível ou entre artefatos relacionados,
   permitindo identificar dependências e conexões entre requisitos, componentes ou funcionalidades.
 
-Essas duas perspectivas são complementares e ajudam a compreender tanto a evolução de um requisito 
+Essas duas perspectivas são complementares e ajudam a compreender tanto a evolução de um requisito
 quanto suas relações com outros elementos do sistema.
 
 ### Relações entre requisitos e outros artefatos
 
-Durante o desenvolvimento, os requisitos precisam ser relacionados aos diferentes artefatos que representam sua realização. 
+Durante o desenvolvimento, os requisitos precisam ser relacionados aos diferentes artefatos que representam sua realização.
 Entre eles estão os modelos de arquitetura, os componentes de software, o código-fonte e os testes.
 
-Por exemplo, um requisito de processamento de pagamentos pode estar relacionado a uma decisão arquitetural sobre a organização 
+Por exemplo, um requisito de processamento de pagamentos pode estar relacionado a uma decisão arquitetural sobre a organização
 desse serviço, ao componente responsável pelo processamento e aos testes que verificam seu funcionamento.
 
-Essas relações permitem acompanhar como uma necessidade especificada se transforma em elementos concretos do sistema, 
+Essas relações permitem acompanhar como uma necessidade especificada se transforma em elementos concretos do sistema,
 estabelecendo conexões entre as diferentes etapas do desenvolvimento [@ballarin2023influence, p. 705].
 
 
 ## Rastreabilidade entre requisitos e arquitetura
 
-A arquitetura de software não é construída de forma independente dos requisitos. Requisitos funcionais definem o 
-que o sistema deve fazer; requisitos não funcionais, expressos como atributos de qualidade, definem como o sistema 
-deve se comportar em termos de desempenho, segurança, modificabilidade e outros critérios. As decisões arquiteturais 
-são tomadas justamente para satisfazer esses requisitos, e a rastreabilidade entre requisitos e arquitetura é o que 
+A arquitetura de software não é construída de forma independente dos requisitos. Requisitos funcionais definem o
+que o sistema deve fazer; requisitos não funcionais, expressos como atributos de qualidade, definem como o sistema
+deve se comportar em termos de desempenho, segurança, modificabilidade e outros critérios. As decisões arquiteturais
+são tomadas justamente para satisfazer esses requisitos, e a rastreabilidade entre requisitos e arquitetura é o que
 permite verificar se essa satisfação realmente ocorre [@ballarin2023influence, p. 705].
 
-Ballarín et al. (2023) destacam que identificar os vínculos entre requisitos e modelos 
-arquiteturais é crítico para localizar partes não confiáveis do sistema e reduzir a taxa 
-esperada de defeitos durante o desenvolvimento e a manutenção [@ballarin2023influence, p. 705]. 
-Nesse sentido, a rastreabilidade não é um exercício burocrático: ela permite que a equipe saiba 
+Ballarín et al. (2023) destacam que identificar os vínculos entre requisitos e modelos
+arquiteturais é crítico para localizar partes não confiáveis do sistema e reduzir a taxa
+esperada de defeitos durante o desenvolvimento e a manutenção [@ballarin2023influence, p. 705].
+Nesse sentido, a rastreabilidade não é um exercício burocrático: ela permite que a equipe saiba
 por que um componente existe e o que pode quebrar quando um requisito muda.
 
-Um ponto central do artigo é que a linguagem utilizada para representar a arquitetura influencia a 
-eficácia da rastreabilidade. Os autores compararam onze linguagens arquiteturais e observaram que 
-linguagens de propósito geral, como UML, Y_DON, SDL e ArchiMate, obtiveram os melhores resultados 
-na recuperação de vínculos com requisitos, com precisão média de 0,51 e recall de 0,38 [@ballarin2023influence, pp. 705–706]. 
+Um ponto central do artigo é que a linguagem utilizada para representar a arquitetura influencia a
+eficácia da rastreabilidade. Os autores compararam onze linguagens arquiteturais e observaram que
+linguagens de propósito geral, como UML, Y_DON, SDL e ArchiMate, obtiveram os melhores resultados
+na recuperação de vínculos com requisitos, com precisão média de 0,51 e recall de 0,38 [@ballarin2023influence, pp. 705–706].
 Isso mostra que a escolha da linguagem não é neutra: ela facilita ou dificulta a manutenção dos vínculos ao longo do tempo.
 
 ### Relação entre requisitos e elementos arquiteturais
 
-Um requisito funcional isolado não determina sozinho a arquitetura. 
-O que impulsiona decisões arquiteturais são, em grande parte, os atributos de qualidade 
+Um requisito funcional isolado não determina sozinho a arquitetura.
+O que impulsiona decisões arquiteturais são, em grande parte, os atributos de qualidade
 associados a esses requisitos. A cadeia de relação pode ser representada como:
 
 Requisito → Atributo de qualidade → Decisão arquitetural → Componente → Interface
 
-Essa sequência representa como uma necessidade do sistema pode orientar uma decisão arquitetural, que 
-posteriormente se materializa nos componentes responsáveis por atendê-la. Por exemplo, um requisito de 
+Essa sequência representa como uma necessidade do sistema pode orientar uma decisão arquitetural, que
+posteriormente se materializa nos componentes responsáveis por atendê-la. Por exemplo, um requisito de
 desempenho pode levar à adoção de estratégias de cache ou otimização de consultas [@bass2021software, cap. 13].
 
 ### Estrutura dos relacionamentos
 
-A representação evidencia que os requisitos orientam decisões arquiteturais, que se materializam em componentes específicos. 
+A representação evidencia que os requisitos orientam decisões arquiteturais, que se materializam em componentes específicos.
 Quando uma necessidade é modificada, esses relacionamentos permitem localizar os elementos que precisam ser reavaliados.
 
 ![Relação entre requisitos e elementos arquiteturais.](assets/imagens/rastreabilidade-requisitos-arquitetura.svg){#fig-rastreabilidade fig-cap="Representação da relação entre requisitos e arquitetura."}
 
-A manutenção desses vínculos é importante porque os artefatos evoluem ao longo do desenvolvimento. 
-Ballarín et al. (2023) destacam que a recuperação dessas relações pode ser influenciada pela 
+A manutenção desses vínculos é importante porque os artefatos evoluem ao longo do desenvolvimento.
+Ballarín et al. (2023) destacam que a recuperação dessas relações pode ser influenciada pela
 linguagem utilizada para representar a arquitetura [@ballarin2023influence, p. 705].
 
 ### Análise de impacto das mudanças
 
-A análise de impacto consiste em identificar quais elementos do sistema podem ser afetados quando um requisito é alterado. 
-Para isso, os relacionamentos de rastreabilidade são percorridos desde o requisito até as decisões arquiteturais, 
+A análise de impacto consiste em identificar quais elementos do sistema podem ser afetados quando um requisito é alterado.
+Para isso, os relacionamentos de rastreabilidade são percorridos desde o requisito até as decisões arquiteturais,
 os componentes e os testes correspondentes.
 
-Esse processo também exige verificar quais outros requisitos dependem dos mesmos elementos. 
-Um componente pode atender a diferentes necessidades, de modo que uma alteração aparentemente 
+Esse processo também exige verificar quais outros requisitos dependem dos mesmos elementos.
+Um componente pode atender a diferentes necessidades, de modo que uma alteração aparentemente
 localizada pode afetar outras funcionalidades.
 
-Dessa forma, a análise de impacto ajuda a planejar modificações, identificar pontos que 
-precisam de revisão e atualizar os testes relacionados. O exemplo aplicado deste tópico demonstra 
-como esse processo pode ser realizado por meio de uma matriz de rastreabilidade.
+Com a matriz de rastreabilidade registrada (REQ-04 → DA-02, DA-04 → COMP-02, COMP-03, COMP-06 → TST-04), a equipe identifica exatamente quais elementos precisam ser revisados:
+
+- DA-02 (índice do repositório): pode precisar de ajuste no índice por profissional e horário.
+- DA-04 (cache): a política de invalidação pode ser insuficiente para 500 ms.
+- COMP-02 (Serviço de Disponibilidade): a estratégia de leitura precisa ser reavaliada.
+- COMP-03 (Repositório de Consultas): o índice pode não ser suficiente.
+- COMP-06 (Cache): o tempo de resposta do cache entra no orçamento de 500 ms.
+- TST-04: o limiar do teste de desempenho precisa ser atualizado.
+
+Sem a rastreabilidade, a equipe poderia alterar apenas o componente mais óbvio (COMP-02) e esquecer o cache ou o índice, resultando em um sistema que falha no novo requisito de desempenho. Quando os requisitos mudam, a visibilidade dessas dependências ajuda a orientar a manutenção do sistema [@egyed2015developers]. A rastreabilidade não elimina a mudança, mas torna seu custo visível e gerenciável.
 
 ## Técnicas para estabelecer e manter a rastreabilidade
 
-As seções anteriores apresentam os conceitos e a importância da rastreabilidade. 
-Nesta etapa, o foco passa a ser sua aplicação: como registrar, consultar e manter os relacionamentos 
+As seções anteriores apresentam os conceitos e a importância da rastreabilidade.
+Nesta etapa, o foco passa a ser sua aplicação: como registrar, consultar e manter os relacionamentos
 entre requisitos e artefatos durante a evolução do software [@gotel2012traceability, p. 11].
 
-A norma ISO/IEC/IEEE 29148 trata a rastreabilidade como atributo do requisito e recomenda que cada 
-requisito seja rastreável até a arquitetura, os elementos de sistema que o implementam e as 
-entidades de verificação, além de ser rastreável para cima, até os requisitos ou necessidades 
-que o originaram [@isoiec2018requirements, p. 40]. A norma também apresenta a rastreabilidade 
-bidirecional como técnica para melhorar a integridade dos requisitos, acompanhar cobertura e apoiar 
+A norma ISO/IEC/IEEE 29148 trata a rastreabilidade como atributo do requisito e recomenda que cada
+requisito seja rastreável até a arquitetura, os elementos de sistema que o implementam e as
+entidades de verificação, além de ser rastreável para cima, até os requisitos ou necessidades
+que o originaram [@isoiec2018requirements, p. 40]. A norma também apresenta a rastreabilidade
+bidirecional como técnica para melhorar a integridade dos requisitos, acompanhar cobertura e apoiar
 a manutenção e a implementação de mudanças [@isoiec2018requirements, p. 40].
 
-Na prática, a rastreabilidade se sustenta em quatro atividades: definição da estratégia, criação dos 
-vínculos, manutenção e uso [@gotel2012traceability, p. 11]. As subseções seguintes detalham o registro 
+Na prática, a rastreabilidade se sustenta em quatro atividades: definição da estratégia, criação dos
+vínculos, manutenção e uso [@gotel2012traceability, p. 11]. As subseções seguintes detalham o registro
 em matriz, as consultas nas duas direções e a atualização dos links ao longo da evolução.
 
 ### Registro dos vínculos
 
-Um vínculo de rastreabilidade é uma tripla formada por artefato de origem, tipo de vínculo e 
-artefato de destino. O tipo é o que dá significado à relação e impede que a matriz se torne um 
-conjunto de marcas sem semântica [@gotel2012traceability, p. 7]. O conjunto de artefatos e de tipos 
-de vínculo permitidos em um projeto é definido no modelo de informação de rastreabilidade, que deve 
-ser acordado antes do preenchimento da matriz. Sem esse modelo, surgem inconsistências como ligar um 
-requisito diretamente a um teste, sem registrar a decisão arquitetural que justifica o teste [@gotel2012traceability, p. 13].
+Um vínculo de rastreabilidade é uma tripla formada por artefato de origem, tipo de vínculo e artefato de destino. O tipo é o que dá significado à relação e impede que a matriz se torne um conjunto de marcas sem semântica [@gotel2012traceability, p. 7]. O conjunto de artefatos e de tipos de vínculo permitidos em um projeto é definido no modelo de informação de rastreabilidade, que deve ser acordado antes do preenchimento da matriz. Esse modelo explicita quais relações a equipe precisa registrar para responder às suas perguntas de cobertura e impacto [@gotel2012traceability].
 
-No exemplo deste tópico, um único tipo genérico — `realiza` — cobre a relação entre requisito, decisão, 
-componente e teste, o que é suficiente para o recorte didático. Em modelos mais detalhados, 
-esse tipo genérico costuma ser decomposto conforme a pergunta que o vínculo deve responder:
+No notebook deste tópico, cada linha agrupa sob o tipo genérico `realiza` um requisito, suas decisões, seus componentes e seu teste. É uma simplificação didática: a linha não especifica qual decisão se materializa em qual componente. Um registro mais detalhado pode tipar vínculos individuais conforme a pergunta que a equipe precisa responder:
 
 | Tipo | Origem → destino | Pergunta que responde | Exemplo |
 |---|---|---|---|
-| `satisfaz` | requisito → decisão arquitetural | Qual decisão atende a este requisito? | REQ-04 → DA-04 |
-| `implementa` | decisão → componente | Onde a decisão se materializa? | DA-04 → COMP-06 |
-| `verifica` | teste → requisito | Que evidência mostra que o requisito foi atendido? | TST-04 → REQ-04 |
-| `depende` | componente → componente | O que pode ser afetado por uma mudança neste componente? | COMP-02 → COMP-03 |
+| `satisfaz` | decisão arquitetural → requisito | Qual requisito a decisão procura atender? | DA-04 → REQ-04 |
+| `materializa` | componente → decisão arquitetural | Em qual componente a decisão se concretiza? | COMP-06 → DA-04 |
+| `verifica` | teste → requisito | Que evidência verifica o requisito? | TST-04 → REQ-04 |
 
-Cada vínculo deve carregar metadados mínimos: identificador próprio, autor, data de criação, justificativa, 
-versão dos artefatos e situação (ativo, substituído ou retirado). 
-Sem a justificativa, o link informa apenas que dois artefatos se relacionam, mas não explica 
-por quê — e é essa informação que sustenta a análise de impacto. Os identificadores, por sua vez, 
-precisam ser únicos e estáveis: `REQ-04` continua sendo `REQ-04` quando o limiar de desempenho muda, 
+Os exemplos de vínculos tipados explicitam relações descritas no guia; o notebook guarda apenas as associações agrupadas por requisito. Uma consulta que parte de `REQ-04` pode percorrer `DA-04 → REQ-04` no sentido inverso, sem mudar o significado de `satisfaz`.
+
+Cada vínculo deve carregar metadados mínimos: identificador próprio, autor, data de criação, justificativa,
+versão dos artefatos e situação (ativo, substituído ou retirado).
+Sem a justificativa, o link informa apenas que dois artefatos se relacionam, mas não explica
+por quê — e é essa informação que sustenta a análise de impacto. Os identificadores, por sua vez,
+precisam ser únicos e estáveis: `REQ-04` continua sendo `REQ-04` quando o limiar de desempenho muda,
 o que preserva o histórico do vínculo.
 
-A criação pode ocorrer de duas formas. Na captura (*trace capture*), o vínculo é registrado no 
-momento em que o artefato é criado; na recuperação (*trace recovery*), ele é reconstruído depois, 
-a partir dos artefatos existentes [@gotel2012traceability, pp. 14–15]. A captura tende a produzir 
-links mais precisos, mas exige disciplina durante o desenvolvimento. A recuperação pode ser 
-automatizada por técnicas de recuperação de informação, mas gera candidatos que precisam de validação 
-humana: links falsos elevam o esforço de revisão, e links ausentes podem esconder impactos [@ingram2012cost, p. 32].
+A criação pode ocorrer de duas formas. Na captura (*trace capture*), o vínculo é registrado no momento em que o artefato é criado; na recuperação (*trace recovery*), ele é reconstruído depois, a partir dos artefatos existentes [@gotel2012traceability, pp. 14–15]. A captura exige disciplina durante o desenvolvimento. A recuperação por técnicas de informação produz vínculos candidatos, que precisam ser revisados: falsos positivos elevam o esforço de revisão, e vínculos ausentes podem esconder impactos.
+
+É essa recuperação que Ballarín et al. (2023) investigam: o estudo compara como diferentes linguagens arquiteturais influenciam a recuperação automatizada de vínculos entre requisitos e elementos de modelos de arquitetura, usando similaridade textual. Os resultados são candidatos à validação, não uma matriz já confirmada. A matriz da clínica, por sua vez, registra associações didáticas predefinidas entre IDs; antes de usar candidatos recuperados numa matriz de projeto, a equipe deve conferir se cada relação faz sentido e registrar as aceitas [@ballarin2023influence].
 
 ### Matrizes de rastreabilidade
 
-A matriz de rastreabilidade é a forma mais direta de registrar uma relação de rastreamento: linhas 
-e colunas representam artefatos e cada célula marca um vínculo entre eles [@gotel2012traceability, p. 7]. 
-Ela é adequada quando o número de artefatos é moderado e a equipe precisa de uma visão que possa ser lida 
-e auditada sem depender de uma ferramenta específica; a matriz também é descrita como um arranjo 
-bidimensional de itens em linhas e colunas [@nour2023traceability, p. 13]. A matriz abaixo relaciona 
-os requisitos do exemplo (linhas) às decisões e aos componentes arquiteturais (colunas), usando os 
-mesmos identificadores do texto e do notebook:
+A matriz de rastreabilidade organiza as associações entre artefatos para consulta e revisão [@gotel2012traceability]. Ela é adequada quando o número de artefatos é moderado e a equipe precisa de uma visão legível sem depender de uma ferramenta específica. A matriz abaixo desdobra as listas do notebook: cada linha é um requisito, cada coluna é uma decisão ou um componente, e `●` indica que o ID consta da lista associada ao requisito. Ela não demonstra, por si só, uma ligação direta entre uma decisão e um componente.
 
 | Requisito | DA-01 | DA-02 | DA-03 | DA-04 | DA-05 | COMP-01 | COMP-02 | COMP-03 | COMP-04 | COMP-05 | COMP-06 |
 |---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
@@ -222,24 +214,19 @@ mesmos identificadores do texto e do notebook:
 | REQ-04 |  | ● |  | ● |  |  | ● | ● |  |  | ● |
 | REQ-05 |  |  |  |  | ● | ● |  |  |  |  | ● |
 
-A leitura é direta. A linha de `REQ-04` mostra os elementos que realizam o 
-requisito (`DA-02`, `DA-04`, `COMP-02`, `COMP-03` e `COMP-06`); a coluna de `COMP-02` 
-mostra os requisitos que justificam o componente (`REQ-01`, `REQ-02` e `REQ-04`). 
-Uma linha vazia indica requisito sem realização; uma coluna vazia indica elemento sem justificativa. 
+A leitura é direta. A linha de `REQ-04` mostra os elementos que realizam o
+requisito (`DA-02`, `DA-04`, `COMP-02`, `COMP-03` e `COMP-06`); a coluna de `COMP-02`
+mostra os requisitos que justificam o componente (`REQ-01`, `REQ-02` e `REQ-04`).
+Uma linha vazia indica requisito sem realização; uma coluna vazia indica elemento sem justificativa.
 Esses dois sintomas são o ponto de partida para a verificação descrita adiante.
 
-A matriz precisa de regras de atualização, não apenas de preenchimento. 
-Ao acrescentar um requisito, a equipe adiciona uma linha e registra os links; ao aposentar uma decisão, 
-os links devem apontar para a decisão sucessora e o histórico deve ser preservado; ao dividir um 
-componente, o vínculo original deve ser substituído por vínculos para as partes. Matrizes em planilha 
-são viáveis em escopos pequenos, mas tendem a aumentar o custo de criação e manutenção em comparação 
-com ferramentas automatizadas [@ingram2012cost, p. 32].
+A matriz precisa de regras de atualização, não apenas de preenchimento. Ao acrescentar um requisito, a equipe adiciona uma linha e registra as associações; ao aposentar uma decisão, revisa os vínculos afetados, registra uma sucessora quando existir e preserva o histórico; ao dividir um componente, redistribui seus vínculos entre as partes pertinentes. Matrizes em planilha são viáveis em escopos pequenos, mas sua manutenção manual tem custo [@ingram2012cost].
 
 ### Rastreabilidade para frente, para trás e bidirecional
 
-Uma vez registrada, a matriz é consultada em três modos. A consulta para frente 
-parte de um requisito e percorre os links até as decisões, os componentes e os testes que o realizam; 
-a consulta para trás parte de um elemento e percorre os links inversos até os requisitos que o justificam; 
+Uma vez registrada, a matriz é consultada em três modos. A consulta para frente
+parte de um requisito e percorre os links até as decisões, os componentes e os testes que o realizam;
+a consulta para trás parte de um elemento e percorre os links inversos até os requisitos que o justificam;
 a consulta bidirecional percorre o mesmo caminho nos dois sentidos e verifica se o conjunto é coerente [@gotel2012traceability, p. 18].
 
 | Consulta | Ponto de partida | O que retorna | Uso típico |
@@ -248,43 +235,29 @@ a consulta bidirecional percorre o mesmo caminho nos dois sentidos e verifica se
 | Para trás | decisão, componente ou teste | requisitos que o justificam | auditoria e detecção de escopo não solicitado |
 | Bidirecional | qualquer artefato | caminho completo nos dois sentidos | verificação de consistência e cobertura |
 
-A direção da consulta não se confunde com a direção do vínculo: o mesmo link pode ser percorrido nos dois 
-sentidos [@gotel2012traceability, p. 18]. Por isso, a verificação de consistência compara as duas direções. Se `REQ-04` alcança `COMP-06`, então `COMP-06` deve alcançar `REQ-04`; 
-caso contrário, há um vínculo incompleto ou um identificador incorreto. 
-No exemplo, a consulta para frente a partir de `REQ-04` retorna `DA-02`, `DA-04`, `COMP-02`, `COMP-03`, 
-`COMP-06` e `TST-04`, enquanto a consulta para trás a partir de `COMP-02` retorna `REQ-01`, `REQ-02` e `REQ-04`. 
-As duas respostas são compatíveis e podem ser conferidas automaticamente, como faz o notebook deste tópico.
+A direção da consulta não se confunde com a direção do vínculo: o mesmo registro pode ser procurado a partir de qualquer uma das pontas [@gotel2012traceability]. No exemplo, a consulta para frente a partir de `REQ-04` retorna `DA-02`, `DA-04`, `COMP-02`, `COMP-03`, `COMP-06` e `TST-04`, enquanto a consulta reversa a partir de `COMP-02` retorna `REQ-01`, `REQ-02` e `REQ-04`, como mostra o notebook. Se uma consulta direta encontra `COMP-02` na linha de `REQ-04`, mas a consulta reversa não encontra `REQ-04`, é preciso revisar a consulta ou os dados; isso não exige gravar um segundo vínculo com a seta invertida.
 
 ### Manutenção dos vínculos e análise de impacto
 
-Um vínculo registrado em um momento deixa de ser verdadeiro quando um dos artefatos muda. 
-A manutenção de rastreabilidade é o conjunto de atividades de recuperar o vínculo, analisar 
-a mudança, atualizar o registro e verificar o resultado [@gotel2012traceability, pp. 15–16]. 
-Ela pode ser contínua, com atualização imediatamente após cada mudança, ou sob demanda, com uma 
-revisão periódica do conjunto [@gotel2012traceability, p. 16]. A escolha depende da frequência das 
-mudanças e do custo de um link desatualizado passar despercebido.
+Um vínculo pode deixar de ser válido quando um dos artefatos muda. A manutenção de rastreabilidade reúne a localização dos vínculos afetados, a análise da mudança, a atualização dos registros e a verificação do resultado [@gotel2012traceability]. Ela pode ser contínua, após cada mudança, ou sob demanda, com revisão periódica. A escolha depende da frequência das mudanças e do custo de um vínculo desatualizado passar despercebido.
 
 | Evento | Efeito nos vínculos | Ação de manutenção |
 |---|---|---|
 | Requisito alterado | decisões e componentes podem deixar de satisfazer o novo critério | revisar os links de saída, reavaliar decisões e atualizar testes |
-| Requisito removido | links de saída ficam órfãos | retirar os links e verificar elementos sem justificativa |
+| Requisito removido | vínculos associados perdem a justificativa original | retirar ou redirecionar os vínculos e verificar elementos sem justificativa |
 | Decisão substituída | links apontam para uma decisão obsoleta | redirecionar para a sucessora e preservar o histórico |
 | Componente renomeado, dividido ou removido | links apontam para identificador inexistente ou incompleto | remapear os identificadores e redistribuir os vínculos |
-| Teste alterado | a relação de verificação muda | atualizar o vínculo `verifica` e o critério de aceitação |
+| Teste alterado | a relação de verificação pode mudar | revisar o vínculo `verifica` e o critério de aceitação |
 
-A análise de impacto é a aplicação mais concreta da matriz. O procedimento é: 
-(i) localizar o requisito alterado; (ii) percorrer os links para frente até o último nível relevante; 
-(iii) consultar para trás cada elemento alcançado, para descobrir outros requisitos que compartilham 
-o mesmo componente; (iv) classificar cada elemento como alterar, revisar ou apenas verificar; 
-(v) atualizar os links e registrar a decisão. O passo (iii) evita um erro comum: 
-ajustar o componente para o requisito que motivou a mudança e esquecer os demais requisitos 
+A análise de impacto é a aplicação mais concreta da matriz. O procedimento é:
+(i) localizar o requisito alterado; (ii) percorrer os links para frente até o último nível relevante;
+(iii) consultar para trás cada elemento alcançado, para descobrir outros requisitos que compartilham
+o mesmo componente; (iv) classificar cada elemento como alterar, revisar ou apenas verificar;
+(v) atualizar os links e registrar a decisão. O passo (iii) evita um erro comum:
+ajustar o componente para o requisito que motivou a mudança e esquecer os demais requisitos
 que dependem dele.
 
-No exemplo, a mudança de `REQ-04` — de 2 segundos para 95% das consultas para 500 ms para 99% — produz o conjunto `DA-02`, `DA-04`, `COMP-02`, `COMP-03`, `COMP-06` e `TST-04`. 
-A consulta reversa mostra que `COMP-02` também atende `REQ-01` e `REQ-02`: esses requisitos não precisam ser alterados, mas seus testes passam a ser pontos de regressão. 
-Sem os vínculos, a equipe poderia ajustar apenas o serviço de disponibilidade e deixar o cache e o índice fora do orçamento de 500 ms. 
-Os benefícios relatados nos estudos empíricos mapeados por Charalampidou et al. (2021) concentram-se em corretude e manutencibilidade, 
-o que é coerente com esse uso da matriz; o custo correspondente está em criar e manter os vínculos [@charalampidou2021empirical].
+No exemplo, a mudança de `REQ-04` — de 2 segundos para 95% das consultas para 500 ms para 99% — aponta `DA-02`, `DA-04`, `COMP-02`, `COMP-03`, `COMP-06` e `TST-04` como candidatos à revisão, sem afirmar que todos precisarão ser alterados. A consulta reversa mostra que `COMP-02` também atende `REQ-01` e `REQ-02`: esses requisitos não precisam necessariamente mudar, mas a revisão do componente pode exigir regressão de `TST-01` e `TST-02`, além da atualização de `TST-04` para o novo limiar. Sem os vínculos, a equipe poderia ajustar apenas o serviço de disponibilidade e deixar o cache e o índice fora do orçamento de 500 ms. Os benefícios relatados nos estudos empíricos mapeados por Charalampidou et al. (2021) concentram-se em corretude e manutencibilidade, o que é coerente com esse uso da matriz; o custo correspondente está em criar e manter os vínculos [@charalampidou2021empirical].
 
 ### Identificação de vínculos inválidos ou desatualizados
 
@@ -296,18 +269,15 @@ A manutenção só é confiável se houver verificação. Um conjunto pequeno de
 | Cobertura para trás | elemento sem requisito de origem | remover o elemento ou documentar sua origem |
 | Integridade referencial | link para identificador inexistente | corrigir o identificador ou retirar o link |
 | Atualidade | link anterior à última versão do artefato | revisar e revalidar o vínculo |
-| Consistência direcional | A alcança B, mas B não alcança A | corrigir o vínculo inverso ou o tipo |
+| Consistência das consultas | a busca direta encontra um par, mas a reversa não | corrigir a consulta, o índice ou o registro |
 | Precisão de links recuperados | similaridade baixa ou relação sem sentido | revisar manualmente e descartar falsos positivos |
 
-Parte dessas verificações pode ser automatizada: consultas à matriz, regras no repositório e conferência durante a revisão de um pull request. 
-O que não pode ser automatizado é a validade semântica do vínculo, que exige revisão humana. 
-Ballarín et al. (2023) mostram que a qualidade dos vínculos recuperados varia com a linguagem arquitetural utilizada, 
-o que reforça a necessidade de conferir os vínculos automáticos antes de usá-los em uma decisão [@ballarin2023influence, pp. 705–706].
+Parte dessas verificações pode ser automatizada: consultas à matriz, regras no repositório e conferência durante a revisão de um pull request. A validade semântica, porém, não se resolve apenas com checagens estruturais. Ballarín et al. (2023) mostram que a qualidade dos vínculos recuperados varia com a linguagem arquitetural utilizada; por isso, candidatos automáticos precisam de revisão antes de apoiar uma decisão [@ballarin2023influence].
 
 ### Ferramentas de apoio
 
-Ferramentas não substituem a estratégia de rastreabilidade: elas apoiam as atividades de criação, consulta e manutenção, 
-mas dependem do modelo de informação e do processo definidos pela equipe [@gotel2012traceability, p. 13]. 
+Ferramentas não substituem a estratégia de rastreabilidade: elas apoiam as atividades de criação, consulta e manutenção,
+mas dependem do modelo de informação e do processo definidos pela equipe [@gotel2012traceability, p. 13].
 As categorias abaixo cobrem as necessidades mais comuns:
 
 | Categoria | Exemplos | Apoio ao registro e à manutenção | Limite |
@@ -317,9 +287,9 @@ As categorias abaixo cobrem as necessidades mais comuns:
 | Recuperação de vínculos | RETRO, ADAMS Re-Trace, Trustrace | sugerem links por recuperação de informação ou mineração de dados | produzem candidatos que precisam de validação |
 | Planilhas e arquivos versionados | matriz em planilha ou em Markdown/YAML | baixo custo, leitura simples e versionamento no Git | manutenção manual e pouca verificação automática |
 
-As ferramentas de gestão de requisitos concentram requisitos, atributos e links em um repositório único e permitem produzir visões de cobertura e de impacto [@nour2023traceability, pp. 14–15]. 
-As ferramentas de manutenção automatizada reagem a eventos de mudança para atualizar os vínculos, mas costumam depender de integração com um ambiente específico [@nour2023traceability, p. 14]. 
-As ferramentas de recuperação comparam a similaridade entre artefatos e propõem links, o que reduz o esforço inicial, porém transfere à equipe a tarefa de validar os candidatos [@nour2023traceability, p. 15]. 
+As ferramentas de gestão de requisitos concentram requisitos, atributos e links em um repositório único e permitem produzir visões de cobertura e de impacto [@nour2023traceability, pp. 14–15].
+As ferramentas de manutenção automatizada reagem a eventos de mudança para atualizar os vínculos, mas costumam depender de integração com um ambiente específico [@nour2023traceability, p. 14].
+As ferramentas de recuperação comparam a similaridade entre artefatos e propõem links, o que reduz o esforço inicial, porém transfere à equipe a tarefa de validar os candidatos [@nour2023traceability, p. 15].
 Para o recorte deste tópico, o próprio `notebook.ipynb` funciona como uma ferramenta mínima: a matriz é uma estrutura de dados, as consultas são funções e os testes verificam automaticamente o conjunto de impacto.
 
 ## Exemplo aplicado
@@ -422,52 +392,52 @@ O texto e o notebook devem utilizar o mesmo exemplo, os mesmos identificadores e
 
 ## Trade-offs da rastreabilidade
 
-A rastreabilidade ajuda a responder o que pode ser afetado por uma mudança e por que um elemento arquitetural existe. 
-Esse benefício depende de manter as relações confiáveis: uma matriz desatualizada pode orientar a equipe para o conjunto 
-errado de artefatos. Estudos empíricos associam a rastreabilidade à corretude e à manutenibilidade, enquanto o trabalho de 
-criar e manter vínculos compõe seu custo [@charalampidou2021empirical; @ingram2012cost]. Em um experimento controlado com 
-tarefas de manutenção em dois projetos, participantes com rastreabilidade concluíram as tarefas mais rapidamente e com mais 
+A rastreabilidade ajuda a responder o que pode ser afetado por uma mudança e por que um elemento arquitetural existe.
+Esse benefício depende de manter as relações confiáveis: uma matriz desatualizada pode orientar a equipe para o conjunto
+errado de artefatos. Estudos empíricos associam a rastreabilidade à corretude e à manutenibilidade, enquanto o trabalho de
+criar e manter vínculos compõe seu custo [@charalampidou2021empirical; @ingram2012cost]. Em um experimento controlado com
+tarefas de manutenção em dois projetos, participantes com rastreabilidade concluíram as tarefas mais rapidamente e com mais
 acerto; o resultado reforça seu benefício potencial, sem medir o caso da clínica [@egyed2015developers].
 
 ### Comparação dos principais trade-offs
 
 {{< include _trade-offs.md >}}
 
-Na clínica, a alteração de `REQ-04` de 2 segundos em 95% das consultas para 500 ms em 99% mostra os dois lados. 
-A matriz localiza `DA-02`, `DA-04`, `COMP-02`, `COMP-03`, `COMP-06` e `TST-04` como candidatos à revisão. 
-A equipe ainda precisa verificar quais decisões e componentes exigem mudança, atualizar o critério de `TST-04` e confirmar 
-se os vínculos continuam válidos. Como `COMP-02` também aparece em `REQ-01` e `REQ-02`, mudanças nele podem pedir 
+Na clínica, a alteração de `REQ-04` de 2 segundos em 95% das consultas para 500 ms em 99% mostra os dois lados.
+A matriz localiza `DA-02`, `DA-04`, `COMP-02`, `COMP-03`, `COMP-06` e `TST-04` como candidatos à revisão.
+A equipe ainda precisa verificar quais decisões e componentes exigem mudança, atualizar o critério de `TST-04` e confirmar
+se os vínculos continuam válidos. Como `COMP-02` também aparece em `REQ-01` e `REQ-02`, mudanças nele podem pedir
 regressão de `TST-01` e `TST-02`. A matriz reduz a busca inicial, mas não substitui a análise técnica.
 
-O estudo de Ballarín et al. (2023) investiga a recuperação automatizada de vínculos entre requisitos e elementos de 
-modelos arquiteturais. A qualidade dos resultados variou conforme a linguagem arquitetural no caso industrial estudado; 
-por isso, sugestões por similaridade devem ser tratadas como candidatas à validação, antes de entrar na 
-matriz do projeto [@ballarin2023influence]. Essa é uma decisão de uso para o exemplo da clínica, não uma avaliação da 
+O estudo de Ballarín et al. (2023) investiga a recuperação automatizada de vínculos entre requisitos e elementos de
+modelos arquiteturais. A qualidade dos resultados variou conforme a linguagem arquitetural no caso industrial estudado;
+por isso, sugestões por similaridade devem ser tratadas como candidatas à validação, antes de entrar na
+matriz do projeto [@ballarin2023influence]. Essa é uma decisão de uso para o exemplo da clínica, não uma avaliação da
 clínica realizada pelos autores.
 
 ## Quando utilizar rastreabilidade
 
-Vale registrar vínculos quando uma mudança em um requisito pode alcançar vários componentes ou quando o mesmo 
-componente atende a requisitos diferentes. Também é útil quando a equipe precisa justificar decisões, verificar 
-cobertura por testes ou prestar contas de como um requisito foi realizado. No exemplo, `COMP-02` participa de três requisitos; 
+Vale registrar vínculos quando uma mudança em um requisito pode alcançar vários componentes ou quando o mesmo
+componente atende a requisitos diferentes. Também é útil quando a equipe precisa justificar decisões, verificar
+cobertura por testes ou prestar contas de como um requisito foi realizado. No exemplo, `COMP-02` participa de três requisitos;
 a consulta reversa torna visível essa dependência antes de alterar o serviço.
 
-Para um projeto pequeno, uma matriz enxuta pode bastar: uma linha por requisito, IDs estáveis e colunas 
-para decisões, componentes e teste, como no notebook. A equipe deve definir quem atualiza a linha após cada 
-mudança e revisar os vínculos na mesma revisão do artefato alterado. Se uma coluna não responde a uma pergunta 
-real de manutenção, seu custo pode superar o benefício. Conforme crescem os artefatos e as consultas, ferramentas de 
+Para um projeto pequeno, uma matriz enxuta pode bastar: uma linha por requisito, IDs estáveis e colunas
+para decisões, componentes e teste, como no notebook. A equipe deve definir quem atualiza a linha após cada
+mudança e revisar os vínculos na mesma revisão do artefato alterado. Se uma coluna não responde a uma pergunta
+real de manutenção, seu custo pode superar o benefício. Conforme crescem os artefatos e as consultas, ferramentas de
 busca e verificação podem reduzir o trabalho manual [@ingram2012cost; @gotel2012traceability].
 
-Sinais de degradação são links para IDs inexistentes ou versões antigas, requisitos sem decisão ou teste associado, decisões 
-sem justificativa e alterações aprovadas sem consulta de impacto. Esses sinais pedem revisão da matriz e do processo 
+Sinais de degradação são links para IDs inexistentes ou versões antigas, requisitos sem decisão ou teste associado, decisões
+sem justificativa e alterações aprovadas sem consulta de impacto. Esses sinais pedem revisão da matriz e do processo
 de atualização antes que a equipe confie novamente nas respostas [@gotel2012traceability].
 
 ## Conclusão
 
-Relacionar requisitos, decisões, componentes e testes permite localizar candidatos à revisão quando o sistema evolui. 
-No caso da clínica, a mudança de `REQ-04` mostra o valor de consultar a matriz para frente e depois verificar outros 
-requisitos ligados aos componentes encontrados. O resultado só é útil se os vínculos tiverem IDs compreensíveis, justificativa 
-e manutenção após mudanças. A escolha entre uma matriz simples e apoio automatizado deve acompanhar a quantidade de artefatos, 
+Relacionar requisitos, decisões, componentes e testes permite localizar candidatos à revisão quando o sistema evolui.
+No caso da clínica, a mudança de `REQ-04` mostra o valor de consultar a matriz para frente e depois verificar outros
+requisitos ligados aos componentes encontrados. O resultado só é útil se os vínculos tiverem IDs compreensíveis, justificativa
+e manutenção após mudanças. A escolha entre uma matriz simples e apoio automatizado deve acompanhar a quantidade de artefatos,
 a frequência das alterações e as perguntas que a equipe precisa responder.
 
 ::: {.callout-note}
@@ -475,7 +445,7 @@ a frequência das alterações e as perguntas que a equipe precisa responder.
 
 A apresentação está disponível em [`slides.qmd`](slides.qmd).
 
-Os slides retomam os conceitos e o exemplo de agendamento usados no texto e no notebook. 
+Os slides retomam os conceitos e o exemplo de agendamento usados no texto e no notebook.
 Cada integrante deve revisar suas próprias notas de fala antes da apresentação.
 :::
 
