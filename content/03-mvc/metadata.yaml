@@ -1,0 +1,95 @@
+# Metadados do tópico — MVC (Model-View-Controller)
+numero: "03"
+slug: "03-mvc"
+titulo: "MVC (Model-View-Controller)"
+subtitulo: "Separação de responsabilidades entre domínio, apresentação e controle"
+resumo: >-
+  O padrão arquitetural Model-View-Controller (MVC) divide sistemas interativos
+  em três partes com responsabilidades estritas: Model (estado e lógica de negócio),
+  View (exibição para o usuário) e Controller (tradução de entradas e comandos).
+  Nascido no Xerox PARC com Smalltalk-80 e amplamente difundido na web moderna,
+  o MVC isola o que o sistema faz da forma como ele se apresenta, viabilizando
+  testes automatizados e múltiplas interfaces simultâneas.
+
+autores:
+  - nome: "Antonio Mário Jesus Vidal Leite"
+    grupo: "Grupo 3"
+    github: "amjvidal"
+    orcid: ""
+  - nome: "David Soares da Silva"
+    grupo: "Grupo 3"
+    github: "DavidSoares18"
+    orcid: ""
+  - nome: "Ian Képler dos Santos Araújo"
+    grupo: "Grupo 3"
+    github: "iankepler5"
+    orcid: ""
+  - nome: "João Gabriel Marcos da Silva"
+    grupo: "Grupo 3"
+    github: "Jgabriel1800"
+    orcid: ""
+  - nome: "João Lucas da Silva Soares Oliveira"
+    grupo: "Grupo 3"
+    github: "jwaoluckas"
+    orcid: ""
+  - nome: "Lucas Matheus Elias Silva Teixeira dos Santos"
+    grupo: "Grupo 3"
+    github: "teixeiralucs"
+    orcid: ""
+
+status: "publicado"
+data_criacao: "2026-09-22"
+ultima_revisao: "2026-10-21"
+revisado_por:
+  - "Matheus Barbosa"
+  - "Maria Letícia"
+  - "Pedro Xavier"
+  - "Ruan Henrique"
+  - "João Henrique"
+  - "Danniel Soares"
+  - "Caio Vinicius"
+
+competencias:
+  - "Distinguir com clareza as fronteiras de responsabilidade entre Model, View e Controller"
+  - "Explicar como o padrão Observer permite a sincronização reativa entre Model e múltiplas Views sem acoplamento direto"
+  - "Diagnosticar e evitar anti-padrões recorrentes como Fat Controller e vazamento de regras de negócio para a View"
+  - "Avaliar os trade-offs de adotar MVC em contrapartida a scripts diretos ou abordagens reativas modernas (MVP, MVVM)"
+  - "Estruturar testes automatizados de regras de domínio de maneira desacoplada da camada visual"
+nivel_bloom: ["compreender", "analisar", "avaliar"]
+pre_requisitos: ["arquitetura-em-camadas"]
+topicos_relacionados: ["cliente-servidor"]
+palavras_chave: ["MVC", "Model-View-Controller", "padrão arquitetural", "separação de responsabilidades", "Observer", "MVP", "MVVM", "Fat Controller"]
+
+formatos:
+  texto: true
+  notebook:
+    entregue: true
+    colab_url: "https://colab.research.google.com/drive/1GiyY0wrC_AD0KsTNtF_1jRdxEOF3XsCk?usp=sharing"
+  audio_notebooklm:
+    entregue: true
+    arquivo: ""
+    url: "https://drive.google.com/file/d/1cjYLBBMD9wWiqQ3-ma2StS7Cvu9skX8V/view?usp=sharing"
+    duracao_min: 12
+    transcricao: "assets/audio-transcricao.md"
+  gem_gemini:
+    entregue: true
+    url: "https://gemini.google.com/gem-labs/1NPyLSiayocYBjSqoxQ-kLajmonoaU4mc"
+    instrucoes: |
+      Você é um tutor especialista em Arquitetura de Software com foco no padrão Model-View-Controller (MVC) e na evolução dos padrões de interface de usuário (como MVP, MVVM e Web MVC).
+      Seu objetivo é ajudar os leitores a compreender a separação de responsabilidades, o fluxo de dados e os papéis de cada componente.
+      Baseie suas respostas no material do guia, cite sempre as fontes teóricas adequadas e use analogias claras para apoiar o raciocínio.
+  slides:
+    entregue: true
+    num_slides: 19
+    arquivo: "slides.qmd"
+  video:
+    entregue: true
+    url: "https://drive.google.com/file/d/1mtYWU0p2qS9ffTEQb-AjIMLSF2HATSHK/view?usp=sharing"
+  podcast:
+    entregue: false
+    url: ""
+  mcp:
+    entregue: false
+    url: ""
+
+licenca: "CC-BY-NC-4.0"

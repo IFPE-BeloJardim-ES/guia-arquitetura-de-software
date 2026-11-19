@@ -1,0 +1,198 @@
+---
+title: "Arquitetura Cliente-Servidor"
+subtitle: "Guia de Arquitetura de Software"
+author: "Edson Cavalcante Valença & Matheus Emanuel"
+format:
+  revealjs:
+    auto-stretch: false
+---
+
+## O Problema: A Necessidade de Compartilhamento
+
+- Modelos anteriores oscilavam entre a extrema centralização de *mainframes* e estações isoladas
+- Desafios marcados por fragmentação, duplicação de dados e alto custo para compartilhar informações
+- Crescente **necessidade de compartilhamento de recursos e serviços** entre computadores conectados em rede
+
+---
+
+## O que é a Arquitetura Cliente-Servidor?
+
+- Modelo de computação distribuída
+- Divisão em dois papéis principais: **Cliente** e **Servidor**
+- Comunicação via rede através de protocolos padrão (ex: HTTP, TCP/IP)
+
+---
+
+## O Papel do Cliente
+
+- Solicita serviços ou recursos
+- Responsável pela apresentação e interface com o utilizador
+- Processamento local focado na experiência do utilizador
+
+---
+
+## O Papel do Servidor
+
+- Fornece serviços e gere recursos partilhados
+- Processa dados, regras de negócio e persistência
+- Atende a múltiplos clientes simultaneamente
+
+---
+
+## Fluxo de Requisição e Resposta
+
+1. Cliente envia um pedido (*Request*)
+2. Rede transporta a mensagem até ao servidor
+3. Servidor processa a requisição e valida regras
+4. Servidor devolve uma resposta (*Response*)
+
+---
+
+## Estrutura e Comunicação
+
+```{mermaid}
+%%| label: fig-estrutura-cliente-servidor-slides
+%%| fig-cap: "Fluxo de comunicação entre clientes, servidor e banco de dados central."
+flowchart TD
+    subgraph Clientes ["Aplicações Cliente (Solicitantes)"]
+        C1[Cliente Web / Browser]
+        C2[App Mobile]
+        C3[Aplicação Desktop]
+    end
+
+    subgraph Servidor ["Camada Servidora (Provedora)"]
+        S[Servidor de Aplicação / API]
+        DB[(Banco de Dados Central)]
+    end
+
+    C1 -->|1. Requisição de Serviço| S
+    C2 -->|1. Requisição de Serviço| S
+    C3 -->|1. Requisição de Serviço| S
+
+    S -->|2. Validação e Negócio| S
+    S -->|3. Consulta/Escrita| DB
+    DB -->|4. Retorna Dados| S
+    S -->|5. Resposta Estruturada| C1
+    S -->|5. Resposta Estruturada| C2
+    S -->|5. Resposta Estruturada| C3
+```
+
+---
+
+## Responsabilidades e Restrições
+
+- **Acesso Mediado:** Os clientes nunca acedem diretamente aos dados ou à base de dados, utilizando sempre as interfaces expostas pelo servidor.
+- **Validação no Servidor:** Operações sensíveis, regras de negócio e verificações de segurança devem ser executadas no servidor, já que o ambiente do cliente é não confiável.
+- **Controle de Recursos:** Centralização estrita da gestão de permissões, autenticação e integridade transacional na camada servidora.
+
+---
+
+## Consequências Mensuráveis da Violação
+
+- **Corrupção de Dados:** Acesso direto permite gravar registros inválidos (como quantidades negativas ou estoques estourados) sem passar por nenhuma regra de negócio.
+- **Falhas de Concorrência:** Múltiplas conexões paralelas disputando o acesso ao banco geram erros de contenção severos (*database locked*).
+- **Perda de Integridade:** A quebra do modelo de acesso mediado compromete a consistência e a segurança de todo o sistema.
+
+---
+
+## Tipos de Clientes: Magro (*Thin Client*)
+
+- Lógica de negócio e processamento concentrados no servidor
+- O cliente apenas exibe a interface gráfica
+- **Exemplo:** Páginas web estáticas e terminais de dados
+
+---
+
+## Tipos de Clientes: Gordo (*Thick/Fat Client*)
+
+- Grande parte do processamento é feito na máquina local
+- Menor dependência do servidor para operações de UI
+- **Exemplo:** Aplicações desktop e jogos locais com sincronização
+
+---
+
+## Estado da Conexão: *Stateless*
+
+- O servidor não guarda estado entre requisições
+- Cada pedido deve conter toda a informação necessária
+- Facilita o escalamento horizontal do servidor
+
+---
+
+## Estado da Conexão: *Stateful*
+
+- O servidor mantém a sessão e o estado do cliente
+- Útil para fluxos contínuos e contextos persistentes
+- Dificulta a escalabilidade em grandes volumes
+
+---
+
+## Vantagens da Arquitetura
+
+- **Centralização:** Gestão e controlo de dados centralizados
+- **Segurança:** Políticas de acesso aplicadas diretamente no servidor
+- **Manutenção:** Atualizações no servidor beneficiam todos os clientes
+
+---
+
+## Desvantagens e Desafios
+
+- **Ponto Único de Falha:** Se o servidor falhar, o serviço fica indisponível
+- **Gargalos de Desempenho:** Sobrecarga com muitas requisições simultâneas
+- **Custos de Infraestrutura:** Servidores robustos exigem maior investimento
+
+---
+
+## Trade-offs e Análise Técnica
+
+<style>
+.slide-tradeoffs table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  border-radius: 8px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+  font-size: 0.45em !important;
+  margin-top: 10px !important;
+}
+
+.slide-tradeoffs th {
+  background-color: #1e293b !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  padding: 10px 14px !important;
+  text-align: left !important;
+  border: none !important;
+}
+
+.slide-tradeoffs td {
+  padding: 8px 14px !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  vertical-align: middle !important;
+  color: #334155 !important;
+}
+
+.slide-tradeoffs tr:nth-child(even) td {
+  background-color: #f8fafc !important;
+}
+
+.slide-tradeoffs tr:nth-child(odd) td {
+  background-color: #ffffff !important;
+}
+
+.slide-tradeoffs tr:last-child td {
+  border-bottom: none !important;
+}
+</style>
+
+::: {.slide-tradeoffs}
+{{< include _trade-offs.md >}}
+:::
+
+---
+
+## Conclusão e Padrões Modernos
+
+- Base de arquiteturas modernas (APIs REST, WebSockets, Microserviços)
+- Essencial para a construção de sistemas distribuídos e escaláveis

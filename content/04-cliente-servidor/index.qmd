@@ -1,0 +1,183 @@
+---
+title: "Arquitetura Cliente-Servidor"
+subtitle: "Divisão de responsabilidades entre provedores e solicitantes de serviços em sistemas distribuídos"
+author:
+  - name: "Edson Cavalcante Valença"
+  - name: "Matheus Emanuel"
+date: 2026-09-28
+date-modified: last-modified
+bibliography: referencias.bib
+citation:
+  type: webpage
+  container-title: "Guia Aberto de Arquitetura de Software"
+license: "CC BY-NC 4.0"
+keywords: ["cliente-servidor", "client-server", "sistemas-distribuidos", "requisicao-resposta", "arquitetura-de-software"]
+---
+
+::: {.meta-topico}
+<dl>
+<dt>Competências</dt>
+<dd>Avaliar a viabilidade da arquitetura Cliente-Servidor, projetar a divisão clara de responsabilidades entre clientes e servidores, e identificar gargalos de desempenho e falhas comuns em sistemas centralizados.</dd>
+<dt>Pré-requisitos</dt>
+<dd>Conceitos básicos de redes de computadores (protocolos TCP/IP, HTTP) e lógica de programação web ou sockets.</dd>
+<dt>Formatos</dt>
+<dd>
+[texto]{.formato} [notebook](notebook.ipynb){.formato} [áudio]{.formato} [gem]{.formato} [slides](slides.qmd){.formato}
+</dd>
+</dl>
+:::
+
+::: {.callout-note}
+## Sobre esta página
+Esta página apresenta o estilo arquitetural **Cliente-Servidor**. Aqui abordamos seus conceitos fundamentais, representação estrutural, exemplo prático de implementação e trade-offs essenciais para apoiar a tomada de decisão em projetos de software distribuído.
+:::
+
+## Definição e contexto
+
+A arquitetura Cliente-Servidor é um modelo de computação distribuída no qual as tarefas e cargas de trabalho são divididas entre os provedores de um recurso ou serviço, chamados de servidores, e os solicitantes desses serviços, denominados clientes.
+
+Este estilo surgiu da necessidade de compartilhamento de recursos e serviços entre computadores conectados em rede, superando as limitações dos modelos anteriores [@tanenbaum2007distribuidos]. Antes da consolidação do modelo Cliente-Servidor, a computação oscilava entre a extrema centralização dos *mainframes* (onde toda a lógica e apresentação ficavam restritas ao sistema central) e a descentralização excessiva de estações de trabalho isoladas, que sofriam com a falta de integração, problemas de inconsistência e alto custo para compartilhar dispositivos e informações.
+
+A decisão de adotar a arquitetura Cliente-Servidor fundamenta-se, portanto, em permitir que múltiplos dispositivos clientes acessem e compartilhem recursos críticos de forma centralizada e eficiente (como bases de dados, serviços de impressão, regras de negócio e autenticação), distribuindo o processamento da interface com o usuário [@bass2021software, cap. 13].
+
+::: {.callout-tip}
+## Sobre as citações
+As citações ao longo deste texto utilizam as chaves definidas no arquivo `referencias.bib` (ex: `[@tanenbaum2007distribuidos]`). O compilador Quarto gera a lista bibliográfica e a numeração ao final do documento automaticamente.
+:::
+
+## Estrutura e componentes
+
+O modelo Cliente-Servidor é estruturado em torno de três papéis/elementos principais:
+
+1. **Cliente (*Client*):** A aplicação que solicita serviços ou recursos. Pode ser classificada como *Thin Client* (cliente magro, focado apenas na apresentação e validações simples) ou *Thick/Fat Client* (cliente gordo, que executa processamento local significativo).
+2. **Servidor (*Server*):** A entidade centralizadora que aguarda requisições, aplica as regras de negócio, autentica permissões e gerencia o acesso aos dados ou recursos computacionais.
+3. **Protocolo de Comunicação:** O conjunto de regras e convenções (como HTTP/REST, gRPC ou WebSockets) que define o formato das mensagens trocadas via rede entre cliente e servidor.
+
+A regra fundamental deste estilo é o **acesso mediado**: os clientes nunca acessam os dados ou recursos subjacentes diretamente, mas sempre por meio das interfaces expostas pelo servidor.
+
+```{mermaid}
+%%| label: fig-estrutura-cliente-servidor
+%%| fig-cap: "Fluxo de requisição e resposta na arquitetura Cliente-Servidor com camada de persistência centralizada."
+flowchart TD
+    subgraph Clientes ["Aplicações Cliente (Solicitantes)"]
+        C1[Cliente Web / Browser]
+        C2[App Mobile]
+        C3[Aplicação Desktop]
+    end
+
+    subgraph Servidor ["Camada Servidora (Provedora)"]
+        S[Servidor de Aplicação / API]
+        DB[(Banco de Dados Central)]
+    end
+
+    C1 -->|1. Requisição de Serviço| S
+    C2 -->|1. Requisição de Serviço| S
+    C3 -->|1. Requisição de Serviço| S
+
+    S -->|2. Validação e Negócio| S
+    S -->|3. Consulta/Escrita| DB
+    DB -->|4. Retorna Dados| S
+    S -->|5. Resposta Estruturada| C1
+    S -->|5. Resposta Estruturada| C2
+    S -->|5. Resposta Estruturada| C3
+```
+Embora o modelo Cliente-Servidor admita variações estruturais — como as **arquiteturas de duas camadas (2-tier)**, nas quais aplicações cliente (frequentemente desktop) conectam-se diretamente ao banco de dados —, a prática moderna e recomendada para ambientes distribuídos (como web e mobile) utiliza **três camadas (3-tier)**, onde o acesso aos dados é rigidamente mediado por uma camada intermediária de serviço ou API.
+...
+Ao descrever a estrutura de sistemas modernos, é fundamental destacar os **riscos do acoplamento inadequado**:
+- Permitir que clientes web ou móveis acessem diretamente a camada de dados (banco de dados) sem uma API intermediária expõe credenciais de acesso sensíveis e regras de negócio corporativas a sérios riscos críticos de segurança e vulnerabilidades estruturais [@sommerville2019engenharia].
+- É uma prática arquitetural altamente inadequada delegar exclusivamente ao cliente validações de segurança, restrições de integridade ou regras de negócio essenciais sem qualquer verificação posterior ou intermediada no servidor, já que o ambiente de execução do cliente é inerentemente hostil e considerado não confiável.
+
+## Exemplo aplicado
+
+Para ilustrar a aplicação prática deste modelo, considere um sistema de gerenciamento de pedidos e controle de estoque de um e-commerce.
+
+1. **A implementação correta:** A aplicação mobile ou web (cliente) envia uma requisição `POST /pedidos` contendo os dados da compra e o token de autenticação. O servidor de aplicação (servidor) recebe a mensagem, valida a identidade do cliente, verifica a disponibilidade dos itens no banco de dados, registra a transação e retorna um status HTTP `201 Created` com a confirmação.
+2. **O anti-patrão (em sistemas web/mobile modernos):** Um aplicativo móvel estabelece uma conexão JDBC/TCP direta com o banco de dados PostgreSQL central e executa a query `INSERT INTO pedidos ...` sem o intermédio de um servidor de aplicação.
+3. **A consequência mensurável:**
+   - **Vulnerabilidade de Segurança:** As credenciais de acesso ao banco de dados ficam expostas via engenharia reversa do pacote do aplicativo cliente.
+   - **Esgotamento de Recursos:** Centenas de conexões simultâneas diretas esgotam rapidamente o pool de conexões do banco de dados.
+   - **Inconsistência de Dados:** Falta de validação centralizada e controle de concorrência adequado para múltiplos usuários.
+
+
+## Exemplo executável
+O notebook interativo deste tópico está disponível em [`notebook.ipynb`](notebook.ipynb) e pode ser aberto diretamente no [Google Colab](https://colab.research.google.com/). Ele demonstra a implementação de um servidor de sockets/HTTP em Python e simula requisições simultâneas de múltiplos clientes.
+
+
+## Trade-offs
+
+A escolha pela arquitetura Cliente-Servidor envolve equilibrar a centralização de controle e gestão contra o aumento de dependência de infraestrutura de rede [@richards2020fundamentals].
+
+| Atributo | Efeito | Por quê |
+|---|---|---|
+| **Gerenciamento Centralizado** | Favorecido | Regras de negócio, dados e segurança residem no servidor, permitindo atualizações sem redistribuição de código nos clientes. |
+| **Segurança** | Favorecida | O servidor atua como um perímetro centralizado de validação, autenticação e controle de acesso a recursos sensíveis. |
+| **Reusabilidade** | Favorecida | A mesma API/servidor pode atender simultaneamente múltiplos clientes heterogêneos (Web, Mobile, CLI). |
+| **Escalabilidade** | Variável (Favorecida / Desafiadora) | O aumento no volume de clientes exige o uso de balanceadores de carga e servidores *stateless*. A escalabilidade horizontal de instâncias de aplicação é facilitada pela separação de papéis, mas o banco de dados centralizado continua exigindo estratégias avançadas de replicação e particionamento. |
+| **Disponibilidade** | Comprometida | O servidor centralizado representa um Ponto Único de Falha (*Single Point of Failure*); se cair, todos os clientes ficam inoperantes. |
+| **Desempenho e Latência** | Comprometido | Cada interação exige transporte de dados via rede, introduzindo latência superior ao processamento estritamente local. |
+| **Simplicidade Operacional** | Comprometida | Exige gestão de infraestrutura de rede, balanceamento de carga e estratégias de contingência para o servidor. |
+
+## Quando usar e quando não usar
+
+**Considere usar quando:**
+
+- **Múltiplos clientes heterogêneos precisam de uma base de dados compartilhada:**
+  - **O cenário:** Diferentes plataformas — como navegadores web, aplicativos móveis (iOS e Android) e sistemas corporativos legados — precisam operar de forma integrada sobre uma única fonte de verdade (*Single Source of Truth*).
+  - **A solução:** A arquitetura Cliente-Servidor viabiliza o desacoplamento total entre a camada de apresentação e a camada de persistência por meio de contratos de API bem definidos (como REST, gRPC ou GraphQL).
+  - **O benefício:** Novas frentes de interface podem ser lançadas rapidamente, garantindo consistência transacional e colaboração simultânea sem duplicar a lógica de acesso aos dados em cada aplicação cliente.
+
+- **Regras de negócio e dados são ativos críticos de segurança:**
+  - **O cenário:** Em domínios sensíveis (como setor financeiro, saúde ou e-commerce corporativo), lógicas de cálculo de preços, descontos, validação de identidades e gestão de credenciais não podem ficar expostas.
+  - **A vulnerabilidade:** O dispositivo do usuário final é inerentemente vulnerável a inspeção de pacotes, engenharia reversa e manipulação de memória local.
+  - **A solução:** O servidor atua como um perímetro de defesa centralizado, aplicando diretrizes rigorosas de autenticação (OAuth2 e JWT), criptografia e controle de acesso baseado em papéis (*RBAC*) para barrar fraudes antes do núcleo transacional.
+
+- **Os dispositivos clientes possuem hardware limitado ou heterogêneo:**
+  - **O cenário:** A base de usuários utiliza dispositivos variados, incluindo smartphones de entrada, computadores antigos ou terminais com restrições severas de bateria, memória RAM e espaço em disco.
+  - **A solução:** O modelo transfere o peso computacional, as consultas complexas a bancos relacionais e o processamento intensivo para servidores ou clusters em nuvem altamente escaláveis.
+  - **O benefício:** O cliente atua de forma leve (*Thin Client*), necessitando apenas de capacidade básica para renderizar interfaces e enviar requisições HTTP, o que amplia o alcance e a acessibilidade da aplicação.
+
+**Evite quando:**
+
+- **O sistema precisa operar primariamente *offline* ou em redes instáveis:**
+  - **O cenário:** Coleta de dados em áreas rurais, embarcações marítimas ou operações industriais em zonas de sombra com altíssima latência ou frequentes quedas de conexão.
+  - **O impacto:** A dependência estrita de um servidor central torna o sistema frágil e inutilizável, além de esgotar rapidamente a bateria de dispositivos móveis devido às tentativas constantes de reconexão.
+  - **A alternativa:** Adotar abordagens *Local-First* ou sistemas baseados em sincronização assíncrona tolerante a falhas (utilizando estruturas como CRDTs), garantindo que o software continue respondendo localmente independentemente do status da rede.
+
+- **A aplicação é simples e de usuário único:**
+  - **O cenário:** Utilitários de sistema, editores de mídia, ferramentas de anotação pessoal ou calculadoras avançadas que não se beneficiam de uma infraestrutura cliente-servidor.
+  - **O impacto:** Introduzir um servidor exige custos contínuos de hospedagem, latência desnecessária e complexidade de gestão de segurança de rede, violando o princípio da simplicidade.
+  - **A alternativa:** Utilizar uma aplicação autônoma e autocontida — aproveitando bancos de dados embutidos, como o SQLite —, que atende ao propósito com desempenho superior, privacidade total e custo de infraestrutura zero.
+
+- **O tempo real crítico exige baixíssima latência:**
+  - **O cenário:** Aplicações com requisitos estritos de desempenho, como controle de maquinário robótico, processamento intensivo de renderização de vídeo, jogos de ação competitivos ou *high-frequency trading* (negociação financeira automatizada).
+  - **O impacto:** O tempo de ida e volta (*round-trip time*) de requisições via rede móvel ou cabos oceânicos quebra os Acordos de Nível de Serviço (SLA), tornando a latência de rede um gargalo inaceitável.
+  - **A alternativa:** Processar os dados na origem, adotando paradigmas como *Edge Computing* ou execução estritamente local, para garantir a entrega de resultados na ordem dos microssegundos.
+**Sinais de que a escolha foi errada:**
+
+- Constantes indisponibilidades no sistema devido à sobrecarga no servidor central enquanto os dispositivos clientes permanecem ociosos.
+- Dificuldade em manter a aplicação funcional em redes instáveis devido ao acoplamento síncrono contínuo entre cliente e servidor.
+
+::: {.callout-note}
+## Slides deste tópico
+A apresentação complementar deste conteúdo está disponível em [`slides.qmd`](slides.qmd) — estruturada para orientar uma exposição direta dos conceitos e trade-offs do modelo Cliente-Servidor.
+:::
+
+## Referências
+
+::: {#refs}
+:::
+
+## Leituras Recomendadas
+
+- **Decomposição Modular:** @parnas1972modularization
+- **Estilos Arquiteturais e REST:** @fielding2000architectural
+- **Sistemas Distribuídos:** @coulouris2013distribuidos
+- **Aplicações Intensivas em Dados:** @kleppmann2017data
+
+::: {.rodapé-final}
+**Rodapé Final**
+
+Valença, Edson Cavalcante; Emanuel, Matheus. "Arquitetura Cliente-Servidor".
+*Guia Aberto de Arquitetura de Software*, 2026. Disponível em:
+<https://ifpe-belojardim-es.github.io/guia-arquitetura-de-software/content/04-cliente-servidor/>. Licenciado sob CC BY-NC 4.0.
+:::
