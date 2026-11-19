@@ -38,6 +38,23 @@ campo `autores` de cada `content/NN-topico/metadata.yaml` — não edite à mão
 Prof. Matheus Barbosa
 </a>
 </td>
+<td align="center" width="150">
+Agdo José Samuel Sousa de oliveira
+</td>
+<td align="center" width="150">
+Antonio Carlos Verissimo de Souza
+</td>
+<td align="center" width="150">
+Pedro Henrique Borges Silva
+</td>
+</tr>
+<tr>
+<td align="center" width="150">
+Felipe dos Santos Silva
+</td>
+<td align="center" width="150">
+Antonio Pedro Guimarães Santos de Macedo
+</td>
 </tr>
 </table>
 
