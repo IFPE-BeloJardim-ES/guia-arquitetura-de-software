@@ -1,0 +1,380 @@
+
+---
+title: "Rastreabilidade entre Requisitos e Arquitetura"
+subtitle: "Relações, técnicas e acompanhamento das decisões arquiteturais"
+author:
+  - "Agdo José Samuel Sousa de oliveira"
+  - "Antonio Carlos Verissimo de Souza"
+  - "Pedro Henrique Borges Silva"
+  - "Felipe dos Santos Silva"
+  - "Antonio Pedro Guimarães Santos de Macedo"
+date: 2026-11-14
+bibliography: referencias.bib
+format:
+  revealjs:
+    theme: default
+    lang: pt-BR
+    slide-number: c/t
+    slide-level: 2
+    incremental: false
+    code-overflow: wrap
+    link-external-newwindow: true
+    footer: "Guia Aberto de Arquitetura de Software · CC BY-NC 4.0"
+---
+
+## Rastreabilidade entre Requisitos e Arquitetura
+
+### Relações, técnicas e acompanhamento das decisões arquiteturais
+
+**Guia Aberto de Arquitetura de Software**
+
+::: {.notes}
+Apresentar o tema, os integrantes e a proposta da apresentação.
+:::
+
+## Roteiro
+
+1. O problema e os fundamentos da rastreabilidade
+2. Relação entre requisitos e arquitetura
+3. Técnicas e ferramentas de rastreabilidade
+4. Exemplo aplicado e análise de impacto
+5. Benefícios, custos e critérios de decisão
+
+## O problema da falta de rastreabilidade
+
+Durante o desenvolvimento de software, os requisitos são transformados em
+modelos, componentes e funcionalidades.
+
+- Nem sempre é fácil identificar quais elementos atendem a cada requisito.
+- Uma alteração pode afetar diferentes partes do sistema.
+- A falta de relacionamentos dificulta a análise de impacto e a manutenção.
+
+::: {.notes}
+Imagine que um sistema possui um requisito de autenticação de usuários.
+Com o passar do tempo, essa funcionalidade pode envolver diferentes
+componentes da arquitetura e partes do código.
+
+Se surgir a necessidade de modificar a autenticação, como saber quais
+elementos precisam ser revisados?
+
+Sem relações bem estabelecidas entre os requisitos e os artefatos do
+sistema, essa identificação pode se tornar difícil.
+
+É esse problema que torna a rastreabilidade necessária.
+:::
+
+## O que é rastreabilidade?
+
+É a capacidade de estabelecer e acompanhar relações entre os requisitos
+e os diferentes artefatos produzidos durante o desenvolvimento de software.
+
+```text
+      REQUISITO
+          |
+          v
+      ARQUITETURA
+          |
+          v
+     IMPLEMENTAÇÃO
+          |
+          v
+        TESTES
+```
+
+- Identifica onde os requisitos estão representados.
+- Permite acompanhar sua realização no sistema.
+- Apoia a manutenção e a análise de mudanças.
+
+**Referência:** Ballarín et al. (2023).
+
+::: {.notes}
+A rastreabilidade permite acompanhar o caminho percorrido por um requisito
+durante o desenvolvimento.
+
+Como podemos observar, um requisito pode estar relacionado a uma decisão
+arquitetural, a componentes implementados e aos testes responsáveis por
+verificar seu funcionamento.
+
+O artigo de Ballarín e seus colaboradores destaca justamente a importância
+das relações entre requisitos e modelos arquiteturais, considerando também
+a influência das linguagens utilizadas para representar a arquitetura.
+
+Portanto, não basta registrar o que o sistema precisa fazer. É importante
+conseguir identificar como essas necessidades estão representadas nos
+artefatos produzidos.
+:::
+
+## Tipos de rastreabilidade
+
+**Forward Traceability — Para frente**
+
+```text
+Requisito ──────────> Implementação
+```
+Permite identificar o que foi desenvolvido a partir de um requisito.
+
+**Backward Traceability — Para trás**
+
+```text
+Implementação ──────> Requisito
+```
+Permite identificar qual requisito deu origem a determinado elemento.
+
+**Vertical Traceability — Vertical**
+
+```text
+Requisitos
+    |
+Arquitetura
+    |
+Implementação
+```
+Relaciona artefatos de diferentes níveis de desenvolvimento.
+
+**Horizontal Traceability — Horizontal**
+
+```text
+Requisito A <──────> Requisito B
+```
+Relaciona elementos de um mesmo nível ou artefatos correspondentes.
+
+::: {.notes}
+Existem diferentes perspectivas para compreender as relações de
+rastreabilidade.
+
+Na rastreabilidade para frente, partimos de um requisito para identificar
+os elementos desenvolvidos a partir dele.
+
+Na rastreabilidade para trás, fazemos o caminho inverso, buscando descobrir
+qual requisito está relacionado a determinado componente.
+
+Já a rastreabilidade vertical conecta diferentes níveis do desenvolvimento,
+como requisitos, arquitetura e implementação.
+
+A horizontal estabelece relações entre elementos de um mesmo nível ou
+artefatos correspondentes.
+
+As classificações indicam perspectivas diferentes: a direção do relacionamento e o nível dos artefatos relacionados.
+
+Essas perspectivas se complementam e ajudam a compreender melhor as
+dependências existentes no sistema.
+
+Com esses conceitos estabelecidos, podemos avançar para entender como
+essas relações são organizadas e mantidas na prática.
+:::
+
+## Requisitos e arquitetura
+
+- **Requisitos funcionais:** definem o que o sistema deve fazer.
+- **Requisitos não funcionais:** estabelecem atributos de qualidade e restrições.
+- **Decisões arquiteturais:** determinam como a estrutura do sistema atenderá aos requisitos.
+- **Rastreabilidade:** conecta requisitos às decisões e aos elementos arquiteturais.
+
+::: {.notes}
+Não basta listar requisitos. A arquitetura precisa materializar esses requisitos em componentes e decisões. A escolha da linguagem já começa a facilitar ou dificultar a rastreabilidade futura.
+:::
+
+## Como os requisitos se conectam à arquitetura?
+
+![](assets/imagens/rastreabilidade-requisitos-arquitetura.svg){fig-align="center" height="200px"}
+
+- **REQ-04 → DA-02 / DA-04:** decisões arquiteturais relacionadas ao requisito.
+- **DA-02 / DA-04 → COMP-02 / COMP-03 / COMP-06:** componentes envolvidos na realização dessas decisões.
+
+::: {.notes}
+O requisito pode estar associado a mais de uma decisão arquitetural, e uma decisão pode envolver diferentes componentes. É justamente essa rede de relacionamentos que permite realizar a análise de impacto.
+:::
+
+## Técnicas de rastreabilidade
+
+- **Vínculo** = origem + tipo + destino, com justificativa,
+  versão e situação.
+- **Tipos** dão semântica: `DA-04` satisfaz `REQ-04`;
+  `TST-04` verifica `REQ-04`.
+- **Captura** registra durante a criação; **recuperação**
+  reconstrói o link depois, a partir dos artefatos.
+- **Manutenção** contínua ou sob demanda, disparada por
+  mudanças em requisitos, decisões, componentes ou testes.
+- **Verificação** por cobertura nos dois sentidos,
+  integridade referencial e atualidade do vínculo.
+
+::: {.notes}
+Não repetir a definição: explicar como se registra e mantém um vínculo.
+O verbo segue a seta do vínculo: DA-04 → REQ-04 significa que a decisão
+procura satisfazer o requisito. A consulta pode percorrer o vínculo ao
+contrário, partindo de REQ-04. Perguntar quem revisa os registros quando
+o limite muda para 500 ms em 99% das consultas.
+
+No estudo de Ballarín et al. (2023), a similaridade textual entre requisitos
+e elementos de modelos arquiteturais recupera vínculos candidatos; a linguagem
+usada no modelo influencia o resultado. A equipe precisa validar os candidatos
+antes de registrá-los como vínculos confirmados [@ballarin2023influence].
+:::
+
+## Matrizes, links e ferramentas
+
+| Requisito | Decisões | Componentes | Teste |
+|---|---|---|---|
+| REQ-01 | DA-01, DA-04 | COMP-01, COMP-02, COMP-06 | TST-01 |
+| REQ-02 | DA-01, DA-02 | COMP-01, COMP-02, COMP-03 | TST-02 |
+| REQ-03 | DA-03 | COMP-04, COMP-05 | TST-03 |
+| REQ-04 | DA-02, DA-04 | COMP-02, COMP-03, COMP-06 | TST-04 |
+| REQ-05 | DA-05 | COMP-01, COMP-06 | TST-05 |
+
+`REQ-04` aponta candidatos à revisão; `COMP-02` aparece
+em `REQ-01`, `REQ-02` e `REQ-04`.
+
+Gestão: DOORS · manutenção: Trace Maintainer ·
+recuperação: RETRO · registro simples: planilha/notebook.
+
+::: {.notes}
+Percorrer a linha de REQ-04: DA-02, DA-04, COMP-02, COMP-03,
+COMP-06 e TST-04 são candidatos à revisão quando o limite muda
+para 500 ms em 99% das consultas. A matriz não afirma que todos
+precisam ser alterados. Para a consulta reversa, localizar COMP-02
+nas células da coluna "Componentes": ele aparece nas linhas de
+REQ-01, REQ-02 e REQ-04. Revisar também a necessidade de regressão
+dos testes ligados aos outros requisitos desse componente.
+
+O notebook guarda associações por requisito; a tabela não prova uma
+ligação direta entre cada decisão e cada componente da mesma linha.
+Ferramentas apoiam o registro e a busca depois que a equipe define
+identificadores, tipos de vínculo e responsáveis pela atualização.
+:::
+
+
+## Exemplo aplicado: sistema de agendamento de consultas
+
+**Cenário:** uma clínica ambulatorial precisa de um sistema para gerenciar o agendamento de consultas.
+
+**Principais funcionalidades:**
+- Consultar horários disponíveis por especialidade.
+- Solicitar consultas e receber confirmação.
+- Enviar confirmação por e-mail.
+- Controlar o acesso às operações.
+- Garantir rapidez na consulta de disponibilidade.
+
+**Estrutura do sistema:**
+
+| Elemento | Identificação |
+|---|---|
+| Requisitos | REQ-01 a REQ-05 |
+| Decisões arquiteturais | DA-01 a DA-05 |
+| Componentes | COMP-01 a COMP-06 |
+| Testes | TST-01 a TST-05 |
+
+**Objetivo:** demonstrar como os requisitos são relacionados às decisões arquiteturais, aos componentes e aos testes.
+
+
+::: {.notes}
+Para demonstrar a rastreabilidade, utilizamos como exemplo uma clínica ambulatorial que precisa organizar seus agendamentos.
+O sistema possui cinco requisitos, que representam tanto funcionalidades quanto necessidades de qualidade, como desempenho e segurança.
+Esses requisitos são relacionados a decisões arquiteturais, componentes responsáveis pela implementação e testes que verificam se o comportamento esperado foi alcançado.
+Com essa estrutura, conseguimos acompanhar como cada necessidade da clínica está representada no sistema.
+:::
+
+## Demonstração prática: rastreabilidade e análise de impacto
+
+## Demonstração prática: rastreabilidade e análise de impacto
+
+**1. Matriz de rastreabilidade**
+
+| Requisito | Decisões | Componentes | Teste |
+|---|---|---|---|
+| REQ-01 | DA-01, DA-04 | COMP-01, 02, 06 | TST-01 |
+| REQ-02 | DA-01, DA-02 | COMP-01, 02, 03 | TST-02 |
+| REQ-03 | DA-03 | COMP-04, 05 | TST-03 |
+| REQ-04 | DA-02, DA-04 | COMP-02, 03, 06 | TST-04 |
+| REQ-05 | DA-05 | COMP-01, 06 | TST-05 |
+
+**2. Alteração do requisito REQ-04**
+
+- Antes: 95% das consultas respondidas em até 2 segundos.
+- Depois: 99% das consultas respondidas em até 500 ms.
+
+**3. Elementos identificados na análise de impacto**
+
+- Decisões: DA-02 e DA-04.
+- Componentes: COMP-02, COMP-03 e COMP-06.
+- Teste: TST-04.
+
+**Resultado:** a rastreabilidade permite identificar quais elementos precisam ser reavaliados após uma mudança.
+
+::: {.notes}
+Agora vamos observar a aplicação da rastreabilidade.
+No notebook, criamos uma matriz que relaciona cada requisito às decisões arquiteturais, aos componentes e aos testes correspondentes.
+Para demonstrar a utilidade dessa estrutura, alteramos o requisito REQ-04. Inicialmente, o sistema deveria responder a 95% das consultas em até dois segundos. Depois, a exigência passou a ser de 99% das consultas em até 500 milissegundos.
+Ao consultar os relacionamentos, o notebook identifica duas decisões arquiteturais, três componentes e um teste que precisam ser reavaliados.
+Dessa forma, em vez de procurar manualmente em todo o sistema, a equipe utiliza os vínculos registrados para identificar os possíveis impactos da mudança.
+:::
+
+<!-- ================================================== -->
+<!-- PESSOA 5 - TRADE-OFFS E DECISÃO                      -->
+<!-- ================================================== -->
+
+## Trade-offs da rastreabilidade
+
+**PESSOA 5: desenvolver este slide.**
+
+Apresentar os principais benefícios e custos:
+
+| Benefício | Custo ou desafio |
+|---|---|
+| Melhor análise de impacto | Manutenção dos relacionamentos |
+| Maior controle das mudanças | Esforço de documentação |
+| Melhor compreensão arquitetural | Necessidade de atualização |
+| Facilidade de auditoria | Custo de gerenciamento |
+| Maior visibilidade | Complexidade de manutenção |
+
+::: {.notes}
+Discutir que a rastreabilidade oferece benefícios, mas também exige
+esforço para estabelecer e manter os relacionamentos.
+:::
+
+## Quando utilizar e quando evitar
+
+**PESSOA 5: desenvolver este slide.**
+
+**Considere utilizar quando:**
+
+- O sistema possui muitos requisitos e componentes.
+- Alterações podem afetar diferentes partes da arquitetura.
+- É necessário justificar decisões arquiteturais.
+- Existe necessidade de auditoria e acompanhamento.
+
+**Avalie a necessidade quando:**
+
+- O projeto é muito pequeno.
+- Existem poucos artefatos e dependências.
+- O custo de manutenção dos relacionamentos supera seus benefícios.
+
+::: {.notes}
+Apresentar critérios objetivos para a adoção da rastreabilidade.
+Evitar afirmar que ela é obrigatória ou vantajosa em qualquer projeto.
+:::
+
+## Conclusão
+
+**PESSOA 5: desenvolver este slide após a integração do grupo.**
+
+Retomar os principais pontos:
+
+- A rastreabilidade conecta requisitos aos artefatos do software.
+- A relação com a arquitetura facilita a compreensão do sistema.
+- Os relacionamentos apoiam a análise de impacto e a manutenção.
+- A escolha das técnicas deve considerar o contexto do projeto.
+
+::: {.notes}
+Finalizar reforçando a importância de manter relações compreensíveis
+e atualizadas entre requisitos e arquitetura.
+:::
+
+## Referências {.smaller}
+
+**PESSOA 5: revisar a lista após receber as referências de todos.**
+
+- Ballarín et al. (2023) — artigo científico principal.
+- Livros e artigos complementares utilizados no guia.
+
+::: {#refs}
+:::
