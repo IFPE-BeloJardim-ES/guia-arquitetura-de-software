@@ -3,11 +3,11 @@
 title: "Rastreabilidade entre Requisitos e Arquitetura"
 subtitle: "Relações, técnicas e acompanhamento das decisões arquiteturais"
 author:
-  - "Nome do Integrante 1"
-  - "Antonio Carlos"
-  - "Nome do Integrante 3"
-  - "Nome do Integrante 4"
-  - "Nome do Integrante 5"
+  - "Agdo José Samuel Sousa de oliveira"
+  - "Antonio Carlos Verissimo de Souza"
+  - "Pedro Henrique Borges Silva"
+  - "Felipe dos Santos Silva"
+  - "Antonio Pedro Guimarães Santos de Macedo"
 date: 2026-11-14
 bibliography: referencias.bib
 format:
@@ -22,10 +22,6 @@ format:
     footer: "Guia Aberto de Arquitetura de Software · CC BY-NC 4.0"
 ---
 
-<!-- ================================================== -->
-<!-- PESSOA 5 - CAPA E ORGANIZAÇÃO INICIAL               -->
-<!-- ================================================== -->
-
 ## Rastreabilidade entre Requisitos e Arquitetura
 
 ### Relações, técnicas e acompanhamento das decisões arquiteturais
@@ -38,11 +34,11 @@ Apresentar o tema, os integrantes e a proposta da apresentação.
 
 ## Roteiro
 
-1. Problema e fundamentos da rastreabilidade
+1. O problema e os fundamentos da rastreabilidade
 2. Relação entre requisitos e arquitetura
-3. Técnicas de rastreabilidade
-4. Exemplo aplicado
-5. Trade-offs e critérios de decisão
+3. Técnicas e ferramentas de rastreabilidade
+4. Exemplo aplicado e análise de impacto
+5. Benefícios, custos e critérios de decisão
 
 ## O problema da falta de rastreabilidade
 
@@ -158,6 +154,8 @@ como requisitos, arquitetura e implementação.
 A horizontal estabelece relações entre elementos de um mesmo nível ou
 artefatos correspondentes.
 
+As classificações indicam perspectivas diferentes: a direção do relacionamento e o nível dos artefatos relacionados.
+
 Essas perspectivas se complementam e ajudam a compreender melhor as
 dependências existentes no sistema.
 
@@ -165,16 +163,12 @@ Com esses conceitos estabelecidos, podemos avançar para entender como
 essas relações são organizadas e mantidas na prática.
 :::
 
-<!-- ================================================== -->
-<!-- PESSOA 2 - REQUISITOS E ARQUITETURA                  -->
-<!-- ================================================== -->
-
 ## Requisitos e arquitetura
 
-- Requisitos funcionais: **o que** o sistema faz.
-- Atributos de qualidade (RNFs): **como** o sistema se comporta.
-- Decisões arquiteturais existem para **satisfazer** requisitos e atributos de qualidade.
-- Ballarín et al. (2023): a linguagem arquitetural escolhida influencia a capacidade de rastrear requisitos.
+- **Requisitos funcionais:** definem o que o sistema deve fazer.
+- **Requisitos não funcionais:** estabelecem atributos de qualidade e restrições.
+- **Decisões arquiteturais:** determinam como a estrutura do sistema atenderá aos requisitos.
+- **Rastreabilidade:** conecta requisitos às decisões e aos elementos arquiteturais.
 
 ::: {.notes}
 Não basta listar requisitos. A arquitetura precisa materializar esses requisitos em componentes e decisões. A escolha da linguagem já começa a facilitar ou dificultar a rastreabilidade futura.
@@ -184,16 +178,12 @@ Não basta listar requisitos. A arquitetura precisa materializar esses requisito
 
 ![](assets/imagens/rastreabilidade-requisitos-arquitetura.svg){fig-align="center" height="200px"}
 
-- **REQ-04 → DA-04**: a decisão existe para satisfazer o atributo de qualidade.
-- **DA-04 → COMP-02 / COMP-06**: a decisão se materializa nesses componentes.
+- **REQ-04 → DA-02 / DA-04:** decisões arquiteturais relacionadas ao requisito.
+- **DA-02 / DA-04 → COMP-02 / COMP-03 / COMP-06:** componentes envolvidos na realização dessas decisões.
 
 ::: {.notes}
-Explique que a seta não é decorativa. "Por que o cache existe?" → por causa de DA-04. "Por que DA-04 existe?" → por causa de REQ-04. A rastreabilidade é a cadeia de respostas a essas perguntas.
+O requisito pode estar associado a mais de uma decisão arquitetural, e uma decisão pode envolver diferentes componentes. É justamente essa rede de relacionamentos que permite realizar a análise de impacto.
 :::
-
-<!-- ================================================== -->
-<!-- PESSOA 3 - TÉCNICAS                                 -->
-<!-- ================================================== -->
 
 ## Técnicas de rastreabilidade
 
@@ -252,47 +242,70 @@ Ferramentas apoiam o registro e a busca depois que a equipe define
 identificadores, tipos de vínculo e responsáveis pela atualização.
 :::
 
-<!-- ================================================== -->
-<!-- PESSOA 4 - EXEMPLO APLICADO                          -->
-<!-- ================================================== -->
 
-## Exemplo aplicado: sistema escolhido
+## Exemplo aplicado: sistema de agendamento de consultas
 
-**PESSOA 4: desenvolver este slide.**
+**Cenário:** uma clínica ambulatorial precisa de um sistema para gerenciar o agendamento de consultas.
 
-Apresentar o sistema utilizado no notebook.
+**Principais funcionalidades:**
+- Consultar horários disponíveis por especialidade.
+- Solicitar consultas e receber confirmação.
+- Enviar confirmação por e-mail.
+- Controlar o acesso às operações.
+- Garantir rapidez na consulta de disponibilidade.
 
-Deve conter:
+**Estrutura do sistema:**
 
-- Contexto do sistema.
-- Problema que será resolvido.
-- Requisitos identificados.
-- Elementos arquiteturais envolvidos.
+| Elemento | Identificação |
+|---|---|
+| Requisitos | REQ-01 a REQ-05 |
+| Decisões arquiteturais | DA-01 a DA-05 |
+| Componentes | COMP-01 a COMP-06 |
+| Testes | TST-01 a TST-05 |
+
+**Objetivo:** demonstrar como os requisitos são relacionados às decisões arquiteturais, aos componentes e aos testes.
+
 
 ::: {.notes}
-Apresentar o cenário antes de mostrar o funcionamento.
-Utilizar exatamente o mesmo exemplo do notebook.
+Para demonstrar a rastreabilidade, utilizamos como exemplo uma clínica ambulatorial que precisa organizar seus agendamentos.
+O sistema possui cinco requisitos, que representam tanto funcionalidades quanto necessidades de qualidade, como desempenho e segurança.
+Esses requisitos são relacionados a decisões arquiteturais, componentes responsáveis pela implementação e testes que verificam se o comportamento esperado foi alcançado.
+Com essa estrutura, conseguimos acompanhar como cada necessidade da clínica está representada no sistema.
 :::
 
-## Demonstração prática
+## Demonstração prática: rastreabilidade e análise de impacto
 
-**PESSOA 4: desenvolver este slide.**
+## Demonstração prática: rastreabilidade e análise de impacto
 
-Demonstrar:
+**1. Matriz de rastreabilidade**
 
-1. Identificação de um requisito.
-2. Associação com uma decisão arquitetural.
-3. Relacionamento com um componente.
-4. Consulta da rastreabilidade.
-5. Alteração do requisito.
-6. Identificação dos elementos afetados.
+| Requisito | Decisões | Componentes | Teste |
+|---|---|---|---|
+| REQ-01 | DA-01, DA-04 | COMP-01, 02, 06 | TST-01 |
+| REQ-02 | DA-01, DA-02 | COMP-01, 02, 03 | TST-02 |
+| REQ-03 | DA-03 | COMP-04, 05 | TST-03 |
+| REQ-04 | DA-02, DA-04 | COMP-02, 03, 06 | TST-04 |
+| REQ-05 | DA-05 | COMP-01, 06 | TST-05 |
 
-Apresentar capturas ou resultados reais da execução do notebook.
+**2. Alteração do requisito REQ-04**
+
+- Antes: 95% das consultas respondidas em até 2 segundos.
+- Depois: 99% das consultas respondidas em até 500 ms.
+
+**3. Elementos identificados na análise de impacto**
+
+- Decisões: DA-02 e DA-04.
+- Componentes: COMP-02, COMP-03 e COMP-06.
+- Teste: TST-04.
+
+**Resultado:** a rastreabilidade permite identificar quais elementos precisam ser reavaliados após uma mudança.
 
 ::: {.notes}
-Executar ou demonstrar os resultados do notebook.
-Mostrar o que acontece quando um requisito é alterado.
-Comparar o cenário com e sem os relacionamentos registrados.
+Agora vamos observar a aplicação da rastreabilidade.
+No notebook, criamos uma matriz que relaciona cada requisito às decisões arquiteturais, aos componentes e aos testes correspondentes.
+Para demonstrar a utilidade dessa estrutura, alteramos o requisito REQ-04. Inicialmente, o sistema deveria responder a 95% das consultas em até dois segundos. Depois, a exigência passou a ser de 99% das consultas em até 500 milissegundos.
+Ao consultar os relacionamentos, o notebook identifica duas decisões arquiteturais, três componentes e um teste que precisam ser reavaliados.
+Dessa forma, em vez de procurar manualmente em todo o sistema, a equipe utiliza os vínculos registrados para identificar os possíveis impactos da mudança.
 :::
 
 <!-- ================================================== -->
