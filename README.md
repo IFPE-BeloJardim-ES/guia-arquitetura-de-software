@@ -188,11 +188,11 @@ Agdo José Samuel Sousa de oliveira
 <td align="center" width="150">
 Antonio Carlos Verissimo de Souza
 </td>
-</tr>
-<tr>
 <td align="center" width="150">
 Pedro Henrique Borges Silva
 </td>
+</tr>
+<tr>
 <td align="center" width="150">
 Felipe dos Santos Silva
 </td>

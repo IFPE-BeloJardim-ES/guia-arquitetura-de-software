@@ -24,9 +24,7 @@ keywords: ["rastreabilidade", "requisitos", "arquitetura de software", "decisõe
 <dt>Pré-requisitos</dt>
 <dd>Engenharia de requisitos e fundamentos de arquitetura de software.</dd>
 <dt>Formatos</dt>
-<dd>
-[texto]{.formato} [notebook](notebook.ipynb){.formato} [slides](slides.qmd){.formato} [áudio](assets/audio/Rastreabilidade_entre_requisitos_e_arquitetura_de_software.m4a){.formato} [Gem pendente]{.formato}
-</dd>
+<dd>[texto]{.formato} [notebook](notebook.ipynb){.formato} [áudio](assets/audio/Rastreabilidade_entre_requisitos_e_arquitetura_de_software.m4a){.formato} [gem](GEM_GEMINI.md){.formato} [slides](slides.qmd){.formato}</dd>
 </dl>
 :::
 
@@ -149,10 +147,22 @@ Esse processo também exige verificar quais outros requisitos dependem dos mesmo
 Um componente pode atender a diferentes necessidades, de modo que uma alteração aparentemente
 localizada pode afetar outras funcionalidades.
 
-Dessa forma, a análise de impacto ajuda a planejar modificações, identificar pontos que
-precisam de revisão e atualizar os testes relacionados. O exemplo aplicado deste tópico demonstra
-como esse processo pode ser realizado por meio de uma matriz de rastreabilidade.
+Com a matriz de rastreabilidade registrada (REQ-04 → DA-02, DA-04 → COMP-02, COMP-03, COMP-06 → TST-04), a equipe identifica 
+exatamente quais elementos precisam ser revisados:
 
+- **DA-02 (índice do repositório):** pode precisar de ajuste no índice por profissional e horário.
+- **DA-04 (cache):** a política de invalidação pode ser insuficiente para 500 ms.
+- **COMP-02 (Serviço de Disponibilidade):** a estratégia de leitura precisa ser reavaliada.
+- **COMP-03 (Repositório de Consultas):** o índice pode não ser suficiente.
+- **COMP-06 (Cache):** o tempo de resposta do cache entra no orçamento de 500 ms.
+- **TST-04:** o limiar do teste de desempenho precisa ser atualizado.
+
+Sem a rastreabilidade, a equipe poderia alterar apenas o componente mais óbvio (COMP-02) e esquecer o cache ou o índice, 
+resultando em um sistema que falha no novo requisito de desempenho. Quando os requisitos mudam, a visibilidade dessas 
+dependências ajuda a orientar a manutenção do sistema [@egyed2015developers].
+
+Dessa forma, a análise de impacto ajuda a planejar modificações, identificar pontos que precisam de revisão e atualizar 
+os testes relacionados. A rastreabilidade não elimina a mudança, mas torna seu custo visível e gerenciável.
 ## Técnicas para estabelecer e manter a rastreabilidade
 
 As seções anteriores apresentam os conceitos e a importância da rastreabilidade.
@@ -172,23 +182,22 @@ em matriz, as consultas nas duas direções e a atualização dos links ao longo
 
 ### Registro dos vínculos
 
-Um vínculo de rastreabilidade é uma tripla formada por artefato de origem, tipo de vínculo e
-artefato de destino. O tipo é o que dá significado à relação e impede que a matriz se torne um
-conjunto de marcas sem semântica [@gotel2012traceability, p. 7]. O conjunto de artefatos e de tipos
-de vínculo permitidos em um projeto é definido no modelo de informação de rastreabilidade, que deve
-ser acordado antes do preenchimento da matriz. Sem esse modelo, surgem inconsistências como ligar um
-requisito diretamente a um teste, sem registrar a decisão arquitetural que justifica o teste [@gotel2012traceability, p. 13].
+Um vínculo de rastreabilidade é uma tripla formada por artefato de origem, tipo de vínculo e artefato de destino. 
+O tipo dá significado à relação e impede que a matriz se torne um conjunto de marcas sem semântica [@gotel2012traceability, p. 7].
+O conjunto de artefatos e de tipos de vínculo permitidos em um projeto é definido no modelo de informação de 
+rastreabilidade, que deve ser acordado antes do preenchimento da matriz. Esse modelo explicita quais relações a equipe precisa 
+registrar para responder às suas perguntas de cobertura e impacto [@gotel2012traceability, p. 13].
+No notebook deste tópico, cada linha agrupa sob o tipo genérico `realiza` um requisito, suas decisões arquiteturais, seus 
+componentes e seu teste. Essa é uma simplificação didática: a linha não especifica qual decisão se materializa em qual componente.
 
-No exemplo deste tópico, um único tipo genérico — `realiza` — cobre a relação entre requisito, decisão,
-componente e teste, o que é suficiente para o recorte didático. Em modelos mais detalhados,
-esse tipo genérico costuma ser decomposto conforme a pergunta que o vínculo deve responder:
-
+Em modelos mais detalhados, os vínculos individuais podem ser tipados conforme a pergunta que a equipe precisa responder:
 | Tipo | Origem → destino | Pergunta que responde | Exemplo |
 |---|---|---|---|
-| `satisfaz` | requisito → decisão arquitetural | Qual decisão atende a este requisito? | REQ-04 → DA-04 |
-| `implementa` | decisão → componente | Onde a decisão se materializa? | DA-04 → COMP-06 |
-| `verifica` | teste → requisito | Que evidência mostra que o requisito foi atendido? | TST-04 → REQ-04 |
-| `depende` | componente → componente | O que pode ser afetado por uma mudança neste componente? | COMP-02 → COMP-03 |
+| `satisfaz` | decisão arquitetural → requisito | Qual requisito a decisão procura atender? | DA-04 → REQ-04 |
+| `materializa` | componente → decisão arquitetural | Em qual componente a decisão se concretiza? | COMP-06 → DA-04 |
+| `verifica` | teste → requisito | Que evidência verifica o requisito? | TST-04 → REQ-04 |
+
+Os exemplos de vínculos tipados explicitam relações descritas no guia; o notebook guarda apenas as associações agrupadas por requisito. Uma consulta que parte de `REQ-04` pode percorrer `DA-04 → REQ-04` no sentido inverso, sem mudar o significado de `satisfaz`.
 
 Cada vínculo deve carregar metadados mínimos: identificador próprio, autor, data de criação, justificativa,
 versão dos artefatos e situação (ativo, substituído ou retirado).
@@ -267,10 +276,10 @@ mudanças e do custo de um link desatualizado passar despercebido.
 | Evento | Efeito nos vínculos | Ação de manutenção |
 |---|---|---|
 | Requisito alterado | decisões e componentes podem deixar de satisfazer o novo critério | revisar os links de saída, reavaliar decisões e atualizar testes |
-| Requisito removido | links de saída ficam órfãos | retirar os links e verificar elementos sem justificativa |
+| Requisito removido | vínculos associados perdem a justificativa original | retirar ou redirecionar os vínculos e verificar elementos sem justificativa |
 | Decisão substituída | links apontam para uma decisão obsoleta | redirecionar para a sucessora e preservar o histórico |
 | Componente renomeado, dividido ou removido | links apontam para identificador inexistente ou incompleto | remapear os identificadores e redistribuir os vínculos |
-| Teste alterado | a relação de verificação muda | atualizar o vínculo `verifica` e o critério de aceitação |
+| Teste alterado | a relação de verificação pode mudar | revisar o vínculo `verifica` e o critério de aceitação |
 
 A análise de impacto é a aplicação mais concreta da matriz. O procedimento é:
 (i) localizar o requisito alterado; (ii) percorrer os links para frente até o último nível relevante;
@@ -296,7 +305,7 @@ A manutenção só é confiável se houver verificação. Um conjunto pequeno de
 | Cobertura para trás | elemento sem requisito de origem | remover o elemento ou documentar sua origem |
 | Integridade referencial | link para identificador inexistente | corrigir o identificador ou retirar o link |
 | Atualidade | link anterior à última versão do artefato | revisar e revalidar o vínculo |
-| Consistência direcional | A alcança B, mas B não alcança A | corrigir o vínculo inverso ou o tipo |
+| Consistência das consultas | a busca direta encontra um par, mas a reversa não | corrigir a consulta, o índice ou o registro |
 | Precisão de links recuperados | similaridade baixa ou relação sem sentido | revisar manualmente e descartar falsos positivos |
 
 Parte dessas verificações pode ser automatizada: consultas à matriz, regras no repositório e conferência durante a revisão de um pull request.
@@ -321,11 +330,6 @@ As ferramentas de gestão de requisitos concentram requisitos, atributos e links
 As ferramentas de manutenção automatizada reagem a eventos de mudança para atualizar os vínculos, mas costumam depender de integração com um ambiente específico [@nour2023traceability, p. 14].
 As ferramentas de recuperação comparam a similaridade entre artefatos e propõem links, o que reduz o esforço inicial, porém transfere à equipe a tarefa de validar os candidatos [@nour2023traceability, p. 15].
 Para o recorte deste tópico, o próprio `notebook.ipynb` funciona como uma ferramenta mínima: a matriz é uma estrutura de dados, as consultas são funções e os testes verificam automaticamente o conjunto de impacto.
-
-<!-- ===================================================== -->
-<!-- PESSOA 4 - EXEMPLO APLICADO E NOTEBOOK                  -->
-<!-- Responsável: caso prático e implementação executável.   -->
-<!-- ===================================================== -->
 
 ## Exemplo aplicado
 
@@ -415,35 +419,6 @@ Sem a matriz, a equipe poderia esquecer o cache ou o teste de desempenho ao
 procurar apenas referências textuais. Com os links, a mudança produz um
 conjunto de impacto verificável.
 
-<!-- PESSOA 4: demonstrar uma situação em que um requisito
-é alterado e explicar como os relacionamentos permitem
-identificar os elementos arquiteturais afetados.
-
-Comparar a situação com e sem rastreabilidade.
--->
-
-### Demonstração executável
-
-O notebook cria os mesmos registros, monta a matriz, consulta rastreabilidade
-para frente e para trás e simula a alteração de `REQ-04`. Ele verifica com
-`assert` que os impactos encontrados são exatamente `DA-02`, `DA-04`,
-`COMP-02`, `COMP-03`, `COMP-06` e `TST-04`.
-
-<!-- PESSOA 4: desenvolver o notebook.ipynb.
-
-O notebook deve reproduzir o mesmo cenário explicado no texto.
-
-Deve conter:
-- Apresentação do problema.
-- Dados ou requisitos utilizados.
-- Construção da matriz de rastreabilidade.
-- Consulta dos relacionamentos.
-- Simulação de alteração de requisito.
-- Identificação dos elementos afetados.
-- Resultados e conclusão.
-
-Testar a execução completa no Google Colab.
--->
 
 ::: {.callout-note}
 ## Notebook deste tópico
@@ -454,45 +429,63 @@ O texto e o notebook devem utilizar o mesmo exemplo, os mesmos identificadores e
 :::
 
 
-<!-- ===================================================== -->
-<!-- PESSOA 5 - TRADE-OFFS, ADOÇÃO E CONCLUSÃO              -->
-<!-- ===================================================== -->
-
 ## Trade-offs da rastreabilidade
 
-A rastreabilidade ajuda a responder o que pode ser afetado por uma mudança e por que um elemento arquitetural existe. Esse benefício depende de manter as relações confiáveis: uma matriz desatualizada pode orientar a equipe para o conjunto errado de artefatos. Estudos empíricos associam a rastreabilidade à corretude e à manutenibilidade, enquanto o trabalho de criar e manter vínculos compõe seu custo [@charalampidou2021empirical; @ingram2012cost]. Em um experimento controlado com tarefas de manutenção em dois projetos, participantes com rastreabilidade concluíram as tarefas mais rapidamente e com mais acerto; o resultado reforça seu benefício potencial, sem medir o caso da clínica [@egyed2015developers].
+A rastreabilidade ajuda a responder o que pode ser afetado por uma mudança e por que um elemento arquitetural existe.
+Esse benefício depende de manter as relações confiáveis: uma matriz desatualizada pode orientar a equipe para o conjunto
+errado de artefatos. Estudos empíricos associam a rastreabilidade à corretude e à manutenibilidade, enquanto o trabalho de
+criar e manter vínculos compõe seu custo [@charalampidou2021empirical; @ingram2012cost]. Em um experimento controlado com
+tarefas de manutenção em dois projetos, participantes com rastreabilidade concluíram as tarefas mais rapidamente e com mais
+acerto; o resultado reforça seu benefício potencial, sem medir o caso da clínica [@egyed2015developers].
 
 ### Comparação dos principais trade-offs
 
 {{< include _trade-offs.md >}}
 
-Na clínica, a alteração de `REQ-04` de 2 segundos em 95% das consultas para 500 ms em 99% mostra os dois lados. A matriz localiza `DA-02`, `DA-04`, `COMP-02`, `COMP-03`, `COMP-06` e `TST-04` como candidatos à revisão. A equipe ainda precisa verificar quais decisões e componentes exigem mudança, atualizar o critério de `TST-04` e confirmar se os vínculos continuam válidos. Como `COMP-02` também aparece em `REQ-01` e `REQ-02`, mudanças nele podem pedir regressão de `TST-01` e `TST-02`. A matriz reduz a busca inicial, mas não substitui a análise técnica.
+Na clínica, a alteração de `REQ-04` de 2 segundos em 95% das consultas para 500 ms em 99% mostra os dois lados.
+A matriz localiza `DA-02`, `DA-04`, `COMP-02`, `COMP-03`, `COMP-06` e `TST-04` como candidatos à revisão.
+A equipe ainda precisa verificar quais decisões e componentes exigem mudança, atualizar o critério de `TST-04` e confirmar
+se os vínculos continuam válidos. Como `COMP-02` também aparece em `REQ-01` e `REQ-02`, mudanças nele podem pedir
+regressão de `TST-01` e `TST-02`. A matriz reduz a busca inicial, mas não substitui a análise técnica.
 
-O estudo de Ballarín et al. (2023) investiga a recuperação automatizada de vínculos entre requisitos e elementos de modelos arquiteturais. A qualidade dos resultados variou conforme a linguagem arquitetural no caso industrial estudado; por isso, sugestões por similaridade devem ser tratadas como candidatas à validação, antes de entrar na matriz do projeto [@ballarin2023influence]. Essa é uma decisão de uso para o exemplo da clínica, não uma avaliação da clínica realizada pelos autores.
+O estudo de Ballarín et al. (2023) investiga a recuperação automatizada de vínculos entre requisitos e elementos de
+modelos arquiteturais. A qualidade dos resultados variou conforme a linguagem arquitetural no caso industrial estudado;
+por isso, sugestões por similaridade devem ser tratadas como candidatas à validação, antes de entrar na
+matriz do projeto [@ballarin2023influence]. Essa é uma decisão de uso para o exemplo da clínica, não uma avaliação da
+clínica realizada pelos autores.
 
 ## Quando utilizar rastreabilidade
 
-Vale registrar vínculos quando uma mudança em um requisito pode alcançar vários componentes ou quando o mesmo componente atende a requisitos diferentes. Também é útil quando a equipe precisa justificar decisões, verificar cobertura por testes ou prestar contas de como um requisito foi realizado. No exemplo, `COMP-02` participa de três requisitos; a consulta reversa torna visível essa dependência antes de alterar o serviço.
+Vale registrar vínculos quando uma mudança em um requisito pode alcançar vários componentes ou quando o mesmo
+componente atende a requisitos diferentes. Também é útil quando a equipe precisa justificar decisões, verificar
+cobertura por testes ou prestar contas de como um requisito foi realizado. No exemplo, `COMP-02` participa de três requisitos;
+a consulta reversa torna visível essa dependência antes de alterar o serviço.
 
-Para um projeto pequeno, uma matriz enxuta pode bastar: uma linha por requisito, IDs estáveis e colunas para decisões, componentes e teste, como no notebook. A equipe deve definir quem atualiza a linha após cada mudança e revisar os vínculos na mesma revisão do artefato alterado. Se uma coluna não responde a uma pergunta real de manutenção, seu custo pode superar o benefício. Conforme crescem os artefatos e as consultas, ferramentas de busca e verificação podem reduzir o trabalho manual [@ingram2012cost; @gotel2012traceability].
+Para um projeto pequeno, uma matriz enxuta pode bastar: uma linha por requisito, IDs estáveis e colunas
+para decisões, componentes e teste, como no notebook. A equipe deve definir quem atualiza a linha após cada
+mudança e revisar os vínculos na mesma revisão do artefato alterado. Se uma coluna não responde a uma pergunta
+real de manutenção, seu custo pode superar o benefício. Conforme crescem os artefatos e as consultas, ferramentas de
+busca e verificação podem reduzir o trabalho manual [@ingram2012cost; @gotel2012traceability].
 
-Sinais de degradação são links para IDs inexistentes ou versões antigas, requisitos sem decisão ou teste associado, decisões sem justificativa e alterações aprovadas sem consulta de impacto. Esses sinais pedem revisão da matriz e do processo de atualização antes que a equipe confie novamente nas respostas [@gotel2012traceability].
+Sinais de degradação são links para IDs inexistentes ou versões antigas, requisitos sem decisão ou teste associado, decisões
+sem justificativa e alterações aprovadas sem consulta de impacto. Esses sinais pedem revisão da matriz e do processo
+de atualização antes que a equipe confie novamente nas respostas [@gotel2012traceability].
 
 ## Conclusão
 
-Relacionar requisitos, decisões, componentes e testes permite localizar candidatos à revisão quando o sistema evolui. No caso da clínica, a mudança de `REQ-04` mostra o valor de consultar a matriz para frente e depois verificar outros requisitos ligados aos componentes encontrados. O resultado só é útil se os vínculos tiverem IDs compreensíveis, justificativa e manutenção após mudanças. A escolha entre uma matriz simples e apoio automatizado deve acompanhar a quantidade de artefatos, a frequência das alterações e as perguntas que a equipe precisa responder.
-
-<!-- ===================================================== -->
-<!-- PESSOA 5 - INTEGRAÇÃO DOS MATERIAIS                     -->
-<!-- Responsável por slides, referências e revisão final.    -->
-<!-- ===================================================== -->
+Relacionar requisitos, decisões, componentes e testes permite localizar candidatos à revisão quando o sistema evolui.
+No caso da clínica, a mudança de `REQ-04` mostra o valor de consultar a matriz para frente e depois verificar outros
+requisitos ligados aos componentes encontrados. O resultado só é útil se os vínculos tiverem IDs compreensíveis, justificativa
+e manutenção após mudanças. A escolha entre uma matriz simples e apoio automatizado deve acompanhar a quantidade de artefatos,
+a frequência das alterações e as perguntas que a equipe precisa responder.
 
 ::: {.callout-note}
 ## Slides deste tópico
 
 A apresentação está disponível em [`slides.qmd`](slides.qmd).
 
-Os slides retomam os conceitos e o exemplo de agendamento usados no texto e no notebook. Cada integrante deve revisar suas próprias notas de fala antes da apresentação.
+Os slides retomam os conceitos e o exemplo de agendamento usados no texto e no notebook.
+Cada integrante deve revisar suas próprias notas de fala antes da apresentação.
 :::
 
 ## Referências

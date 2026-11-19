@@ -1,4 +1,3 @@
-
 ---
 title: "Rastreabilidade entre Requisitos e Arquitetura"
 subtitle: "Relações, técnicas e acompanhamento das decisões arquiteturais"
@@ -155,6 +154,8 @@ como requisitos, arquitetura e implementação.
 A horizontal estabelece relações entre elementos de um mesmo nível ou
 artefatos correspondentes.
 
+As classificações indicam perspectivas diferentes: a direção do relacionamento e o nível dos artefatos relacionados.
+
 Essas perspectivas se complementam e ajudam a compreender melhor as
 dependências existentes no sistema.
 
@@ -162,16 +163,12 @@ Com esses conceitos estabelecidos, podemos avançar para entender como
 essas relações são organizadas e mantidas na prática.
 :::
 
-<!-- ================================================== -->
-<!-- PESSOA 2 - REQUISITOS E ARQUITETURA                  -->
-<!-- ================================================== -->
-
 ## Requisitos e arquitetura
 
-- Requisitos funcionais: **o que** o sistema faz.
-- Atributos de qualidade (RNFs): **como** o sistema se comporta.
-- Decisões arquiteturais existem para **satisfazer** requisitos e atributos de qualidade.
-- Ballarín et al. (2023): a linguagem arquitetural escolhida influencia a capacidade de rastrear requisitos.
+- **Requisitos funcionais:** definem o que o sistema deve fazer.
+- **Requisitos não funcionais:** estabelecem atributos de qualidade e restrições.
+- **Decisões arquiteturais:** determinam como a estrutura do sistema atenderá aos requisitos.
+- **Rastreabilidade:** conecta requisitos às decisões e aos elementos arquiteturais.
 
 ::: {.notes}
 Não basta listar requisitos. A arquitetura precisa materializar esses requisitos em componentes e decisões. A escolha da linguagem já começa a facilitar ou dificultar a rastreabilidade futura.
@@ -181,23 +178,19 @@ Não basta listar requisitos. A arquitetura precisa materializar esses requisito
 
 ![](assets/imagens/rastreabilidade-requisitos-arquitetura.svg){fig-align="center" height="200px"}
 
-- **REQ-04 → DA-04**: a decisão existe para satisfazer o atributo de qualidade.
-- **DA-04 → COMP-02 / COMP-06**: a decisão se materializa nesses componentes.
+- **REQ-04 → DA-02 / DA-04:** decisões arquiteturais relacionadas ao requisito.
+- **DA-02 / DA-04 → COMP-02 / COMP-03 / COMP-06:** componentes envolvidos na realização dessas decisões.
 
 ::: {.notes}
-Explique que a seta não é decorativa. "Por que o cache existe?" → por causa de DA-04. "Por que DA-04 existe?" → por causa de REQ-04. A rastreabilidade é a cadeia de respostas a essas perguntas.
+O requisito pode estar associado a mais de uma decisão arquitetural, e uma decisão pode envolver diferentes componentes. É justamente essa rede de relacionamentos que permite realizar a análise de impacto.
 :::
-
-<!-- ================================================== -->
-<!-- PESSOA 3 - TÉCNICAS                                 -->
-<!-- ================================================== -->
 
 ## Técnicas de rastreabilidade
 
 - **Vínculo** = origem + tipo + destino, com justificativa,
   versão e situação.
-- **Tipos** dão semântica: `satisfaz`, `implementa`,
-  `verifica` e `depende`.
+- **Tipos** dão semântica: `DA-04` satisfaz `REQ-04`;
+  `TST-04` verifica `REQ-04`.
 - **Captura** registra durante a criação; **recuperação**
   reconstrói o link depois, a partir dos artefatos.
 - **Manutenção** contínua ou sob demanda, disparada por
@@ -206,10 +199,16 @@ Explique que a seta não é decorativa. "Por que o cache existe?" → por causa 
   integridade referencial e atualidade do vínculo.
 
 ::: {.notes}
-Não repetir a definição de rastreabilidade: o foco é o como.
-Perguntar à turma quem atualiza a matriz quando REQ-04 muda.
-Um vínculo sem justificativa e sem responsável não sobrevive
-à primeira mudança.
+Não repetir a definição: explicar como se registra e mantém um vínculo.
+O verbo segue a seta do vínculo: DA-04 → REQ-04 significa que a decisão
+procura satisfazer o requisito. A consulta pode percorrer o vínculo ao
+contrário, partindo de REQ-04. Perguntar quem revisa os registros quando
+o limite muda para 500 ms em 99% das consultas.
+
+No estudo de Ballarín et al. (2023), a similaridade textual entre requisitos
+e elementos de modelos arquiteturais recupera vínculos candidatos; a linguagem
+usada no modelo influencia o resultado. A equipe precisa validar os candidatos
+antes de registrá-los como vínculos confirmados [@ballarin2023influence].
 :::
 
 ## Matrizes, links e ferramentas
@@ -222,67 +221,129 @@ Um vínculo sem justificativa e sem responsável não sobrevive
 | REQ-04 | DA-02, DA-04 | COMP-02, COMP-03, COMP-06 | TST-04 |
 | REQ-05 | DA-05 | COMP-01, COMP-06 | TST-05 |
 
-Ler a linha responde "o que muda se este requisito mudar";
-ler a coluna responde "por que este elemento existe".
+`REQ-04` aponta candidatos à revisão; `COMP-02` aparece
+em `REQ-01`, `REQ-02` e `REQ-04`.
 
-Ferramentas: DOORS e Requisite Pro (gestão), Trace
-Maintainer (manutenção), RETRO (recuperação) e a própria
-matriz em planilha ou notebook (baixo custo).
-
-::: {.notes}
-Percorrer a linha de REQ-04 e a coluna de COMP-02 na tabela.
-Mostrar que a ferramenta só ajuda depois que o modelo de
-informação, os identificadores e o responsável pela
-atualização estão definidos. Evitar listar ferramentas sem
-ligar cada uma à atividade que ela apoia.
-:::
-
-<!-- ================================================== -->
-<!-- PESSOA 4 - EXEMPLO APLICADO                          -->
-<!-- ================================================== -->
-
-## Exemplo aplicado: sistema escolhido
-
-**PESSOA 4: desenvolver este slide.**
-
-Apresentar o sistema utilizado no notebook.
-
-Deve conter:
-
-- Contexto do sistema.
-- Problema que será resolvido.
-- Requisitos identificados.
-- Elementos arquiteturais envolvidos.
+Gestão: DOORS · manutenção: Trace Maintainer ·
+recuperação: RETRO · registro simples: planilha/notebook.
 
 ::: {.notes}
-Apresentar o cenário antes de mostrar o funcionamento.
-Utilizar exatamente o mesmo exemplo do notebook.
+Percorrer a linha de REQ-04: DA-02, DA-04, COMP-02, COMP-03,
+COMP-06 e TST-04 são candidatos à revisão quando o limite muda
+para 500 ms em 99% das consultas. A matriz não afirma que todos
+precisam ser alterados. Para a consulta reversa, localizar COMP-02
+nas células da coluna "Componentes": ele aparece nas linhas de
+REQ-01, REQ-02 e REQ-04. Revisar também a necessidade de regressão
+dos testes ligados aos outros requisitos desse componente.
+
+O notebook guarda associações por requisito; a tabela não prova uma
+ligação direta entre cada decisão e cada componente da mesma linha.
+Ferramentas apoiam o registro e a busca depois que a equipe define
+identificadores, tipos de vínculo e responsáveis pela atualização.
 :::
 
-## Demonstração prática
 
-**PESSOA 4: desenvolver este slide.**
+## Exemplo aplicado: sistema de agendamento de consultas
 
-Demonstrar:
+**Cenário:** uma clínica ambulatorial precisa de um sistema para gerenciar o agendamento de consultas.
 
-1. Identificação de um requisito.
-2. Associação com uma decisão arquitetural.
-3. Relacionamento com um componente.
-4. Consulta da rastreabilidade.
-5. Alteração do requisito.
-6. Identificação dos elementos afetados.
+**Principais funcionalidades:**
+- Consultar horários disponíveis por especialidade.
+- Solicitar consultas e receber confirmação.
+- Enviar confirmação por e-mail.
+- Controlar o acesso às operações.
+- Garantir rapidez na consulta de disponibilidade.
 
-Apresentar capturas ou resultados reais da execução do notebook.
+**Estrutura do sistema:**
+
+| Elemento | Identificação |
+|---|---|
+| Requisitos | REQ-01 a REQ-05 |
+| Decisões arquiteturais | DA-01 a DA-05 |
+| Componentes | COMP-01 a COMP-06 |
+| Testes | TST-01 a TST-05 |
+
+**Objetivo:** demonstrar como os requisitos são relacionados às decisões arquiteturais, aos componentes e aos testes.
+
 
 ::: {.notes}
-Executar ou demonstrar os resultados do notebook.
-Mostrar o que acontece quando um requisito é alterado.
-Comparar o cenário com e sem os relacionamentos registrados.
+Para demonstrar a rastreabilidade, utilizamos como exemplo uma clínica ambulatorial que precisa organizar seus agendamentos.
+O sistema possui cinco requisitos, que representam tanto funcionalidades quanto necessidades de qualidade, como desempenho e segurança.
+Esses requisitos são relacionados a decisões arquiteturais, componentes responsáveis pela implementação e testes que verificam se o comportamento esperado foi alcançado.
+Com essa estrutura, conseguimos acompanhar como cada necessidade da clínica está representada no sistema.
 :::
 
-<!-- ================================================== -->
-<!-- PESSOA 5 - TRADE-OFFS E DECISÃO                      -->
-<!-- ================================================== -->
+## Demonstração prática: rastreabilidade e análise de impacto
+
+## Demonstração prática: rastreabilidade e análise de impacto
+
+**1. Matriz de rastreabilidade**
+
+| Requisito | Decisões | Componentes | Teste |
+|---|---|---|---|
+| REQ-01 | DA-01, DA-04 | COMP-01, 02, 06 | TST-01 |
+| REQ-02 | DA-01, DA-02 | COMP-01, 02, 03 | TST-02 |
+| REQ-03 | DA-03 | COMP-04, 05 | TST-03 |
+| REQ-04 | DA-02, DA-04 | COMP-02, 03, 06 | TST-04 |
+| REQ-05 | DA-05 | COMP-01, 06 | TST-05 |
+
+**2. Alteração do requisito REQ-04**
+
+- Antes: 95% das consultas respondidas em até 2 segundos.
+- Depois: 99% das consultas respondidas em até 500 ms.
+
+**3. Elementos identificados na análise de impacto**
+
+- Decisões: DA-02 e DA-04.
+- Componentes: COMP-02, COMP-03 e COMP-06.
+- Teste: TST-04.
+
+**Resultado:** a rastreabilidade permite identificar quais elementos precisam ser reavaliados após uma mudança.
+
+::: {.notes}
+Agora vamos observar a aplicação da rastreabilidade.
+No notebook, criamos uma matriz que relaciona cada requisito às decisões arquiteturais, aos componentes e aos testes correspondentes.
+Para demonstrar a utilidade dessa estrutura, alteramos o requisito REQ-04. Inicialmente, o sistema deveria responder a 95% das consultas em até dois segundos. Depois, a exigência passou a ser de 99% das consultas em até 500 milissegundos.
+Ao consultar os relacionamentos, o notebook identifica duas decisões arquiteturais, três componentes e um teste que precisam ser reavaliados.
+Dessa forma, em vez de procurar manualmente em todo o sistema, a equipe utiliza os vínculos registrados para identificar os possíveis impactos da mudança.
+:::
+
+
+## Artigo principal: abordagem e avaliação
+
+- Ballarín et al. (2023): **11 linguagens arquiteturais**.
+- Caso industrial ferroviário da **CAF**, com 16 requisitos.
+- Recuperação de vínculos por similaridade textual (**LSI**).
+- Comparação com vínculos aprovados; métricas de precisão,
+  revocação, F-measure e MCC. [@ballarin2023influence]
+
+::: {.notes}
+Explicar a passagem do exemplo da clínica para a pesquisa: o artigo
+pergunta se a linguagem usada para modelar a arquitetura influencia
+a recuperação automática dos vínculos com requisitos. A equipe da
+CAF forneceu requisitos, modelos e vínculos aprovados para comparação.
+O procedimento usa a mesma abordagem RTAL baseada em LSI para as
+linguagens avaliadas. As métricas avaliam os vínculos recuperados;
+não medem o desempenho do sistema da clínica.
+:::
+
+## Resultados e limites do estudo
+
+- No caso estudado, linguagens de **propósito geral/pesquisa**
+  tiveram os melhores indicadores médios.
+- Nesse grupo: precisão média **0,51** e revocação média **0,38**.
+- Os autores pedem replicação em outros estudos de caso.
+- O parâmetro da LSI foi mantido fixo para comparar linguagens.
+
+::: {.notes}
+Precisão é a parcela dos vínculos recuperados que estava correta;
+revocação é a parcela dos vínculos corretos que foi recuperada.
+Os valores 0,51 e 0,38 são médias do grupo de linguagens de
+propósito geral/pesquisa no caso da CAF, não valores da clínica nem
+garantia de desempenho em qualquer projeto. A seção de ameaças à
+validade reconhece a necessidade de replicação e que a escolha do
+parâmetro k na LSI pode influenciar a acurácia [@ballarin2023influence].
+:::
 
 ## Artigo principal: abordagem e avaliação
 
