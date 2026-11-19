@@ -308,73 +308,125 @@ Ao consultar os relacionamentos, o notebook identifica duas decisões arquitetur
 Dessa forma, em vez de procurar manualmente em todo o sistema, a equipe utiliza os vínculos registrados para identificar os possíveis impactos da mudança.
 :::
 
-<!-- ================================================== -->
-<!-- PESSOA 5 - TRADE-OFFS E DECISÃO                      -->
-<!-- ================================================== -->
+
+## Artigo principal: abordagem e avaliação
+
+- Ballarín et al. (2023): **11 linguagens arquiteturais**.
+- Caso industrial ferroviário da **CAF**, com 16 requisitos.
+- Recuperação de vínculos por similaridade textual (**LSI**).
+- Comparação com vínculos aprovados; métricas de precisão,
+  revocação, F-measure e MCC. [@ballarin2023influence]
+
+::: {.notes}
+Explicar a passagem do exemplo da clínica para a pesquisa: o artigo
+pergunta se a linguagem usada para modelar a arquitetura influencia
+a recuperação automática dos vínculos com requisitos. A equipe da
+CAF forneceu requisitos, modelos e vínculos aprovados para comparação.
+O procedimento usa a mesma abordagem RTAL baseada em LSI para as
+linguagens avaliadas. As métricas avaliam os vínculos recuperados;
+não medem o desempenho do sistema da clínica.
+:::
+
+## Resultados e limites do estudo
+
+- No caso estudado, linguagens de **propósito geral/pesquisa**
+  tiveram os melhores indicadores médios.
+- Nesse grupo: precisão média **0,51** e revocação média **0,38**.
+- Os autores pedem replicação em outros estudos de caso.
+- O parâmetro da LSI foi mantido fixo para comparar linguagens.
+
+::: {.notes}
+Precisão é a parcela dos vínculos recuperados que estava correta;
+revocação é a parcela dos vínculos corretos que foi recuperada.
+Os valores 0,51 e 0,38 são médias do grupo de linguagens de
+propósito geral/pesquisa no caso da CAF, não valores da clínica nem
+garantia de desempenho em qualquer projeto. A seção de ameaças à
+validade reconhece a necessidade de replicação e que a escolha do
+parâmetro k na LSI pode influenciar a acurácia [@ballarin2023influence].
+:::
 
 ## Trade-offs da rastreabilidade
 
-**PESSOA 5: desenvolver este slide.**
+::: {style="font-size: 0.68em"}
 
-Apresentar os principais benefícios e custos:
-
-| Benefício | Custo ou desafio |
-|---|---|
-| Melhor análise de impacto | Manutenção dos relacionamentos |
-| Maior controle das mudanças | Esforço de documentação |
-| Melhor compreensão arquitetural | Necessidade de atualização |
-| Facilidade de auditoria | Custo de gerenciamento |
-| Maior visibilidade | Complexidade de manutenção |
-
-::: {.notes}
-Discutir que a rastreabilidade oferece benefícios, mas também exige
-esforço para estabelecer e manter os relacionamentos.
+| Aspecto | Benefício | Custo ou desafio |
+|---|---|---|
+| Impacto | Localizar elementos a revisar | Atualizar vínculos |
+| Mudanças | Justificar decisões | Documentar motivos |
+| Auditoria | Conferir cobertura | Evitar links obsoletos |
+| Automação | Sugerir vínculos | Revisar falsos positivos |
+| Visibilidade | Ver dependências | Gerir mais relações |
 :::
 
-## Quando utilizar e quando evitar
+::: {.notes}
+Uma mudança para 500 ms em 99% das consultas torna útil localizar
+os candidatos à revisão, mas a equipe precisa confirmar quais deles
+realmente mudam e atualizar os vínculos. COMP-02 também atende REQ-01
+e REQ-02; por isso, considerar regressão de TST-01 e TST-02.
+O custo de registrar e manter a rastreabilidade deve ser comparado
+ao valor das consultas que ela permite [@ingram2012cost].
+:::
 
-**PESSOA 5: desenvolver este slide.**
+## Quando e quanto rastrear
 
-**Considere utilizar quando:**
+**Registre vínculos quando:**
 
-- O sistema possui muitos requisitos e componentes.
-- Alterações podem afetar diferentes partes da arquitetura.
-- É necessário justificar decisões arquiteturais.
-- Existe necessidade de auditoria e acompanhamento.
+- Um componente atende a vários requisitos.
+- Mudanças alcançam decisões, componentes e testes.
+- A equipe precisa justificar decisões ou auditar cobertura.
 
-**Avalie a necessidade quando:**
+**Mantenha a matriz enxuta quando:**
 
-- O projeto é muito pequeno.
-- Existem poucos artefatos e dependências.
-- O custo de manutenção dos relacionamentos supera seus benefícios.
+- Poucos artefatos respondem às consultas necessárias.
+- Uma linha por requisito e IDs estáveis bastam.
 
 ::: {.notes}
-Apresentar critérios objetivos para a adoção da rastreabilidade.
-Evitar afirmar que ela é obrigatória ou vantajosa em qualquer projeto.
+Na clínica, a planilha ou o notebook com cinco requisitos, decisões,
+componentes e testes já responde às perguntas de impacto. Definir
+quem atualiza cada vínculo após uma mudança. Se as consultas e os
+artefatos crescerem, avaliar apoio automatizado; se uma coluna não
+responder a uma pergunta real, não mantê-la por hábito.
+Links obsoletos e decisões sem justificativa indicam que o processo
+de atualização precisa de revisão.
+:::
+
+## Crítica do grupo e aplicação ao guia
+
+- **Força do estudo:** dados industriais e métricas explícitas.
+- **Limite:** um caso ferroviário da CAF e uma abordagem baseada em LSI.
+- **Decisão para a clínica:** tratar sugestões automáticas como
+  candidatas; revisar antes de incluir na matriz.
+
+::: {.notes}
+Os autores comparam linguagens com requisitos e modelos fornecidos
+pela CAF e medem precisão, revocação, F-measure e MCC. Isso torna a
+comparação verificável. Eles próprios pedem replicação em outros casos;
+além disso, a escolha do parâmetro k da LSI não foi avaliada. O artigo
+não testou o sistema da clínica. Nossa recomendação é usar a recuperação
+para priorizar a revisão humana dos vínculos, mantendo a matriz como
+registro confirmado [@ballarin2023influence].
 :::
 
 ## Conclusão
 
-**PESSOA 5: desenvolver este slide após a integração do grupo.**
-
-Retomar os principais pontos:
-
-- A rastreabilidade conecta requisitos aos artefatos do software.
-- A relação com a arquitetura facilita a compreensão do sistema.
-- Os relacionamentos apoiam a análise de impacto e a manutenção.
-- A escolha das técnicas deve considerar o contexto do projeto.
+- `REQ-04` mostra o valor de consultar decisões, componentes e testes.
+- A consulta reversa revela requisitos que compartilham `COMP-02`.
+- Vínculos úteis precisam de IDs estáveis, justificativa e revisão.
+- A técnica deve caber no tamanho e no ritmo de mudança do projeto.
 
 ::: {.notes}
-Finalizar reforçando a importância de manter relações compreensíveis
-e atualizadas entre requisitos e arquitetura.
+Retomar o caminho percorrido pelos cinco integrantes: problema,
+relação com a arquitetura, técnicas, exemplo executável e escolha
+prática. A matriz aponta candidatos à revisão; a equipe decide o
+que alterar e mantém os vínculos coerentes depois da mudança.
 :::
 
 ## Referências {.smaller}
 
-**PESSOA 5: revisar a lista após receber as referências de todos.**
-
-- Ballarín et al. (2023) — artigo científico principal.
-- Livros e artigos complementares utilizados no guia.
-
 ::: {#refs}
+:::
+
+::: {.notes}
+Ballarín et al. (2023) é o único estudo principal do seminário.
+As demais obras fundamentam conceitos e custos de rastreabilidade.
 :::
