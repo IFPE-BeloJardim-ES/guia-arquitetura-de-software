@@ -159,7 +159,7 @@ Com a matriz de rastreabilidade registrada (REQ-04 → DA-02, DA-04 → COMP-02,
 - COMP-06 (Cache): o tempo de resposta do cache entra no orçamento de 500 ms.
 - TST-04: o limiar do teste de desempenho precisa ser atualizado.
 
-Sem a rastreabilidade, a equipe poderia alterar apenas o componente mais óbvio (COMP-02) e esquecer o cache ou o índice, resultando em um sistema que falha no novo requisito de desempenho. A volatilidade de requisitos é uma realidade em projetos de software, e a falta de visibilidade sobre essas dependências leva a retrabalho e degradação arquitetural [@volatilidade2019]. A rastreabilidade não elimina a mudança, mas torna seu custo visível e gerenciável.
+Sem a rastreabilidade, a equipe poderia alterar apenas o componente mais óbvio (COMP-02) e esquecer o cache ou o índice, resultando em um sistema que falha no novo requisito de desempenho. Quando os requisitos mudam, a visibilidade dessas dependências ajuda a orientar a manutenção do sistema [@egyed2015developers]. A rastreabilidade não elimina a mudança, mas torna seu custo visível e gerenciável.
 
 ## Técnicas para estabelecer e manter a rastreabilidade
 
