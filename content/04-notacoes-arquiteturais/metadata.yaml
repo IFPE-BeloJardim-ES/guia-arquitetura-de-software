@@ -8,7 +8,7 @@ licenca: "CC BY-NC 4.0"
 autores:
   - nome: "Edson Cavalcante Valença"
     github: "EdsonCavalcanteValenca"
-  - nome: "Matheus Emanuel"
+  
 
 palavras_chave:
   - "notacoes-arquiteturais"
@@ -33,7 +33,7 @@ formatos:
     entregue: true
     url: "https://github.com/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/04-notacoes-arquiteturais/_trade-offs.md"
     transcricao: "Análise comparativa e trade-offs entre o Modelo 4+1, o Modelo C4 e Diagramas de Componentes UML."
-  gem_gemini:
+    gem_gemini:
     entregue: true
     url: "https://github.com/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/04-notacoes-arquiteturais/slides.qmd"
     instrucoes: "Especialista em modelagem visual de arquitetura de software, visões 4+1, C4 Model e UML."

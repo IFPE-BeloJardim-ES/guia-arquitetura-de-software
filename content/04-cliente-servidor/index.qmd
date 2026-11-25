@@ -3,7 +3,7 @@ title: "Arquitetura Cliente-Servidor"
 subtitle: "Divisão de responsabilidades entre provedores e solicitantes de serviços em sistemas distribuídos"
 author:
   - name: "Edson Cavalcante Valença"
-  - name: "Matheus Emanuel"
+  
 date: 2026-09-28
 date-modified: last-modified
 bibliography: referencias.bib
@@ -177,7 +177,7 @@ A apresentação complementar deste conteúdo está disponível em [`slides.qmd`
 ::: {.rodapé-final}
 **Rodapé Final**
 
-Valença, Edson Cavalcante; Emanuel, Matheus. "Arquitetura Cliente-Servidor".
+Valença, Edson Cavalcante. "Arquitetura Cliente-Servidor".
 *Guia Aberto de Arquitetura de Software*, 2026. Disponível em:
 <https://ifpe-belojardim-es.github.io/guia-arquitetura-de-software/content/04-cliente-servidor/>. Licenciado sob CC BY-NC 4.0.
 :::

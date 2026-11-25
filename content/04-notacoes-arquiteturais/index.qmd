@@ -3,7 +3,7 @@ title: "Notações Arquiteturais"
 subtitle: "Modelagem visual e comunicação de sistemas com Visões 4+1, Modelo C4 e Diagramas de Componentes."
 author:
   - name: "Edson Cavalcante Valença"
-  - name: "Matheus Emanuel"
+  
 date: 2026-11-13
 date-modified: last-modified
 bibliography: referencias.bib
@@ -168,5 +168,5 @@ A escolha entre o Modelo 4+1, o Modelo C4 e os Diagramas de Componentes UML não
 ::: {.rodape-final}
 **Rodapé Final**
 
-Valença, Edson Cavalcante; Emanuel, Matheus. "Notações Arquiteturais" *Guia Aberto de Arquitetura de Software*, 2026. Disponível em: <https://ifpe-belojardim-es.github.io/guia-arquitetura-de-software/content/04-notacoes-arquiteturais/>
+Valença, Edson Cavalcante. "Notações Arquiteturais" *Guia Aberto de Arquitetura de Software*, 2026. Disponível em: <https://ifpe-belojardim-es.github.io/guia-arquitetura-de-software/content/04-notacoes-arquiteturais/>
 :::
