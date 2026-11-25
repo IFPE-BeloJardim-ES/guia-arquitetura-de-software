@@ -33,7 +33,7 @@ formatos:
     entregue: true
     url: "https://github.com/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/04-notacoes-arquiteturais/_trade-offs.md"
     transcricao: "Análise comparativa e trade-offs entre o Modelo 4+1, o Modelo C4 e Diagramas de Componentes UML."
-  slide_projeto:
+    gem_gemini:
     entregue: true
     url: "https://github.com/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/04-notacoes-arquiteturais/slides.qmd"
     instrucoes: "Especialista em modelagem visual de arquitetura de software, visões 4+1, C4 Model e UML."
