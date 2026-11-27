@@ -256,12 +256,34 @@ Usa diretivas (`#if`, `#elif`, `#else`, `#endif`) resolvidas na **pré-compilaç
 
 ### Implementação da variabilidade II: orientação a objetos e critérios de escolha
 
-Padrões de Orientação a Objetos localizam a variabilidade em classes dedicadas, evitando espalhar `if`s ou `#ifdef`s pelo núcleo [@gomaa2004designing, cap. 10-11; @apel2013feature, cap. 4].
+Outra saída é usar Orientação a Objetos para colocar cada variação em uma classe própria, sem encher o código comum de `if` ou `#ifdef` [@gomaa2004designing, cap. 11-12; @apel2013feature, cap. 4]. Fazemos isso com herança ou composição [@gamma1994design, cap. 4-5].
 
-- **Herança (*Template Method*):** uma superclasse abstrata fixa o esqueleto invariante e subclasses implementam as variações [@gamma1994design, cap. 5]. No exemplo clássico de Fowler [-@fowler1999refactoring, cap. 11], `Site.getBillableAmount()` soma `getBaseAmount()` e `getTaxAmount()`, enquanto `ResidentialSite` e `LifelineSite` definem o cálculo específico. Funciona bem para variações **alternativas (`XOR`)**, mas gera explosão de subclasses diante de muitas features independentes.
-- **Composição (*Decorator*):** o núcleo fica em `LojaBase` e cada feature opcional ou `OR` vira um decorador empilhável (`PreferenciasDecorator`, `BonusDecorator`) com a mesma interface [@gamma1994design, cap. 4]. Combinar decoradores equivale a combinar features sem explosão de herança, mantendo o núcleo livre de dependências sobre features opcionais.
+Na **herança (Template Method)**, uma classe abstrata fixa os passos da operação e deixa o que muda para as subclasses [@gamma1994design, cap. 5]. No exemplo do Fowler [-@fowler1999refactoring, cap. 11], `Site.getBillableAmount()` soma base e imposto (`getBaseAmount() + getTaxAmount()`), e cada conta (`ResidentialSite`, `LifelineSite`) calcula esses valores do seu jeito:
 
-A escolha entre técnicas considera quatro critérios somados ao que vai no produto final [@apel2013feature, cap. 3; @capilla2013systems, cap. 4-5]: **granularidade** (menor trecho variável), **binding time** (quando a decisão é fechada), **restrições** (quais relações do modelo a técnica suporta, respeitando que código comum não pode assumir feature opcional) e **espalhamento** (dispersão no código).
+```java
+abstract class Site {
+    final double getBillableAmount() { return getBaseAmount() + getTaxAmount(); }
+    abstract double getBaseAmount();
+    abstract double getTaxAmount();
+}
+class ResidentialSite extends Site { /* regra residencial */ }
+class LifelineSite extends Site { /* regra tarifa social */ }
+```
+
+Isso serve muito bem para escolhas **alternativas (`XOR`)**. O problema é combinar várias features opcionais (`Carrinho`, `Bônus`, `Preferências`): o número de subclasses explode, pois seria preciso criar uma classe para cada combinação [@apel2013feature, cap. 4].
+
+A **composição (Decorator)** resolve isso deixando o fluxo básico em `LojaBase` e criando um decorador para cada feature opcional ou `OR` (`PreferenciasDecorator`, `BonusDecorator`) [@gamma1994design, cap. 4; @gomaa2004designing, cap. 12]:
+
+```java
+Loja loja = new BonusDecorator(new PreferenciasDecorator(new LojaBase()));
+```
+
+Montar um produto vira só empilhar os decoradores escolhidos, sem mexer na `LojaBase`. Para decidir entre as técnicas da Seção 4 e desta, olhamos quatro critérios e o que vai no pacote final [@apel2013feature, cap. 4 e 6; @capilla2013systems, cap. 4-5]:
+
+- **Granularidade:** tamanho do trecho que varia (de um `if` até uma classe inteira).
+- **Binding time:** quando a variante é escolhida (pré-compilação, *build* ou execução).
+- **Restrições:** relações que a técnica expressa (`XOR` no Template, `OR` no Decorator), respeitando que o código comum nunca pode depender de uma feature opcional.
+- **Espalhamento e pacote final:** se a variação fica espalhada ou isolada em classes, e se o binário leva todas as variantes ou só as do cliente.
 
 | Critério | Parametrização | Compilação condicional | Herança / Composição (OO) |
 |:---|:---|:---|:---|
@@ -271,7 +293,7 @@ A escolha entre técnicas considera quatro critérios somados ao que vai no prod
 | **Espalhamento** | `if`s se espalham | Entrelaçado no arquivo | Localizado em classes |
 | **O que o produto leva** | Todas as variantes | Só as suas | Depende do *build* |
 
-: Comparação das técnicas de implementação de variabilidade. Fontes: [@apel2013feature, cap. 3-5; @capilla2013systems, cap. 4-5]. {#tbl-tecnicas-variabilidade tbl-colwidths="[22,25,26,27]"}
+: Comparação das técnicas de implementação de variabilidade. Fontes: [@apel2013feature, cap. 4-6; @capilla2013systems, cap. 4-5]. {#tbl-tecnicas-variabilidade tbl-colwidths="[22,25,26,27]"}
 
 ## Exemplo aplicado
 
