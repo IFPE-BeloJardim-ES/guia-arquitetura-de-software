@@ -65,10 +65,10 @@ formatos:
     entregue: true
     colab_url: "https://colab.research.google.com/github/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/07-arquitetura-dominio-linhas-de-produto-reutilizacao/notebook.ipynb"
   audio_notebooklm:
-    entregue: false
+    entregue: true
     arquivo: ""
-    url: ""
-    duracao_min: 0
+    url: "https://open.spotify.com/episode/1hXDy4lnZhX6sPzuODVsYd?si=aqzVwNEcSEKx5hXMMCzVTg"
+    duracao_min: 14
     transcricao: "assets/audio-transcricao.md"
   gem_gemini:
     entregue: true
@@ -96,7 +96,7 @@ formatos:
     num_slides: 18
   # opcionais
   podcast:
-    entregue: false
-    url: ""
+    entregue: true
+    url: "https://open.spotify.com/episode/1hXDy4lnZhX6sPzuODVsYd?si=aqzVwNEcSEKx5hXMMCzVTg"
 
 licenca: "CC-BY-NC-4.0"
