@@ -1,0 +1,224 @@
+---
+title: "Arquiteturas de Domínio e LPS"
+subtitle: "Engenharia de domínio, variabilidade e derivação de produtos"
+author:
+  - "Maria Letícia de Sousa Barboza"
+  - "João Henrique Lopes de Araújo Freire"
+  - "Pedro Henrique Reis Xavier"
+  - "Wellison Danniel Soares Ponciano"
+  - "Caio Vinícius Santana Gomes"
+  - "Ruan Henrique Pereira dos Santos"
+date: 2026-11-26
+date-modified: last-modified
+bibliography: referencias.bib
+format:
+  revealjs:
+    theme: default
+    lang: pt-BR
+    slide-number: c/t
+    slide-level: 2
+    incremental: false
+    code-overflow: wrap
+    link-external-newwindow: true
+    footer: "Guia Aberto de Arquitetura de Software · CC BY-NC 4.0"
+---
+
+## Roteiro
+
+1. O problema de manter dezenas de versões
+2. Definição: LPS, *feature* e Arquitetura de Domínio
+3. Engenharia de Domínio vs. Engenharia de Aplicação
+4. Modelo de *features* e a Loja Web
+5. Especificação e derivação do produto
+6. Implementação da variabilidade no código
+7. Exemplo aplicado, violação e consequência
+8. Trade-offs, quando usar e quando evitar
+
+## O problema veio antes
+
+Manter de 15 a 60 versões do mesmo software logo sai do controle [@kruger2020empirical]:
+
+- Saída inicial: **clone-and-own** (copiar projeto ou criar *branch* por cliente)
+- Funciona com 2 ou 3 variantes, mas não escala
+- Cada correção comum precisa ser replicada em *N* cópias
+- Resultado: conflitos de integração e versões que divergem
+
+::: {.notes}
+Clonar repositório parece rápido no primeiro cliente, mas cobra juros altos na manutenção.
+:::
+
+## Definição
+
+- **Linha de Produtos (LPS):** família de sistemas do mesmo domínio construída sobre ativos reutilizáveis [@clements2001software, cap. 1]
+- **Feature:** funcionalidade visível ao cliente que distingue um produto ($1$ = incluída, $0$ = excluída) [@kang1990foda; @apel2013feature, cap. 2]
+- **Arquitetura de Domínio (DSSA):** arquitetura de referência da família, com pontos de variação explícitos [@tracz1995dssa; @pohl2005software, cap. 10]
+
+## Dois processos
+
+:::: {.columns}
+
+::: {.column width="50%"}
+```{mermaid}
+%%| fig-alt: "Fluxo: Modelo de Features e Arquitetura de Domínio geram a Base de Ativos, que alimenta a Seleção e Derivação para produzir os Produtos 1 a N."
+flowchart TD
+    AD["1. Engenharia de Domínio<br/>Modelo + Arquitetura + Ativos"] ==> DER["2. Engenharia de Aplicação<br/>Validação + Derivação"]
+    DER --> P1["Produto 1"]
+    DER --> P2["Produto 2..N"]
+```
+:::
+
+::: {.column width="50%"}
+- **Engenharia de Domínio (para reuso):** cria a arquitetura e os ativos base [@pohl2005software, cap. 2]
+- **Engenharia de Aplicação (com reuso):** valida escolhas e gera o produto [@clements2001software, cap. 3; @czarnecki2000generative, cap. 2]
+:::
+
+::::
+
+## Modelo de features {.smaller}
+
+| Relação / Restrição | Semântica | Regra na derivação |
+|:---|:---:|:---|
+| **Obrigatória** | $Filho \iff Pai$ | Sempre presente quando o pai está ativo |
+| **Opcional** | $Filho \implies Pai$ | Pode ser incluída ou omitida |
+| **Alternativa (`XOR`)** | $\sum Filho_i = 1$ | Exatamente **1** opção do grupo |
+| **Inclusiva (`OR`)** | $\sum Filho_i \ge 1$ | Pelo menos **1** opção do grupo |
+| **`A requer B` / `A exclui B`** | $A \implies B$ / $\neg(A \wedge B)$ | Dependência ou exclusão entre ramos |
+
+: Fonte: [@kang1990foda; @apel2013feature, cap. 2; @capilla2013systems, cap. 2]
+
+## Exemplo da Loja Web
+
+:::: {.columns}
+
+::: {.column width="50%"}
+```{mermaid}
+%%| fig-alt: "Árvore da Loja Web com Envio obrigatória (grupo OR: Econômico, Rápido, Exterior) e opcionais Carrinho, Bônus e Preferências."
+flowchart TD
+    R["Loja web"] --> E["Envio (OR ≥ 1)"]
+    R -.-> CA["Carrinho"]
+    R -.-> BO["Bônus"]
+    R -.-> PR["Preferências"]
+    E --> EC["Econ. / Ráp. / Ext."]
+    BO -.->|requer| CA
+```
+:::
+
+::: {.column width="50%"}
+Com **7 features** [@apel2013feature, cap. 2]:
+
+- `Envio` (`OR` de 3): $2^3 - 1 = \mathbf{7}$ opções
+- 3 opcionais: $2^3 = \mathbf{8}$ combinações
+- Total bruto: $7 \times 8 = \mathbf{56}$ **produtos**
+- `Bônus requer Carrinho`: **42 válidos**
+:::
+
+::::
+
+## Especificação de casos de uso
+
+Clonar casos de uso por cliente gera divergência (`B6` extra, `B4` alterado e `B1`–`B2` com/sem carrinho) [@pohl2005software, cap. 15]:
+
+- **Anotativa (PLUSS):** documento único com passos marcados por `[Carrinho]`, `[não Carrinho]` e `[Preferências]` [@eriksson2005pluss]; sofre com **entrelaçamento** (*tangling*) [@apel2013feature, cap. 5].
+- **Composicional (*Advices*):** módulo base limpo + variações em `ADV01`–`ADV03`, ligadas pelo **Configuration Knowledge** [@bonifacio2009modeling; @czarnecki2000generative, cap. 2 e 5].
+
+## Derivação do produto {.smaller}
+
+| Critério | Abordagem Anotativa (PLUSS) | Abordagem Composicional (*Advices*) |
+|:---|:---|:---|
+| **Base** | Documento único com condições nos passos | Módulo base comum e variações separadas |
+| **Derivação** | Corta trechos de *features* não escolhidas | Junta módulos via *Configuration Knowledge* |
+| **Leitura** | Piora com entrelaçamento (*tangling*) | Arquivos limpos; exige seguir a tabela de regras |
+
+: Fonte: [@eriksson2005pluss; @bonifacio2009modeling; @apel2013feature, cap. 4]
+
+**Regra da Engenharia de Aplicação:** **o produto é gerado, não editado** (como um *bytecode* compilado: corrige-se no domínio e gera-se de novo) [@pohl2005software, cap. 15; @czarnecki2000generative, cap. 5].
+
+## Parametrização e pré-compilação
+
+- **Parametrização (*runtime*):** escolha em execução via argumentos de CLI, `.prop` ou **Feature Flags** [@pohl2005software, cap. 6 e 11; @apel2013feature, cap. 4; @capilla2013systems, cap. 4].
+  - *Custo:* leva todas as variantes no binário e espalha `if`s.
+- **Compilação condicional:** diretivas `#if / #endif` (ou `//#if` no **Antenna**) geram um `.jar` enxuto por cliente [@apel2013feature, cap. 5].
+  - *Custo:* *tangling* e risco de **variantes desligadas nem compilarem** [@apel2013feature, cap. 10].
+
+## Orientação a Objetos
+
+Padrões OO isolam variações em classes próprias [@gomaa2004designing, cap. 11-12; @gamma1994design, cap. 4-5]:
+
+- **Herança (*Template Method*):** superclasse fixa o esqueleto (`Site.getBillableAmount()`) e subclasses variam [@fowler1999refactoring, cap. 11]. Bom para `XOR`, mas explode em subclasses com várias opcionais.
+- **Composição (*Decorator*):** núcleo em `LojaBase` e *features* opcionais/`OR` em decoradores empilháveis:
+
+```java
+Loja loja = new BonusDecorator(new PreferenciasDecorator(new LojaBase()));
+```
+
+## Critérios de escolha {.smaller}
+
+| Critério | Parametrização | Compilação cond. | Herança / Composição |
+|:---|:---|:---|:---|
+| **Granularidade** | Dados e `if`s | Qualquer trecho | Classes e métodos |
+| **Binding time** | Execução | Pré-compilação | *Build* ou execução |
+| **Restrições** | Opcional / `XOR` | Todas (`#if`/`#elif`) | `XOR` (Template) / `OR` (Decorator) |
+| **Espalhamento** | `if`s espalhados | Entrelaçado | Localizado em classes |
+| **No pacote final** | Todas as variantes | Só as escolhidas | Depende do *build* |
+
+: Fonte: [@apel2013feature, cap. 4-6; @capilla2013systems, cap. 4-5]
+
+## Exemplo aplicado: implementação
+
+```python
+def derivar_loja(nome, envios, carrinho=False, bonus=False, pref=False):
+    validar_configuracao(envios, carrinho, bonus, pref)
+    loja = LojaBase(nome, envios)
+    if carrinho: loja = CarrinhoDecorator(loja)
+    if pref:     loja = PreferenciasDecorator(loja)
+    if bonus:    loja = BonusDecorator(loja)
+    return loja
+```
+
+Validador comprova **56 produtos brutos** e **42 válidos**, sem nenhum `if` de cliente dentro de `LojaBase`.
+
+## A violação e sua consequência
+
+1. **Pular o validador:** cria loja sem envio ou com `Bônus` sem `Carrinho`.
+2. **Clonar classes (`LojaCloneA..E`):** 5 cópias independentes da loja.
+
+```
+Mudança: reajustar imposto padrão de 5% para 8% em 5 lojas
+LPS (LojaBase)   → 1 edição no núcleo  → 5/5 lojas certas (0 divergências)
+Clones (5 cópias) → 5 edições manuais  → 1 clone esquecido cobra 5%
+```
+
+## Trade-offs
+
+LPS troca **custo inicial alto** na Engenharia de Domínio por **custo marginal menor** a cada produto [@clements2001software, cap. 3; @pohl2005software, cap. 1]. Segundo Krüger e Berger [-@kruger2020empirical]:
+
+- Reduz o custo de reuso no longo prazo e eleva a qualidade do código
+- Propagar mudanças pode custar caro se houver acoplamento entre variantes
+- Empresas costumam começar com *clone-and-own* e migrar quando a família cresce
+
+## Trade-offs em uma tabela {.smaller .scrollable}
+
+{{< include _trade-offs.md >}}
+
+::: {.notes}
+Tabela compartilhada via `_trade-offs.md` entre texto e slides.
+:::
+
+## Quando usar
+
+- Há **muitas variantes ativas** compartilhando o mesmo núcleo [@clements2001software, cap. 1]
+- O domínio é **conhecido e estável**, permitindo delimitar o que varia [@pohl2005software, cap. 1-2]
+- Correções e regras comuns precisam **propagar rápido** para toda a família
+
+## Quando evitar
+
+- Existem **poucas variantes** (2 a 3 produtos) sem previsão de expansão [@kruger2020empirical]
+- O domínio está em **descoberta rápida** (MVP inicial)
+- O prazo não comporta construir a plataforma antes da primeira entrega
+
+**Sinais de alerta:** edição manual pós-geração, *flags* mortas ou `#ifdef` quebrados [@apel2013feature, cap. 5 e 10] e plataforma mais cara que o ganho de reuso [@capilla2013systems, cap. 8].
+
+## Referências {.smaller .scrollable}
+
+::: {#refs}
+:::
