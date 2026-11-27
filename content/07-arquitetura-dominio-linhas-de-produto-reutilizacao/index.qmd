@@ -29,8 +29,8 @@ keywords: ["linhas de produtos de software", "software product lines", "arquitet
 <dd>Nenhum</dd>
 <dt>Formatos</dt>
 <dd>
-[texto]{.formato} [notebook](notebook.ipynb){.formato} [slides](slides.qmd){.formato}
-<!-- Adicionar links públicos de áudio e gem quando finalizados -->
+[texto]{.formato} [notebook](notebook.ipynb){.formato} [gem](https://gemini.google.com/customize/skills/d/1wfb4YMLchzX-NKbx23if-PnZoQAQY1Pk?usp=sharing){.formato} [slides](slides.qmd){.formato}
+<!-- Adicionar link público do áudio quando finalizado -->
 </dd>
 </dl>
 :::
