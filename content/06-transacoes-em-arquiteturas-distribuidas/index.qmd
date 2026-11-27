@@ -18,6 +18,7 @@ appendix-cite-as: display
 date: 2026-11-17
 date-modified: last-modified
 bibliography: referencias.bib
+nocite: "@*"
 citation:
   type: webpage
   container-title: "Guia Aberto de Arquitetura de Software"
