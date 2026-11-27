@@ -56,6 +56,17 @@ domínio, comunicação entre serviços, propriedade de dados e custos da distri
 
 **Formatos:** [texto](content/05-microsservicos/index.qmd) · [jupyter notebook](content/05-microsservicos/notebook.ipynb) · [áudio](content/05-microsservicos/assets/audio-microsservicos.wav) · [gem](https://gemini.google.com/gem/1xG1FvWU5t9C_gJmn_z_Z0l1q2GqTHo5Y?usp=sharing) · [slides](content/05-microsservicos/slides.qmd)
 
+### [06 — Transações Distribuídas: 2PC e Saga](content/06-transacoes-em-arquiteturas-distribuidas/index.qmd)
+
+Consistência de dados em arquiteturas de microsserviços: protocolo síncrono
+Two-Phase Commit (2PC), padrão assíncrono Saga, compensações idempotentes e
+trade-offs sob contenção.
+
+**Autores:** Emerson Silva, Gustavo Henrique, José Victor, Randson Bredley, Thiago
+Leal e Thiago Patriota.
+
+**Formatos:** [texto](content/06-transacoes-em-arquiteturas-distribuidas/index.qmd) · [notebook](content/06-transacoes-em-arquiteturas-distribuidas/notebook.ipynb) · [áudio](https://drive.google.com/drive/folders/1YEhliUYZSWkVbFYr-1ZmjoayMh3FI0XG) · [gem](https://gemini.google.com/gem/1SVhArn562AqA-bwmIyBX1B7Y9ayb5YgZ?usp=sharing) · [slides](content/06-transacoes-em-arquiteturas-distribuidas/slides.qmd)
+
 ## O que cada tópico entrega
 
 | Formato | O que é |
