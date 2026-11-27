@@ -1,0 +1,144 @@
+---
+title: "Arquiteturas de Domínio, Linhas de Produto e Reutilização"
+subtitle: "Engenharia de domínio, modelagem de variabilidade e técnicas para derivar famílias de sistemas"
+author:
+  - name: "Maria Letícia de Sousa Barboza"
+  - name: "João Henrique Lopes de Araújo Freire"
+  - name: "Pedro Henrique Reis Xavier"
+  - name: "Wellison Danniel Soares Ponciano"
+  - name: "Caio Vinícius Santana Gomes"
+  - name: "Ruan Henrique Pereira dos Santos"
+date: 2026-11-26
+date-modified: last-modified
+bibliography: referencias.bib
+citation:
+  type: webpage
+  container-title: "Guia Aberto de Arquitetura de Software"
+license: "CC BY-NC 4.0"
+keywords: ["linhas de produtos de software", "software product lines", "arquitetura de domínio", "modelo de features", "gestão de variabilidade", "reutilização de software"]
+---
+
+::: {.meta-topico}
+<dl>
+<dt>Competências</dt>
+<dd>Distinguir engenharia de domínio, arquitetura de domínio e engenharia de aplicação em linhas de produtos de software</dd>
+<dd>Modelar comunalidades, variabilidades e restrições entre features em um modelo de features</dd>
+<dd>Comparar técnicas de especificação e implementação de variabilidade segundo granularidade, binding time, restrições e espalhamento</dd>
+<dd>Avaliar os trade-offs econômicos e arquiteturais entre plataforma de linha de produtos e clone-and-own</dd>
+<dt>Pré-requisitos</dt>
+<dd>Nenhum</dd>
+<dt>Formatos</dt>
+<dd>
+[texto]{.formato} [notebook](notebook.ipynb){.formato} [slides](slides.qmd){.formato}
+<!-- Adicionar links públicos de áudio e gem quando finalizados -->
+</dd>
+</dl>
+:::
+
+## Definição e contexto
+
+<!-- Seção 1 — Responsável: Lets (~380 palavras)
+Base: slides 2-5 + reforço obrigatório da lacuna (Arquitetura de Domínio / DSSA e Engenharia de Domínio vs. Engenharia de Aplicação).
+Itens:
+1. Definir LPS, feature e Arquitetura de Domínio.
+2. Problema concreto: 15–60 versões e custos de clone-and-own.
+3. Contraste direto: Engenharia de Domínio vs. Engenharia de Aplicação.
+4. Diagrama Mermaid 1 (com label, fig-cap e fig-alt).
+Citações sugeridas: [@clements2001software, cap. 1], [@pohl2005software, cap. 1-2], [@czarnecki2000generative, cap. 2], [@tracz1995dssa], [@kruger2020empirical].
+-->
+
+## Estrutura e componentes
+
+### Modelo de features e variabilidade
+
+<!-- Seção 2 — Responsável: JH (~380 palavras)
+Base: slides 7-9.
+Itens:
+1. Papel do Modelo de Features (FODA) em todo o ciclo de vida.
+2. As 4 relações hierárquicas: obrigatória, opcional, alternativa (XOR), inclusiva (OR).
+3. Restrições entre ramos (cross-tree): requer e exclui (o que é proibido).
+4. Exemplo da Loja Web: Envio (OR de 3 -> 7) x Carrinho, Bônus, Preferências (opcionais -> 2x2x2) = 56 produtos válidos com 7 features.
+5. Diagrama Mermaid 2: árvore do Feature Model da Loja Web (com label, fig-cap e fig-alt).
+Citações sugeridas: [@kang1990foda], [@apel2013feature, cap. 2], [@capilla2013systems, cap. 2].
+-->
+
+### Especificação e derivação do produto
+
+<!-- Seção 3 — Responsável: Pedu (~380 palavras)
+Base: slides 6, 10-12 + reforço da lacuna (Engenharia de Aplicação e Configuration Knowledge).
+Itens:
+1. Problema de especificações separadas por cliente (slide 6).
+2. Abordagem Anotativa: notação PLUSS ([Carrinho], [não Carrinho], [Preferências]) e entrelaçamento (tangling).
+3. Abordagem Composicional: módulo base + advices (ADV01-ADV03) + Configuration Knowledge.
+4. Derivação na Engenharia de Aplicação: "o produto é gerado, não editado".
+5. Tabela comparativa curta: Anotativa vs. Composicional.
+Citações sugeridas: [@eriksson2005pluss], [@bonifacio2009modeling], [@czarnecki2000generative, cap. 2 e 5], [@apel2013feature, cap. 4-5], [@pohl2005software, cap. 15].
+-->
+
+### Implementação da variabilidade I: parametrização e compilação condicional
+
+<!-- Seção 4 — Responsável: Ruan (~420 palavras)
+Base: slides 14-23.
+Itens:
+1. Ponte do modelo para o código: feature obrigatória -> código comum; opcional/XOR/OR -> código variável.
+2. Parametrização: argumentos de CLI, arquivos .prop (dado vs. comportamento via nome de classe) e Feature Flags (serviço em execução, A/B, dívida técnica, só flags por cliente/plano são LPS) + ganhos e custos.
+3. Compilação condicional: diretivas #if/#elif/#else/#endif (ex.: Antenna em Java com //#if), flexibilidade sintática (extends, constantes), pipeline de build por cliente + ganhos e custos (variantes desligadas nem são compiladas).
+Citações sugeridas: [@apel2013feature, cap. 5], [@pohl2005software, cap. 14], [@capilla2013systems, cap. 4].
+-->
+
+### Implementação da variabilidade II: orientação a objetos e critérios de escolha
+
+<!-- Seção 5 — Responsável: Danniel (~400 palavras)
+Base: slides 16, 24-26.
+Itens:
+1. Herança — Template Method (Fowler: Site / ResidentialSite / LifelineSite): ideal para XOR; explosão de subclasses.
+2. Composição — Decorator (LojaBase + PreferenciasDecorator + BonusDecorator): ideal para opcionais/OR sem explosão de herança.
+3. Os 4 critérios de escolha + o que o produto leva (Granularidade, Binding time, Restrições, Espalhamento) + tabela comparativa do slide 26.
+Citações sugeridas: [@fowler1999refactoring, cap. 11], [@gamma1994design, cap. 4-5], [@gomaa2004designing, cap. 11-12], [@apel2013feature, cap. 4 e 6].
+-->
+
+## Exemplo aplicado
+
+<!-- Seção 6 — Responsável: Caio (~320 palavras + notebook.ipynb)
+Base: Loja Web de ponta a ponta (slides 8-9 e 25), no padrão de 3 partes do 00-modelo:
+1. Implementação correta: Feature Model da Loja Web em Python + validador comprovando 56 produtos válidos + derivação com Decorator.
+2. A violação: clone-and-own / condicionais misturados no núcleo e instanciação sem validação do modelo.
+3. Consequência mensurável: contagem de combinações válidas/inválidas e custo de propagar 1 mudança comum (1 ponto na LPS vs. N clones).
+-->
+
+::: {.callout-note}
+## Exemplo executável
+O notebook deste tópico estará em [notebook.ipynb](notebook.ipynb) e poderá ser aberto direto no Google Colab assim que a implementação for concluída.
+:::
+
+## Trade-offs, quando usar e quando não usar
+
+<!-- Seção 7 — Responsável: Lets (~380 palavras + _trade-offs.md)
+Base: slides 20, 23, 26 + Krüger & Berger (2020).
+Itens:
+1. Trade-offs da tabela compartilhada {{< include _trade-offs.md >}}.
+2. Custo da plataforma vs. clone-and-own (upfront investment, ponto de equilíbrio empírico em Krüger & Berger 2020).
+3. Critérios acionáveis: quando usar, quando evitar e sinais de que a escolha deu errado.
+Citações sugeridas: [@kruger2020empirical], [@clements2001software, cap. 3], [@pohl2005software, cap. 1], [@capilla2013systems, cap. 1 e 10].
+-->
+
+{{< include _trade-offs.md >}}
+
+::: {.callout-note}
+## Slides deste tópico
+A apresentação estará disponível em [`slides.qmd`](slides.qmd) após a consolidação final do texto.
+:::
+
+## Exercícios de fixação
+
+<!-- Responsável: JH (~300 palavras)
+5 questões de múltipla escolha com gabarito em <details><summary>Gabarito e Explicação</summary>...</details>, cobrindo do modelo de features aos trade-offs.
+-->
+
+## Referências
+
+::: {#refs}
+:::
+
+::: {.como-citar}
+:::

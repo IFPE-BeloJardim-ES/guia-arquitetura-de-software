@@ -1,0 +1,94 @@
+# Metadados do tópico — preencha tudo. O CI valida os campos obrigatórios.
+# Este arquivo também alimenta a indexação por ferramentas de IA.
+
+numero: "07"
+slug: "arquitetura-dominio-linhas-de-produto-reutilizacao"
+titulo: "Arquiteturas de Domínio, Linhas de Produto e Reutilização"
+subtitulo: "Engenharia de domínio, modelagem de variabilidade e técnicas para derivar famílias de sistemas"
+resumo: >-
+  Explora como Arquiteturas de Domínio e Linhas de Produtos de Software (LPS)
+  organizam o reuso sistemático de ativos entre famílias de sistemas. Aborda
+  Engenharia de Domínio e de Aplicação, modelos de features, especificação
+  anotativa e composicional, técnicas de implementação de variabilidade e os
+  trade-offs frente ao clone-and-own.
+
+autores:
+  - nome: "Maria Letícia de Sousa Barboza"
+    grupo: "Grupo 1"
+    github: "omeIets"
+    orcid: ""
+  - nome: "João Henrique Lopes de Araújo Freire"
+    grupo: "Grupo 1"
+    github: "joaohenrique11z"
+    orcid: ""
+  - nome: "Pedro Henrique Reis Xavier"
+    grupo: "Grupo 1"
+    github: "xavier9190"
+    orcid: ""
+  - nome: "Wellison Danniel Soares Ponciano"
+    grupo: "Grupo 1"
+    github: "DannSrs"
+    orcid: ""
+  - nome: "Caio Vinícius Santana Gomes"
+    grupo: "Grupo 1"
+    github: "Caioxlw"
+    orcid: ""
+  - nome: "Ruan Henrique Pereira dos Santos"
+    grupo: "Grupo 1"
+    github: "RuanHD"
+    orcid: ""
+
+status: "rascunho"        # rascunho | em-revisao | publicado | modelo
+data_criacao: "2026-11-26"
+ultima_revisao: "2026-11-26"
+revisado_por:
+  - ""
+
+# Estrutura pedagógica
+competencias:
+  - "distinguir engenharia de domínio, arquitetura de domínio e engenharia de aplicação em linhas de produtos de software"
+  - "modelar comunalidades, variabilidades e restrições entre features em um modelo de features"
+  - "comparar técnicas de especificação e implementação de variabilidade segundo granularidade, binding time, restrições e espalhamento"
+  - "avaliar os trade-offs econômicos e arquiteturais entre plataforma de linha de produtos e clone-and-own"
+nivel_bloom: ["compreender", "aplicar", "analisar", "avaliar"]   # lembrar|compreender|aplicar|analisar|avaliar|criar
+pre_requisitos: []
+topicos_relacionados: ["arquitetura-em-camadas"]
+palavras_chave:
+  - "linhas de produtos de software"
+  - "software product lines"
+  - "arquitetura de domínio"
+  - "modelo de features"
+  - "gestão de variabilidade"
+  - "reutilização de software"
+
+# Formatos entregues — atualizar para true conforme cada entregável for finalizado após fechar o index.qmd
+formatos:
+  texto: true
+  notebook:
+    entregue: false
+    colab_url: ""
+  audio_notebooklm:
+    entregue: false
+    arquivo: ""
+    url: ""
+    duracao_min: 0
+    transcricao: "assets/audio-transcricao.md"
+  gem_gemini:
+    entregue: false
+    url: ""
+    instrucoes: ""
+  slides:
+    entregue: false
+    num_slides: 0
+  # opcionais
+  video:
+    entregue: false
+    url: ""
+  podcast:
+    entregue: false
+    url: ""
+  mcp:
+    entregue: false
+    url: ""
+
+licenca: "CC-BY-NC-4.0"
