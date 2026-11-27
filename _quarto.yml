@@ -39,6 +39,10 @@ website:
             text: "04 — Arquitetura Cliente-Servidor"
           - href: content/05-microsservicos/index.qmd
             text: "05 — Microsserviços"
+          - href: content/00-modelo/index.qmd
+            text: "00. Modelo de Tópico"
+          - href: content/04-notacoes-arquiteturais/index.qmd
+            text: "04. Notações Arquiteturais"
     right:
       - icon: github
         href: "https://github.com/IFPE-BeloJardim-ES/guia-arquitetura-de-software"
