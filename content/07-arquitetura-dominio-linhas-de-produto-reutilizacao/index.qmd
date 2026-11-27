@@ -258,7 +258,7 @@ O notebook deste tópico constrói em Python a família **Loja Web** de ponta a 
 
 ::: {.callout-note}
 ## Exemplo executável
-O notebook deste tópico está em [notebook.ipynb](notebook.ipynb) e pode ser aberto direto no [Google Colab](https://colab.research.google.com/github/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/07-arquitetura-dominio-linhas-de-produto-reutilizacao/notebook.ipynb).
+O notebook deste tópico está em [notebook.ipynb](notebook.ipynb) e pode ser aberto direto no [Google Colab](https://colab.research.google.com/drive/1XRIqvjUOmaVeR1wWXRJgdssl1-9MJyOj?usp=sharing).
 :::
 
 ## Trade-offs, quando usar e quando não usar
