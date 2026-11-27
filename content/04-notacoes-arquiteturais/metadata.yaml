@@ -1,0 +1,39 @@
+numero: "04"
+slug: "notacoes-arquiteturais"
+titulo: "Notações Arquiteturais"
+resumo: "Modelagem visual e comunicação de sistemas distribuídos utilizando o Modelo 4+1, o Modelo C4 e Diagramas de Componentes UML."
+status: "concluido"
+licenca: "CC BY-NC 4.0"
+
+autores:
+  - nome: "Edson Cavalcante Valença"
+    github: "EdsonCavalcanteValenca"
+  - nome: "Matheus Emanuel"
+
+palavras_chave:
+  - "notacoes-arquiteturais"
+  - "modelo-4-mais-1"
+  - "c4-model"
+  - "diagrama-de-componentes"
+  - "uml"
+  - "arquitetura-de-software"
+
+competencias:
+  - "Selecionar a notação arquitetural mais adequada para diferentes perfis de stakeholders"
+  - "Estruturar visões arquiteturais complementares com os modelos 4+1 e C4"
+  - "Modelar componentes, interfaces fornecidas/requeridas e fronteiras de dependência sem ambiguidade"
+
+formatos:
+  texto: true
+  slides: true
+  notebook:
+    entregue: true
+    colab_url: "https://colab.research.google.com/github/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/04-notacoes-arquiteturais/notebook.ipynb"
+  audio_notebooklm:
+    entregue: true
+    url: "https://github.com/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/04-notacoes-arquiteturais/_trade-offs.md"
+    transcricao: "Análise comparativa e trade-offs entre o Modelo 4+1, o Modelo C4 e Diagramas de Componentes UML."
+  gem_gemini:
+    entregue: true
+    url: "https://github.com/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/04-notacoes-arquiteturais/slides.qmd"
+    instrucoes: "Especialista em modelagem visual de arquitetura de software, visões 4+1, C4 Model e UML."

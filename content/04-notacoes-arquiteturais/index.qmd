@@ -1,0 +1,172 @@
+---
+title: "Notações Arquiteturais"
+subtitle: "Modelagem visual e comunicação de sistemas com Visões 4+1, Modelo C4 e Diagramas de Componentes."
+author:
+  - name: "Edson Cavalcante Valença"
+  - name: "Matheus Emanuel"
+date: 2026-11-13
+date-modified: last-modified
+bibliography: referencias.bib
+citation:
+  type: webpage
+  container-title: "Guia Aberto de Arquitetura de Software"
+license: "CC BY-NC 4.0"
+keywords: ["notacoes-arquiteturais", "modelo-4-mais-1", "c4-model", "diagrama-de-componentes", "uml", "arquitetura-de-software"]
+---
+
+::: {.meta-topico}
+<dl>
+<dt>Competências</dt>
+<dd>Selecionar a notação arquitetural mais adequada para diferentes perfis de stakeholders; estruturar visões arquiteturais complementares (4+1 e C4); modelar componentes, interfaces e dependências sem ambiguidade.</dd>
+</dl>
+:::
+
+## Definição e Contextualização
+
+Notações arquiteturais são linguagens visuais, textuais ou formais utilizadas para representar, analisar e comunicar as decisões estruturais e comportamentais fundamentais de um sistema de software [@bass2021software]. Diferentemente de rascunhos informais compostos por caixas e setas sem significado definido, uma notação arquitetural estabelece um vocabulário compartilhado com semântica explícita, níveis de abstração bem delimitados e regras claras sobre o que cada elemento e cada relacionamento representam.
+
+Na engenharia de software contemporânea, sistemas complexos precisam ser compreendidos por múltiplos grupos de interessados (*stakeholders*), cada qual com preocupações distintas. Enquanto gestores de produto e patrocinadores executivos buscam entender as fronteiras do sistema, as integrações externas e o alinhamento com os objetivos de negócio, engenheiros de software precisam visualizar módulos, contratos de API e fluxos de dados, ao passo que engenheiros de infraestrutura e segurança avaliam topologias de rede, protocolos de transporte e políticas de isolamento [@rozanski2011software]. Tentar condensar todas essas dimensões em um único diagrama monolítico invariavelmente produz artefatos poluídos, ambíguos e difíceis de manter.
+
+Para resolver essa limitação, a norma internacional **ISO/IEC/IEEE 42010** formaliza a distinção essencial entre **ponto de vista** (*viewpoint*) e **visão** (*view*) [@iso2022architecture]. Um ponto de vista define as convenções, as regras de modelagem e o público-alvo para abordar um conjunto específico de preocupações arquiteturais; já uma visão é a representação concreta de um sistema específico construída segundo as regras daquele ponto de vista [@clements2010documenting]. Nesse contexto, abordagens consolidadas como o **Modelo de Visões 4+1**, o **Modelo C4** e os **Diagramas de Componentes da UML** oferecem estruturas complementares para documentar sistemas com rigor técnico e clareza comunicativa.
+
+## Estrutura e Modelos de Notação
+
+### O Modelo de Visões 4+1 de Kruchten
+
+Proposto por Philippe Kruchten em 1995, o **Modelo de Visões 4+1** organiza a descrição arquitetural em quatro visões principais, unificadas e validadas por um quinto elemento composto por cenários de uso [@kruchten1995architectural]. O objetivo central dessa estrutura é separar preocupações ortogonais para que cada equipe técnica trabalhe sobre o recorte relevante à sua responsabilidade sem perder a coerência global do projeto:
+
+1. **Visão Lógica (*Logical View*):** Foca nos requisitos funcionais do sistema, descrevendo as principais abstrações do domínio, entidades, classes, pacotes e suas colaborações. É voltada principalmente para analistas de negócio e desenvolvedores orientados a domínio.
+2. **Visão de Desenvolvimento (*Development View*):** Também conhecida como visão de implementação, organiza os artefatos estáticos de software no ambiente de construção, incluindo módulos, bibliotecas, repositórios, diretórios e dependências de compilação.
+3. **Visão de Processos (*Process View*):** Aborda os aspectos dinâmicos e os atributos de qualidade em tempo de execução, como concorrência, sincronização, threads, processos do sistema operacional, distribuição de carga, tolerância a falhas e desempenho.
+4. **Visão Física (*Physical View*):** Mapeia o software sobre o hardware e a infraestrutura de rede, detalhando nós de computação, servidores, contêineres, topologias de implantação e canais de comunicação física [@rozanski2011software].
+5. **Cenários (+1 / *Scenarios*):** Consiste em um conjunto selecionado de casos de uso críticos que atravessam as quatro visões anteriores. Os cenários servem tanto para descobrir elementos arquiteturais durante o projeto quanto para validar se as decisões tomadas nas demais visões atendem aos fluxos ponta a ponta do negócio [@kruchten1995architectural].
+
+```{mermaid}
+%%| label: fig-modelo-4-mais-1
+%%| fig-cap: "Relação entre as quatro visões técnicas e os cenários integradores no Modelo 4+1."
+flowchart TD
+    VL["Visão Lógica\n(Abstrações e Domínio)"]
+    VD["Visão de Desenvolvimento\n(Módulos e Organização de Código)"]
+    VP["Visão de Processos\n(Concorrência e Execução)"]
+    VF["Visão Física\n(Topologia, Nós e Rede)"]
+    CEN["+1: Cenários\n(Casos de Uso Críticos)"]
+
+    CEN <--> VL
+    CEN <--> VD
+    CEN <--> VP
+    CEN <--> VF
+    VL --- VD
+    VP --- VF
+```
+
+### O Modelo C4 de Simon Brown
+
+Criado por Simon Brown como uma resposta pragmática à complexidade excessiva de notações formais tradicionais, o **Modelo C4** adota a metáfora de mapas interativos com múltiplos níveis de zoom [@brown2018visualising]. Em vez de impor símbolos rígidos proprietários, o modelo define uma hierarquia clara de quatro níveis estáticos de abstração — **Contexto**, **Contêineres**, **Componentes** e **Código** — apoiados por diagramas complementares e regras rigorosas de rotulagem explícita (título, tipo de elemento, tecnologia e responsabilidade em cada caixa e seta) [@richards2020fundamentals]:
+
+- **Nível 1 — Diagrama de Contexto do Sistema (*System Context*):** Apresenta a visão mais ampla possível, situando o sistema de software como uma caixa central cercada pelos seus usuários (*personas*) e pelos sistemas externos com os quais interage. É ideal para apresentações executivas e alinhamento inicial com stakeholders não técnicos.
+- **Nível 2 — Diagrama de Contêineres (*Containers*):** Amplia a caixa do sistema principal para revelar as unidades executáveis ou armazenamentos de dados implantáveis de forma independente, como aplicações web SPA, aplicativos móveis, APIs REST, microsserviços, filas de mensagens e bancos de dados. Note que, no C4, o termo "contêiner" refere-se a um limite de execução ou armazenamento lógico, não necessariamente ao Docker [@brown2018visualising].
+- **Nível 3 — Diagrama de Componentes (*Components*):** Detalha a estrutura interna de um contêiner específico, evidenciando os agrupamentos lógicos de funcionalidades (como controladores, serviços de domínio, repositórios e adaptadores de integração) e como eles interagem entre si e com outros contêineres.
+- **Nível 4 — Diagrama de Código (*Code*):** Representa o nível mais granular de implementação, mostrando classes, interfaces, métodos ou estruturas de dados de um componente. Por mudar constantemente durante o desenvolvimento, recomenda-se que esse nível seja gerado automaticamente por IDEs ou ferramentas de engenharia reversa, e não desenhado manualmente [@brown2018visualising].
+
+```{mermaid}
+%%| label: fig-c4-container-exemplo
+%%| fig-cap: "Exemplo de estrutura hierárquica inspirada no Nível 2 (Contêineres) do Modelo C4."
+flowchart LR
+    Usuario(("Médico / Triagem\n[Pessoa]"))
+
+    subgraph SistemaClinico ["Sistema de Gestão Clínica [Sistema de Software]"]
+        WebApp["Portal Web\n[Contêiner: React / TypeScript]"]
+        ApiCore["API de Atendimento\n[Contêiner: Node.js / REST]"]
+        BancoDados[("Banco Clínico\n[Contêiner: PostgreSQL]")]
+    end
+
+    SistemaLab["Sistema Laboratorial\n[Sistema Externo]"]
+
+    Usuario -->|"Consulta prontuários via HTTPS"| WebApp
+    WebApp -->|"Envia requisições JSON / HTTPS"| ApiCore
+    ApiCore -->|"Lê e grava registros via SQL/TCP"| BancoDados
+    ApiCore -->|"Solicita exames via HL7/HTTPS"| SistemaLab
+```
+
+### Diagramas de Componentes (UML)
+
+Enquanto o Modelo C4 prioriza a acessibilidade e a hierarquia de implantação, o **Diagrama de Componentes da UML (*Unified Modeling Language*)** oferece uma semântica estrutural rigorosa voltada à modularidade, encapsulamento e governança de contratos entre partes substituíveis de um sistema [@omg2017uml; @fowler2003uml]. Na UML 2.x, um componente representa uma unidade modular autocontida cuja implementação interna permanece oculta atrás de interfaces bem definidas.
+
+Os elementos fundamentais dessa notação incluem:
+
+- **Componente (`<<component>>`):** Bloco estrutural que encapsula um conjunto coeso de funcionalidades e gerencia seu próprio estado ou lógica interna.
+- **Interface Fornecida (*Provided Interface*):** Representada graficamente pela notação de pirulito (*lollipop* — um círculo conectado ao componente), especifica os serviços e operações que o componente disponibiliza para outros módulos consumirem.
+- **Interface Requerida (*Required Interface*):** Representada pela notação de tomada (*socket* — um semicírculo conectado ao componente), declara explicitamente quais serviços externos o componente precisa que estejam disponíveis no ambiente para funcionar corretamente [@fowler2003uml].
+- **Portas (*Ports*) e Conectores de Montagem (*Assembly Connectors*):** As portas definem pontos distintos de interação na fronteira do componente, enquanto os conectores ligam a interface requerida de um componente à interface fornecida compatível de outro, viabilizando a inversão de dependências e a substituição de implementações sem impacto nos consumidores.
+
+```{mermaid}
+%%| label: fig-uml-componentes
+%%| fig-cap: "Modelagem modular de componentes com interfaces fornecidas, requeridas e isolamento de persistência."
+flowchart LR
+    subgraph ModuloFaturamento ["<<component>> Módulo de Faturamento"]
+        PortGuia["[Porta: API Guias]"]
+    end
+
+    subgraph ModuloConvenios ["<<component>> Validador de Convênios"]
+        PortConv["[Porta: Elegibilidade]"]
+    end
+
+    subgraph ModuloPersistencia ["<<component>> Repositório Clínico"]
+        PortDB["[Porta: Dados]"]
+    end
+
+    PortGuia -->|"Requer: IValidadorConvenio\n(Socket -> Lollipop)"| PortConv
+    PortGuia -->|"Requer: IRepositorioFatura\n(Socket -> Lollipop)"| PortDB
+```
+
+## Exemplo Prático Aplicado
+
+Para ilustrar como as três abordagens operam em conjunto sem redundância, considere o projeto arquitetural de uma **Plataforma Hospitalar de Agendamento e Regulação de Plantões**, responsável por coordenar escalas médicas, validar disponibilidade de especialistas e integrar notificações em tempo real.
+
+Na fase inicial de concepção com a diretoria clínica e a equipe de TI, utiliza-se o **Nível 1 (Contexto) do Modelo C4** para deixar claro que a plataforma interage com três perfis de usuários (Coordenador de Escala, Médico Plantonista e Recepção) e dois sistemas externos (Prontuário Eletrônico do Paciente e Gateway de Notificações SMS/Push). Em seguida, o **Nível 2 (Contêineres)** detalha que a solução é composta por um aplicativo móvel para os médicos, um painel administrativo web, uma API central de regras de negócio, um barramento de eventos assíncronos e um banco de dados relacional transacional.
+
+Quando a equipe de engenharia precisa especificar o núcleo crítico de alocação de plantões — garantindo que dois médicos não assumam o mesmo turno simultaneamente e que regras trabalhistas de descanso mínimo sejam respeitadas — entra em cena o **Diagrama de Componentes UML** combinado com o **Nível 3 do C4**. Nesse recorte, o componente `MotorAlocacaoPlantao` expõe a interface fornecida `IAlocacaoService` e declara duas interfaces requeridas: `IRegraDescansoValidator` e `IPersistenciaEscala`. Ao explicitar esses contratos via interfaces, a equipe consegue testar o motor de alocação isoladamente com implementações falsas (*mocks*) antes mesmo de o banco de dados definitivo estar provisionado.
+
+Por fim, para atender aos requisitos não funcionais de alta disponibilidade e auditoria médica, a equipe aplica o **Modelo 4+1**: a **Visão de Processos** documenta o mecanismo de bloqueio otimista e filas de processamento para evitar condições de corrida durante trocas simultâneas de plantão; a **Visão Física** descreve a implantação em clusters redundantes com réplicas de leitura do banco; e um **Cenário (+1)** — *"Médico solicita troca emergencial de plantão a menos de 2 horas do início do turno"* — percorre todas essas camadas para comprovar que a arquitetura responde dentro do tempo limite estipulado [@clements2010documenting].
+
+## Trade-offs e Critérios de Escolha
+
+A escolha entre o Modelo 4+1, o Modelo C4 e os Diagramas de Componentes UML não é mutuamente exclusiva, mas envolve compromissos diretos entre expressividade formal, velocidade de atualização e amplitude do público-alvo [@richards2020fundamentals].
+
+| Critério Arquitetural | Modelo 4+1 (Kruchten) | Modelo C4 (Simon Brown) | Diagramas de Componentes (UML) |
+| :--- | :--- | :--- | :--- |
+| **Foco Principal** | Separação multidimensional de preocupações (estrutura, execução e hardware) | Hierarquia progressiva de abstração (zoom estático do contexto ao código) | Encapsulamento modular e contratos estritos de interfaces |
+| **Público-Alvo Ideal** | Arquitetos, engenheiros de infraestrutura, QA e líderes técnicos | Todos os stakeholders (executivos nos níveis 1–2; devs nos níveis 3–4) | Engenheiros de software e arquitetos orientados a componentes |
+| **Rigor Semântico** | Médio (depende da notação escolhida para cada visão) | Pragmático (foco em texto descritivo claro, tecnologia e legenda) | Alto (padronização formal pela especificação OMG UML) |
+| **Curva de Aprendizado** | Moderada a alta | Baixa (intuitiva para equipes multidisciplinares) | Moderada (exige domínio da sintaxe de interfaces e portas) |
+| **Risco de Obsolescência** | Médio-alto se mantido fora do fluxo de entrega contínua | Baixo nos níveis 1–2; alto no nível 4 se desenhado manualmente | Médio-alto quando desconectado da estrutura real de pacotes |
+
+### Quando Priorizar Cada Abordagem
+
+- **Priorize o Modelo C4** como espinha dorsal da documentação viva do projeto, especialmente nos níveis de Contexto e Contêineres, para alinhar rapidamente novos membros da equipe, gestores de produto e desenvolvedores sobre como o sistema está dividido e quais tecnologias sustentam cada parte [@brown2018visualising].
+- **Priorize o Modelo 4+1** em sistemas distribuídos críticos, plataformas corporativas de grande porte ou ambientes regulados nos quais decisões de concorrência (Visão de Processos) e topologia de implantação (Visão Física) possuem impacto direto nos acordos de nível de serviço (*SLAs*) [@kruchten1995architectural; @rozanski2011software].
+- **Priorize Diagramas de Componentes UML** ao projetar bibliotecas compartilhadas, arquiteturas baseadas em plugins, microsserviços com múltiplos adaptadores ou sistemas legados em processo de modularização, onde a explicitação de interfaces fornecidas e requeridas previne o acoplamento oculto [@fowler2003uml].
+
+### Armadilhas e Más Práticas Comuns
+
+- **Diagramas sem legenda ou sem declaração de tecnologia:** Apresentar caixas genéricas rotuladas apenas como "Serviço" ou "Backend" sem indicar protocolo de comunicação, formato de dados ou tecnologia de execução compromete a utilidade técnica do diagrama [@brown2018visualising].
+- **Mistura de níveis de abstração:** Representar um usuário final, um sistema externo de pagamentos e uma classe utilitária interna no mesmo diagrama gera ruído cognitivo e impede a leitura hierárquica da arquitetura.
+- **Documentação estática desvinculada do código (*Diagram Drift*):** Desenhar diagramas exaustivos de nível de código manualmente resulta em artefatos desatualizados poucas semanas após o início da implementação. Sempre que possível, adote ferramentas de *Architecture-as-Code* (como Structurizr, PlantUML ou Mermaid) versionadas junto ao repositório.
+
+## Referências
+
+::: {#refs}
+:::
+
+## Leituras Recomendadas
+
+- **Visões Arquiteturais Fundamentais:** @kruchten1995architectural
+- **Modelagem Pragmática com C4:** @brown2018visualising
+- **Documentação de Arquitetura Baseada em Visões:** @clements2010documenting
+- **Padrão Internacional de Descrição Arquitetural:** @iso2022architecture
+
+::: {.rodape-final}
+**Rodapé Final**
+
+Valença, Edson Cavalcante; Emanuel, Matheus. "Notações Arquiteturais" *Guia Aberto de Arquitetura de Software*, 2026. Disponível em: <https://ifpe-belojardim-es.github.io/guia-arquitetura-de-software/content/04-notacoes-arquiteturais/>
+:::
