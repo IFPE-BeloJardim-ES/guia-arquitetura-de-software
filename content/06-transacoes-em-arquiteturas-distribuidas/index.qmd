@@ -18,7 +18,6 @@ appendix-cite-as: display
 date: 2026-11-17
 date-modified: last-modified
 bibliography: referencias.bib
-nocite: "@*"
 citation:
   type: webpage
   container-title: "Guia Aberto de Arquitetura de Software"
@@ -41,15 +40,15 @@ keywords: [transações distribuídas, 2PC, two-phase commit, Saga, microsservi�
 
 ## Definição e contexto
 
-**Transação distribuída** é uma operação de negócio que altera dados em vários serviços, cada um com o seu próprio banco, e precisa terminar com todos de acordo: ou todas as mudanças valem, ou nenhuma vale. Duas famílias de solução disputam o problema: o **2PC** (*Two-Phase Commit*), que impõe esse acordo na hora, e a **Saga**, que aceita desfazer depois o que deu errado [@fan2020_2pc, p. 1; @garciamolina1987_sagas].
+**Transação distribuída** é uma operação de negócio que altera dados em vários serviços, cada um com o seu próprio banco, e precisa terminar com todos de acordo: ou todas as mudanças valem, ou nenhuma vale. Duas famílias de solução disputam o problema: o **2PC** (*Two-Phase Commit*), que impõe esse acordo na hora, e a **Saga**, que aceita desfazer depois o que deu errado [@fan2020twopc, p. 1; @garciamolina1987sagas].
 
 Pense num grupo de amigos comprando ingressos para o show da banda favorita: cada um precisa garantir o seu lugar, transferir a grana e confirmar o transporte. Se a internet de alguém cair bem na hora do PIX, a compra inteira tem que ser cancelada, para ninguém ficar sozinho na porta do evento.
 
-Nos bons e velhos tempos do monolito, a vida era mansa: um único banco relacional, um `BEGIN TRANSACTION`, um monte de alterações e, se algo desse errado, um `ROLLBACK` salvador. O banco resolvia tudo sozinho (as transações ACID). Aí o mundo virou uma república de microsserviços, e cada um ficou dono do seu banco: o Estoque guarda os tênis numa ponta, o Pagamento processa o cartão na outra, o Frete calcula a entrega num terceiro lugar.
+Nos bons e velhos tempos do monolito, a vida era mansa: um único banco relacional, um `BEGIN TRANSACTION`, um monte de alterações e, se algo desse errado, um `ROLLBACK` salvador. O banco resolvia tudo sozinho (as transações ACID) [@breitbart1992overview]. Aí o mundo virou uma república de microsserviços, e cada um ficou dono do seu banco: o Estoque guarda os tênis numa ponta, o Pagamento processa o cartão na outra, o Frete calcula a entrega num terceiro lugar.
 
-A dificuldade tem nome: **manter a consistência entre bancos independentes**. Como baixar o estoque somente se o pagamento for aprovado, se não existe mais um banco único para dar o `ROLLBACK`? Quando uma aplicação chama vários microsserviços, é preciso uma transação distribuída para atualizar todos os bancos de forma consistente [@fan2020_2pc, p. 1].
+A dificuldade tem nome: **manter a consistência entre bancos independentes**. Como baixar o estoque somente se o pagamento for aprovado, se não existe mais um banco único para dar o `ROLLBACK`? Quando uma aplicação chama vários microsserviços, é preciso uma transação distribuída para atualizar todos os bancos de forma consistente [@fan2020twopc, p. 1; @helland2007beyond].
 
-O remédio clássico, o 2PC, garante consistência forte, mas mantém as travas (*locks*) do começo ao fim da transação e sofre quando muita gente disputa os mesmos dados [@fan2020_2pc, p. 2]. Por isso, na camada de aplicação, os microsserviços costumam trocar a consistência imediata por disponibilidade e consistência eventual, a filosofia BASE, em oposição ao ACID [@fan2020_2pc, p. 3]. É nesse terreno que a Saga ganha espaço.
+O remédio clássico, o 2PC, garante consistência forte, mas mantém as travas (*locks*) do começo ao fim da transação e sofre quando muita gente disputa os mesmos dados [@fan2020twopc, p. 2; @kleppmann2017designing, cap. 9]. Por isso, na camada de aplicação, os microsserviços costumam trocar a consistência imediata por disponibilidade e consistência eventual, a filosofia BASE, em oposição ao ACID [@fan2020twopc, p. 3]. É nesse terreno que a Saga ganha espaço.
 
 ## Estrutura e componentes
 
@@ -92,7 +91,7 @@ Esse é o calcanhar de Aquiles: com as travas seguradas em todos os serviços du
 
 ### Saga: a Bailarina Flexível
 
-A Saga desiste de travar o mundo inteiro de uma vez e abraça a realidade assíncrona dos microsserviços [@garciamolina1987_sagas; @richardson2018_microservices, cap. 4]. Em vez de uma transação atômica gigante, ela é uma sequência de **transações locais** (T1, T2, T3...), cada uma confirmada no banco do seu próprio serviço, e cada uma com a sua **compensação** (C1, C2...), uma ação que desfaz o seu efeito. Se um passo falha, o sistema executa as compensações dos passos já feitos, em ordem inversa. As Sagas se organizam de duas formas:
+A Saga desiste de travar o mundo inteiro de uma vez e abraça a realidade assíncrona dos microsserviços [@garciamolina1987sagas; @richardson2018microservices, cap. 4; @newman2021building, cap. 6]. Em vez de uma transação atômica gigante, ela é uma sequência de **transações locais** (T1, T2, T3...), cada uma confirmada no banco do seu próprio serviço, e cada uma com a sua **compensação** (C1, C2...), uma ação que desfaz o seu efeito. Se um passo falha, o sistema executa as compensações dos passos já feitos, em ordem inversa. As Sagas se organizam de duas formas [@microsoft2026saga]:
 
 - **Coreografia:** cada serviço sabe o que fazer ouvindo os eventos dos outros, um "passa-repasse" sem chefe central.
 - **Orquestração:** um maestro central (o orquestrador) dita os passos e comanda o plano de resgate se algo der errado.
@@ -110,13 +109,13 @@ flowchart LR
 O que a Saga **proíbe**:
 
 - **Passo sem compensação definida.** Cada transação local com efeito no mundo precisa ter o seu "desfazer" escrito antes de ir para produção.
-- **Compensação que falha e fica por isso mesmo.** Ela precisa poder ser repetida até dar certo, e por isso deve ser **idempotente**: executá-la duas vezes não pode estornar duas vezes. O próprio artigo, ao tratar compensação, repete os passos que falharam até concluírem e usa o identificador da transação para descartar mensagens duplicadas [@fan2020_2pc, p. 10].
+- **Compensação que falha e fica por isso mesmo.** Ela precisa poder ser repetida até dar certo, e por isso deve ser **idempotente**: executá-la duas vezes não pode estornar duas vezes. O próprio artigo, ao tratar compensação, repete os passos que falharam até concluírem e usa o identificador da transação para descartar mensagens duplicadas [@fan2020twopc, p. 10].
 - **Segurar trava de outro serviço, ou mexer no banco alheio.** Cada transação local só toca os dados do seu dono.
 - **Tratar estado intermediário como definitivo.** Estoque "reservado" ainda não é estoque "vendido": o pedido pode ser cancelado logo adiante.
 
 ## Exemplo aplicado
 
-Você comprou um tênis maneiro na lojinha virtual. A compra passa por três serviços: o **Estoque** reserva uma unidade, o **Pagamento** debita o cartão e o **Frete** gera a etiqueta de envio com os Correios, o elo lento e pouco confiável da cadeia. O artigo de Fan et al. mede algo parecido numa plataforma de e-commerce real, com serviços de pedido, estoque e conta [@fan2020_2pc, p. 14].
+Você comprou um tênis maneiro na lojinha virtual. A compra passa por três serviços: o **Estoque** reserva uma unidade, o **Pagamento** debita o cartão e o **Frete** gera a etiqueta de envio com os Correios, o elo lento e pouco confiável da cadeia. O artigo de Fan et al. mede algo parecido numa plataforma de e-commerce real, com serviços de pedido, estoque e conta [@fan2020twopc, p. 14].
 
 ::: {.callout-note title="Exemplo executável"}
 O notebook deste tópico está em [`notebook.ipynb`](notebook.ipynb) e pode ser aberto direto no [Google Colab](https://colab.research.google.com/drive/1O9UtzQH4us0-qWmZ8tIQY72PXJMpnapY). Ele implementa esta mesma compra e reproduz as tabelas abaixo. As latências são parâmetros de uma simulação, não medidas de produção.
@@ -169,13 +168,13 @@ Como sempre, a arquitetura cobra o seu pedágio. Cada abordagem favorece certos 
 
 | Atributo (e a dimensão) | 2PC | Saga | Por quê |
 |---|---|---|---|
-| Consistência (quando os dados de todos os serviços concordam) | Favorecida | Comprometida | No 2PC, ou tudo mudou ou nada mudou. Na Saga, há uma janela, entre o primeiro passo e a última compensação, em que o sistema fica "inconsistente por alguns instantes" e outros leitores enxergam estados intermediários [@fan2020_2pc, p. 3; @richardson2018_microservices, cap. 4] |
+| Consistência (quando os dados de todos os serviços concordam) | Favorecida | Comprometida | No 2PC, ou tudo mudou ou nada mudou. Na Saga, há uma janela, entre o primeiro passo e a última compensação, em que o sistema fica "inconsistente por alguns instantes" e outros leitores enxergam estados intermediários [@fan2020twopc, p. 3; @richardson2018microservices, cap. 4] |
 | Vazão sob contenção (pedidos por segundo disputando os mesmos dados) | Comprometida | Favorecida | O 2PC segura as travas até a decisão final, e a vazão desaba quando a disputa cresce (dados do artigo abaixo). A Saga só segura travas locais e curtas, como no exemplo aplicado |
 | Latência (tempo de resposta de uma compra) | Comprometida | Depende da carga | No 2PC, a resposta segue o participante mais lento e cresce com a disputa. Na Saga, é a soma dos passos, e não cresce por espera de travas alheias |
-| Disponibilidade e autonomia (o que acontece se um serviço fica lento ou cai) | Comprometida | Favorecida | No 2PC, um participante lerdo trava o grupo, e o artigo lista perda de serviço e atrasos de rede como fatores incontroláveis na nuvem [@fan2020_2pc, p. 2]. Na Saga, cada serviço avança por conta própria e uma falha vira compensação, não bloqueio |
-| Esforço de desenvolvimento (código que o time escreve por operação de negócio) | Favorecido | Comprometido | No 2PC, o protocolo mora no middleware, e o artigo o injeta no código de negócio por uma anotação [@fan2020_2pc, p. 10]. Na Saga, é preciso escrever, testar e tornar idempotente a compensação de cada passo, a "lógica adicional" que o artigo cita como custo das alternativas por compensação [@fan2020_2pc, p. 2] |
+| Disponibilidade e autonomia (o que acontece se um serviço fica lento ou cai) | Comprometida | Favorecida | No 2PC, um participante lerdo trava o grupo, e o artigo lista perda de serviço e atrasos de rede como fatores incontroláveis na nuvem [@fan2020twopc, p. 2]. Na Saga, cada serviço avança por conta própria e uma falha vira compensação, não bloqueio |
+| Esforço de desenvolvimento (código que o time escreve por operação de negócio) | Favorecido | Comprometido | No 2PC, o protocolo mora no middleware, e o artigo o injeta no código de negócio por uma anotação [@fan2020twopc, p. 10]. Na Saga, é preciso escrever, testar e tornar idempotente a compensação de cada passo, a "lógica adicional" que o artigo cita como custo das alternativas por compensação [@fan2020twopc, p. 2] |
 
-O que o 2PC cobra em desempenho aparece nos números reais do artigo, medidos numa plataforma de e-commerce (pedido, estoque e conta) com várias threads chamando a criação de pedidos [@fan2020_2pc, pp. 15-18]:
+O que o 2PC cobra em desempenho aparece nos números reais do artigo, medidos numa plataforma de e-commerce (pedido, estoque e conta) com várias threads chamando a criação de pedidos [@fan2020twopc, pp. 15-18]:
 
 | Threads simultâneas | Referência (transações do banco local) | 2PC | 2PC* | Taxa de commit do 2PC |
 |---|---|---|---|---|

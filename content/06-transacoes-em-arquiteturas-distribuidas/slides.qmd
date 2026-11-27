@@ -11,7 +11,6 @@ author:
 date: 2026-11-17
 date-modified: last-modified
 bibliography: referencias.bib
-nocite: "@*"
 format:
   revealjs:
     theme: black
@@ -47,7 +46,7 @@ Nos **microsserviços**, cada serviço é dono do seu próprio banco:
 - **Pagamento** processa o cartão na outra
 - **Frete** calcula a entrega em um terceiro serviço
 
-> **O desafio:** como garantir que o estoque só seja baixado se o pagamento aprovar, sem um banco único para dar `ROLLBACK`? [@fan2020_2pc, p. 1]
+> **O desafio:** como garantir que o estoque só seja baixado se o pagamento aprovar, sem um banco único para dar `ROLLBACK`? [@fan2020twopc, p. 1]
 
 ::: {.notes}
 Abrir pela analogia do grupo de amigos comprando ingressos e transporte via PIX: se a internet de um cai na hora de pagar, todos precisam cancelar para ninguém ficar sozinho na porta do evento.
@@ -55,17 +54,17 @@ Abrir pela analogia do grupo de amigos comprando ingressos e transporte via PIX:
 
 ## Definição do conceito
 
-> **Transação distribuída** é uma operação de negócio que altera dados em vários serviços independentes e precisa terminar com todos de acordo: **ou todas as mudanças valem, ou nenhuma vale** [@fan2020_2pc, p. 1].
+> **Transação distribuída** é uma operação de negócio que altera dados em vários serviços independentes e precisa terminar com todos de acordo: **ou todas as mudanças valem, ou nenhuma vale** [@fan2020twopc, p. 1].
 
 Duas famílias disputam o problema:
 
 - **2PC (*Two-Phase Commit*)**: impõe o acordo na hora, com travas distribuídas
-- **Saga**: executa passos locais e desfaz depois o que deu errado [@garciamolina1987_sagas]
+- **Saga**: executa passos locais e desfaz depois o que deu errado [@garciamolina1987sagas]
 
 ## ACID vs. BASE no mundo distribuído
 
-- **ACID (2PC clássico)**: garante consistência forte, mas segura travas (*locks*) do começo ao fim e colapsa sob alta disputa [@fan2020_2pc, p. 2]
-- **BASE (Saga / aplicações em nuvem)**: troca consistência imediata por **alta disponibilidade** e **consistência eventual** [@fan2020_2pc, p. 3]
+- **ACID (2PC clássico)**: garante consistência forte, mas segura travas (*locks*) do começo ao fim e colapsa sob alta disputa [@fan2020twopc, p. 2]
+- **BASE (Saga / aplicações em nuvem)**: troca consistência imediata por **alta disponibilidade** e **consistência eventual** [@fan2020twopc, p. 3]
 
 | Abordagem | Metáfora | Mecanismo central |
 |---|---|---|
@@ -120,7 +119,7 @@ Restrições estritas do protocolo:
 
 ## Saga: a Bailarina Flexível
 
-Em vez de travar tudo de uma vez, divide a operação em **transações locais** (`T1`, `T2`, `T3`), cada uma com sua **compensação** (`C1`, `C2`) [@garciamolina1987_sagas; @richardson2018_microservices, cap. 4]:
+Em vez de travar tudo de uma vez, divide a operação em **transações locais** (`T1`, `T2`, `T3`), cada uma com sua **compensação** (`C1`, `C2`) [@garciamolina1987sagas; @richardson2018microservices, cap. 4]:
 
 - **Coreografia**: serviços reagem a eventos dos demais, sem chefe central
 - **Orquestração**: um orquestrador central dita os passos e comanda o resgate em caso de falha
@@ -153,7 +152,7 @@ flowchart LR
 ## O que a Saga proíbe
 
 - **Passo sem compensação definida**: todo efeito externo precisa de seu "desfazer" antes de ir para produção
-- **Compensação não idempotente**: repetir a chamada não pode estornar duas vezes; usa-se o ID da transação para descartar duplicatas [@fan2020_2pc, p. 10]
+- **Compensação não idempotente**: repetir a chamada não pode estornar duas vezes; usa-se o ID da transação para descartar duplicatas [@fan2020twopc, p. 10]
 - **Mexer no banco alheio**: cada transação local só altera os dados do seu serviço
 - **Tratar estado intermediário como definitivo**: "reservado" ainda não é "vendido"
 
@@ -207,7 +206,7 @@ Disputa concorrente pelo **mesmo tênis em promoção**:
 
 ## Evidência empírica sob contenção {.smaller}
 
-Dados reais medidos por Fan et al. [@fan2020_2pc, pp. 15-18] em e-commerce (pedido, estoque e conta):
+Dados reais medidos por Fan et al. [@fan2020twopc, pp. 15-18] em e-commerce (pedido, estoque e conta):
 
 | Threads simultâneas | Banco local (ref.) | 2PC | 2PC* (SAOL) | Commit rate (2PC) |
 |---|---|---|---|---|
@@ -237,7 +236,7 @@ Dados reais medidos por Fan et al. [@fan2020_2pc, pp. 15-18] em e-commerce (pedi
 
 ## Critérios de decisão: quando evitar e sinais de alerta
 
-- **Evite 2PC** com participantes externos fora do seu controle, cadeias longas ou alta contenção (taxa de *commit* cai para `0,03` em 500 *threads*) [@fan2020_2pc, pp. 15-18]
+- **Evite 2PC** com participantes externos fora do seu controle, cadeias longas ou alta contenção (taxa de *commit* cai para `0,03` em 500 *threads*) [@fan2020twopc, pp. 15-18]
 - **Evite Saga** quando há passos irreversíveis (ex.: e-mail enviado, transferência sem estorno) ou exigência legal de atomicidade imediata
 - **Sinais de escolha errada:**
   - No 2PC: taxa de *commit* despenca com a carga e coordenador estoura *timeout*
