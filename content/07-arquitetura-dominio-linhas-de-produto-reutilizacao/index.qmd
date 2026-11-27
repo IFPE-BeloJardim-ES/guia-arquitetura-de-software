@@ -319,9 +319,90 @@ A apresentação estará disponível em [`slides.qmd`](slides.qmd) após a conso
 
 ## Exercícios de fixação
 
-<!-- Responsável: JH (~300 palavras)
-5 questões de múltipla escolha com gabarito em <details><summary>Gabarito e Explicação</summary>...</details>, cobrindo do modelo de features aos trade-offs.
--->
+### Questão 1: Relações no Modelo de Features
+
+A feature mandatória `Envio` possui filhas em grupo `OR` (`Econômico`, `Rápido`, `Exterior`). Qual regra governa a seleção dessas opções em um produto derivado?
+
+A) Deve-se selecionar exatamente uma das modalidades.
+B) A feature `Envio` pode ser omitida se nenhuma for marcada.
+C) `Envio` é obrigatória e deve-se escolher ao menos uma modalidade, admitindo múltiplas opções simultâneas.
+D) Todas as opções do grupo devem ser incluídas juntas.
+
+<details>
+<summary>Gabarito e Explicação</summary>
+
+Resposta: C
+
+Por ser mandatória, `Envio` deve constar em todo produto válido. O grupo `OR` exige ao menos uma subfeature ativa, admitindo uma, duas ou as três simultâneas.
+</details>
+
+### Questão 2: Restrições Transversais e SAT Solvers
+
+Ao validar um modelo de features em um SAT Solver, o que caracteriza uma *Feature Morta* (*Dead Feature*)?
+
+A) Funcionalidade desativada via *feature flag*.
+B) Feature que, por conflito em regras ou restrições transversais, nunca poderá compor um produto válido.
+C) Feature cujo código ainda não foi integrado ao repositório.
+D) Feature mandatória cuja presença torna a fórmula insatisfatível.
+
+<details>
+<summary>Gabarito e Explicação</summary>
+
+Resposta: B
+
+Features mortas surgem quando contradições lógicas impedem sua seleção em qualquer configuração válida de produto.
+</details>
+
+### Questão 3: Implementação de Variabilidade
+
+Qual é a vantagem de implementar features opcionais com o padrão *Decorator* frente à compilação condicional (`#ifdef`)?
+
+A) Eliminar a criação de classes adicionais.
+B) Reduzir o tamanho do binário gerado.
+C) Isolar variações em classes coesas, evitando o entrelaçamento (*tangling*) de diretivas no código.
+D) Permitir alterar a herança da classe base dinamicamente.
+
+<details>
+<summary>Gabarito e Explicação</summary>
+
+Resposta: C
+
+Diretivas `#ifdef` poluem o código (*tangling*). O padrão *Decorator* localiza a variação em classes isoladas com interface idêntica ao núcleo.
+</details>
+
+### Questão 4: Derivação e Antipadrões
+
+Em LPS, que problema decorre de realizar ajustes manuais no código de um produto já derivado?
+
+A) Quebrar a amarração das *feature flags*.
+B) Violar o princípio de que produtos são gerados e não editados, regredindo ao *clone-and-own*.
+C) Falha de tipos no momento da compilação.
+D) Impedir testes unitários na variante.
+
+<details>
+<summary>Gabarito e Explicação</summary>
+
+Resposta: B
+
+Produtos devem ser gerados automaticamente. Ajustes manuais fragmentam a base e trazem de volta a manutenção divergente do *clone-and-own*.
+</details>
+
+### Questão 5: Critérios de Decisão e Trade-offs
+
+A implantação de uma LPS exige alto esforço inicial. Em qual situação sua adoção é contraindicada?
+
+A) Famílias com dezenas de variantes estáveis e núcleo compartilhado.
+B) Sistemas em que manutenções no núcleo devem propagar para todos os produtos.
+C) Protótipos rápidos ou MVPs com domínio instável e poucas variantes previstas.
+D) Plataformas que suportam múltiplos provedores externos.
+
+<details>
+<summary>Gabarito e Explicação</summary>
+
+Resposta: C
+
+O investimento inicial em plataforma só compensa quando diluído em muitas variantes. Em MVPs com domínio instável, o custo supera os ganhos de reuso.
+</details>
 
 ## Referências
 
