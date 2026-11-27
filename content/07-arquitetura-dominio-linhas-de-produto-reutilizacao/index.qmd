@@ -275,15 +275,15 @@ A escolha entre técnicas considera quatro critérios somados ao que vai no prod
 
 ## Exemplo aplicado
 
-O notebook deste tópico implementa a família **Loja Web** em Python, conectando o modelo de features à derivação com *Decorator*:
+Para sair da teoria e ver tudo funcionando junto, o notebook deste tópico constrói em Python a família **Loja Web** de ponta a ponta, conectando o modelo de *features* à derivação de produtos com o padrão *Decorator*.
 
-1. **Implementação correta:** um validador declara o modelo de features da Loja Web, enumera todas as combinações, comprova os **56 produtos válidos** ($7 \times 2 \times 2 \times 2$) e bloqueia configurações proibidas (como ausência de envio ou violação de `Bônus requer Carrinho`). Para cada seleção válida, uma fábrica compõe `LojaBase` com `CarrinhoDecorator`, `BonusDecorator`, `PreferenciasDecorator` e as modalidades de envio, sem condicionais por cliente no núcleo.
-2. **A violação:** o notebook simula o antipadrão **clone-and-own** (cópias separadas da loja por cliente, ou `if`s por cliente misturados em `LojaBase`) e instancia uma loja diretamente sem passar pela validação do modelo de features.
-3. **Consequência mensurável:** a saída imprime o total de combinações válidas versus inválidas interceptadas e compara o custo de corrigir uma regra comum (taxa de envio/imposto): **1 ponto alterado** no núcleo da LPS (regenerando os $N$ produtos) versus **$N$ alterações manuais** nos clones, com risco de divergência silenciosa.
+1. **Implementação correta:** primeiro definimos um validador (`validar_configuracao`) que funciona como um "porteiro" do modelo de *features*. Ele testa todas as $2^6 = 64$ combinações possíveis, comprova matematicamente os **56 produtos válidos** do modelo básico ($7 \times 2 \times 2 \times 2$) e bloqueia combinações proibidas — como lojas sem nenhum método de envio ou que ativam `Bonus` sem `Carrinho` (caso em que restam 42 produtos válidos). Em seguida, o núcleo comum fica isolado em `LojaBase` (cálculo de subtotal, imposto padrão de 5% e frete), enquanto cada variação opcional vira um decorador empilhável (`CarrinhoDecorator`, `PreferenciasDecorator` e `BonusDecorator`). Uma fábrica (`derivar_loja`) valida a escolha do cliente e monta três lojas concretas (`Loja Básica`, `Loja Express` e `Loja VIP`) sem escrever um único `if` específico de cliente dentro do núcleo.
+2. **A violação:** o notebook mostra dois erros comuns na prática. Primeiro, instanciar `LojaBase` e decoradores diretamente sem passar pelo validador — o que permite criar uma loja sem envio (que só falha na mão do usuário) ou dar bônus sem carrinho. Depois, simula o antipadrão *clone-and-own* com cópias separadas da classe da loja (`LojaCloneA`, `LojaCloneB` e `LojaCloneC`).
+3. **Consequência mensurável:** ao simular uma mudança simples em uma regra comum — reajustar o imposto padrão de 5% para 8% em 5 lojas —, na LPS basta alterar **1 único ponto** (`LojaBase.TAXA_IMPOSTO`) e regenerar os produtos sem nenhuma divergência. Nos clones, são necessárias **5 alterações manuais**; ao esquecer apenas um clone (`LojaCloneC`), o sistema passa a cobrar errado em produção de forma silenciosa.
 
 ::: {.callout-note}
 ## Exemplo executável
-O notebook deste tópico estará em [notebook.ipynb](notebook.ipynb) e poderá ser aberto direto no Google Colab assim que a implementação for concluída.
+O código completo, comentado passo a passo para rodar direto no navegador, está em [notebook.ipynb](notebook.ipynb) (adicione aqui o link público do Google Colab após testar em ambiente limpo).
 :::
 
 ## Trade-offs, quando usar e quando não usar
