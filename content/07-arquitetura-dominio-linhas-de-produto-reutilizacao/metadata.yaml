@@ -12,6 +12,9 @@ resumo: >-
   anotativa e composicional, técnicas de implementação de variabilidade e os
   trade-offs frente ao clone-and-own.
 
+# Um tópico pode ter vários autores — liste um item por pessoa, na ordem em que
+# devem ser creditados. Todos entram no crédito, na citação e na lista de
+# contribuidores do site.
 autores:
   - nome: "Maria Letícia de Sousa Barboza"
     grupo: "Grupo 1"
@@ -38,7 +41,7 @@ autores:
     github: "RuanHD"
     orcid: ""
 
-status: "rascunho"        # rascunho | em-revisao | publicado | modelo
+status: "publicado"        # rascunho | em-revisao | publicado | modelo
 data_criacao: "2026-11-26"
 ultima_revisao: "2026-11-26"
 revisado_por:
@@ -51,22 +54,16 @@ competencias:
   - "comparar técnicas de especificação e implementação de variabilidade segundo granularidade, binding time, restrições e espalhamento"
   - "avaliar os trade-offs econômicos e arquiteturais entre plataforma de linha de produtos e clone-and-own"
 nivel_bloom: ["compreender", "aplicar", "analisar", "avaliar"]   # lembrar|compreender|aplicar|analisar|avaliar|criar
-pre_requisitos: []
+pre_requisitos: []                          # slugs de outros tópicos
 topicos_relacionados: ["arquitetura-em-camadas"]
-palavras_chave:
-  - "linhas de produtos de software"
-  - "software product lines"
-  - "arquitetura de domínio"
-  - "modelo de features"
-  - "gestão de variabilidade"
-  - "reutilização de software"
+palavras_chave: ["linhas de produtos de software", "software product lines", "arquitetura de domínio", "modelo de features", "gestão de variabilidade", "reutilização de software"]
 
-# Formatos entregues — atualizar para true conforme cada entregável for finalizado após fechar o index.qmd
+# Formatos entregues — o CI verifica a existência do que está marcado como true
 formatos:
   texto: true
   notebook:
-    entregue: false
-    colab_url: ""
+    entregue: true
+    colab_url: "https://colab.research.google.com/github/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/07-arquitetura-dominio-linhas-de-produto-reutilizacao/notebook.ipynb"
   audio_notebooklm:
     entregue: false
     arquivo: ""
@@ -95,16 +92,10 @@ formatos:
       5. Tom de voz e formato: seja encorajador, reconheça quando o estudante acertar um raciocínio e use formatação limpa (parágrafos curtos, listas e negritos moderados).
       6. Idioma: responda sempre em Português do Brasil.
   slides:
-    entregue: false
-    num_slides: 0
+    entregue: true
+    num_slides: 18
   # opcionais
-  video:
-    entregue: false
-    url: ""
   podcast:
-    entregue: false
-    url: ""
-  mcp:
     entregue: false
     url: ""
 

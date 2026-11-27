@@ -91,52 +91,29 @@ flowchart LR
 
 ### Modelo de features e variabilidade
 
-O **Modelo de Features**, proposto no método FODA (*Feature-Oriented Domain Analysis*) por Kang et al. [-@kang1990foda] e consolidado por Apel et al. [-@apel2013feature, cap. 2], formaliza o que é comum e o que varia na família de sistemas. Ele organiza o **espaço de problemas** (*problem space* — o que o sistema oferece na visão do cliente) antes das decisões do **espaço de soluções** (*solution space* — classes, módulos, diretivas `#ifdef` e esquemas de dados) [@czarnecki2000generative, cap. 4; @pohl2005software, cap. 3].
+O **Modelo de Features**, criado no método FODA (*Feature-Oriented Domain Analysis*) por Kang et al. [-@kang1990foda] e detalhado por Apel et al. [-@apel2013feature, cap. 2], separa o que é fixo do que varia na família de sistemas. Ele organiza o **espaço de problemas** (as funcionalidades visíveis que o cliente pode escolher, tratadas como decisões booleanas: $1$ incluída ou $0$ excluída) antes do **espaço de soluções** (classes, módulos e código) [@czarnecki2000generative, cap. 4; @pohl2005software, cap. 3]. Na prática, funciona como um contrato entre a Engenharia de Domínio e a Engenharia de Aplicação [@clements2001software, cap. 1; @pohl2005software, cap. 2].
 
-Na prática, o modelo funciona como um contrato entre a **Engenharia de Domínio** (que define as regras válidas da família) e a **Engenharia de Aplicação** (que seleciona as features desejadas para um cliente específico) [@clements2001software, cap. 1; @pohl2005software, cap. 2].
+#### Relações estruturais e restrições
 
-::: {.callout-note}
-## O que é uma feature?
-Uma **feature** (característica) é uma unidade atômica de requisito ou funcionalidade observável pelo usuário ou cliente do sistema [@kang1990foda; @apel2013feature, cap. 2]. Diferente de um trecho de código, que pode abranger várias classes e arquivos, no modelo de features cada funcionalidade é tratada como uma decisão booleana: incluída ($1$) ou excluída ($0$) na configuração de um produto.
-:::
-
-#### Relações estruturais na árvore
-
-A árvore organiza sub-features conectadas a nós pais sob quatro relações estruturais [@kang1990foda; @apel2013feature, cap. 2; @capilla2013systems, cap. 2]:
+A árvore liga sub-features aos nós pais por quatro relações hierárquicas [@kang1990foda; @apel2013feature, cap. 2; @capilla2013systems, cap. 2]:
 
 | Relação | Notação FODA | Semântica lógica | Regra na derivação |
 |:---|:---:|:---|:---|
-| **Obrigatória (*Mandatory*)** | Círculo preenchido (●) | $Filho \iff Pai$ | Presente sempre que a feature pai estiver ativa. Forma o núcleo comum (*core*). |
-| **Opcional (*Optional*)** | Círculo vazio (○) | $Filho \implies Pai$ | Pode ser incluída ou omitida, desde que o pai esteja selecionado. |
-| **Alternativa (`XOR`)** | Arco aberto cruzando arestas | $\sum Filho_i = 1$ | Exatamente **uma** sub-feature do grupo deve ser selecionada se o pai estiver ativo. |
-| **Inclusiva (`OR`)** | Arco preenchido cruzando arestas | $\sum Filho_i \ge 1$ | Pelo menos **uma** sub-feature do grupo precisa ser selecionada (de 1 a $k$). |
+| **Obrigatória** | Círculo preenchido (●) | $Filho \iff Pai$ | Sempre presente quando o pai está ativo (núcleo comum). |
+| **Opcional** | Círculo vazio (○) | $Filho \implies Pai$ | Pode ser incluída ou omitida se o pai estiver ativo. |
+| **Alternativa (`XOR`)** | Arco aberto | $\sum Filho_i = 1$ | Exatamente **uma** opção do grupo deve ser escolhida. |
+| **Inclusiva (`OR`)** | Arco preenchido | $\sum Filho_i \ge 1$ | Pelo menos **uma** opção do grupo deve ser escolhida. |
 
 : Relações estruturais em modelos de features. Fontes: [@kang1990foda; @apel2013feature, cap. 2; @capilla2013systems, cap. 2]. {#tbl-relacoes-features tbl-colwidths="[22,18,22,38]"}
 
-#### Restrições transversais (*cross-tree constraints*)
+Como a árvore só expressa dependências de pai para filho, regras entre ramos distantes usam **restrições transversais** (*cross-tree constraints*) [@apel2013feature, cap. 2; @czarnecki2000generative, cap. 4]:
 
-A estrutura em árvore resolve bem as dependências verticais (de pai para filho). Contudo, requisitos de negócio com frequência impõem regras entre ramos separados. Nesses casos, utilizam-se **Restrições Transversais** (*Cross-Tree Constraints* — CTCs), descritas por fórmulas proposicionais [@apel2013feature, cap. 2; @czarnecki2000generative, cap. 4]:
-
-1. **Requer (*Requires*):**  
-   $$A \implies B$$  
-   Escolher a feature $A$ obriga a incluir $B$ no produto, mesmo que estejam em ramos distantes. No nosso exemplo da Loja Web, `Bônus requer Carrinho` ($Bônus \implies Carrinho$), pois bonificações só podem ser creditadas na etapa de compra no carrinho.
-2. **Exclui (*Excludes*):**  
-   $$A \implies \neg B \quad (\text{ou } \neg(A \wedge B))$$  
-   A presença de $A$ torna $B$ incompatível no mesmo produto. Por exemplo, uma política de frete `Exterior` pode excluir modalidades sem rastreamento ou de baixo custo.
-
-::: {.callout-tip}
-## Restrições transversais em excesso indicam acoplamento
-Quando a árvore acumula muitas restrições de *requer* e *exclui* cruzando ramos, isso costuma indicar que as fronteiras dos módulos foram mal delineadas [@capilla2013systems, cap. 2]. Nesses cenários, compensa revisar a arquitetura do domínio antes de passar para a fase de implementação.
-:::
+- **Requer ($A \implies B$):** escolher $A$ obriga a incluir $B$ (ex.: `Bônus requer Carrinho`, pois o bônus só é calculado no fechamento do carrinho).
+- **Exclui ($\neg(A \wedge B)$):** $A$ e $B$ não podem entrar juntos no mesmo produto. Quando um modelo acumula restrições transversais demais, isso costuma indicar alto acoplamento e fronteiras mal divididas na arquitetura [@capilla2013systems, cap. 2].
 
 #### O exemplo da Loja Web e a combinatória
 
-Para acompanhar como a variabilidade cresce na prática, considere o modelo da **Loja Web** adotado neste capítulo:
-
-- **Raiz:** `Loja web` (obrigatória).
-- **Módulo de Envio:** Feature obrigatória ligada à raiz, composta por um **Grupo OU Inclusivo (OR)** com 3 modalidades: `Econômico`, `Rápido` e `Exterior`.
-- **Módulos Opcionais:** Três features ligadas à raiz: `Carrinho`, `Bônus` e `Preferências`.
-- **Restrição Transversal:** `Bônus requer Carrinho` ($Bônus \implies Carrinho$).
+Considere o modelo da **Loja Web**: toda loja possui `Envio` (obrigatória), com um grupo `OR` de três modalidades (`Econômico`, `Rápido` e `Exterior`), além de três features opcionais (`Carrinho`, `Bônus` e `Preferências`) e da restrição `Bônus requer Carrinho`.
 
 ```{mermaid}
 %%| label: fig-feature-model-loja
@@ -176,63 +153,40 @@ flowchart TD
     class OR,EC,RA,EX grp
 ```
 
-O total de configurações possíveis é obtido multiplicando as decisões independentes [@apel2013feature, cap. 2]:
+Mesmo pequeno, esse modelo mostra como o espaço de variantes cresce rápido [@apel2013feature, cap. 2]:
 
-1. **Modalidades de Envio (Grupo OR de 3 itens):** Cada modalidade (`Econômico`, `Rápido`, `Exterior`) admite 2 estados (presente ou ausente), gerando $2^3 = 8$ combinações. Como a semântica do grupo `OR` exige ao menos uma opção marcada (nenhum envio é proibido, já que `Envio` é obrigatório), restam:
-   $$2^3 - 1 = \mathbf{7 \text{ combinações válidas de envio}}$$
-2. **Features opcionais independentes:** Cada uma das três opções (`Carrinho`, `Bônus`, `Preferências`) tem 2 estados independentes:
-   $$2 \times 2 \times 2 = \mathbf{8 \text{ combinações}}$$
-3. **Espaço de configuração bruto:** Combinando envio com as features opcionais, temos:
-   $$\text{Total Bruto} = 7 \times 2 \times 2 \times 2 = \mathbf{56 \text{ produtos}}$$
-4. **Poda pela restrição transversal:**  
-   Dessas 56 variantes, `Bônus` está ativo em exatamente metade ($28$ produtos). Nessas 28 lojas, o `Carrinho` é opcional e portanto está ausente em $14$ delas. Como a regra exige `Bônus requer Carrinho`, essas 14 configurações violam o modelo e são descartadas pelo validador:
-   $$\text{Espaço de Produtos Válidos} = 56 - 14 = \mathbf{42 \text{ produtos}}$$
+1. **Envio (`OR` de 3 opções):** cada modalidade pode estar ativa ou não ($2^3 = 8$), mas como é proibido criar loja sem envio, restam $2^3 - 1 = \mathbf{7}$ combinações válidas.
+2. **Opcionais (`Carrinho`, `Bônus`, `Preferências`):** $2 \times 2 \times 2 = \mathbf{8}$ combinações.
+3. **Total sem restrição:** com apenas **7 features**, temos $7 \times 8 = \mathbf{56}$ **produtos**.
+4. **Corte pela restrição:** metade das 56 lojas tem `Bônus` (28), e metade dessas 28 não tem `Carrinho` (14). Como `Bônus requer Carrinho` bloqueia essas 14 combinações, restam $56 - 14 = \mathbf{42}$ **produtos válidos**.
 
-#### Formalização em lógica proposicional e SAT Solvers
+#### Validação com lógica proposicional e SAT Solvers
 
-Em linhas de produtos reais com dezenas ou centenas de features — como em sistemas automotivos ou no kernel Linux [@kruger2020empirical; @apel2013feature, cap. 2] —, é inviável conferir combinações manualmente. A abordagem padrão consiste em traduzir a árvore e suas restrições em uma fórmula booleana na **Forma Normal Conjuntiva** (CNF — *Conjunctive Normal Form*) [@czarnecki2000generative, cap. 4; @apel2013feature, cap. 2]:
+Em linhas reais com centenas de features, como sistemas automotivos ou o kernel Linux [@kruger2020empirical; @apel2013feature, cap. 2], é impossível validar combinações no olho. Ferramentas como **FeatureIDE** e **pure::variants** convertem a árvore para uma fórmula booleana na **Forma Normal Conjuntiva (CNF)** (onde `Bônus requer Carrinho` vira $\neg \text{Bonus} \vee \text{Carrinho}$) e usam **SAT Solvers** para achar defeitos no modelo antes de gerar código [@czarnecki2000generative, cap. 4; @capilla2013systems, cap. 2]:
 
-$$\Phi = \bigwedge_{i} C_i$$
-
-Cada cláusula $C_i$ traduz uma regra do modelo da Loja Web:
-
-- **Raiz ativa:** $(\text{LojaWeb})$
-- **Envio obrigatório:** $(\neg \text{Envio} \vee \text{LojaWeb}) \wedge (\neg \text{LojaWeb} \vee \text{Envio})$
-- **Grupo OR de Envio:** $(\neg \text{Envio} \vee \text{Economico} \vee \text{Rapido} \vee \text{Exterior}) \wedge (\neg \text{Economico} \vee \text{Envio}) \wedge (\neg \text{Rapido} \vee \text{Envio}) \wedge (\neg \text{Exterior} \vee \text{Envio})$
-- **Features opcionais:** $(\neg \text{Carrinho} \vee \text{LojaWeb}) \wedge (\neg \text{Bonus} \vee \text{LojaWeb}) \wedge (\neg \text{Preferencias} \vee \text{LojaWeb})$
-- **Restrição Transversal:** $(\neg \text{Bonus} \vee \text{Carrinho})$
-
-Com a árvore descrita em CNF, ferramentas como **FeatureIDE**, **pure::variants** e **Gears** usam algoritmos **SAT Solvers** para validar o modelo antes de gerar qualquer código [@apel2013feature, cap. 2; @capilla2013systems, cap. 2]:
-
-1. **Modelo Vazio (*Void Feature Model*):** Checa se $\Phi$ é insatisfatível. Se for, o modelo tem contradições e nenhum produto válido pode ser gerado.
-2. **Features Mortas (*Dead Features*):** Identifica features que nunca poderão ser selecionadas em nenhum produto devido a regras conflitantes.
-3. **Falsas Opcionais (*False Optional Features*):** Encontra features desenhadas como opcionais, mas que se tornaram obrigatórias em todos os produtos por efeito de outras dependências.
-4. **Validação interativa:** Durante a seleção de features para um cliente, o SAT Solver valida a combinação em tempo real e bloqueia opções incompatíveis.
-
-::: {.callout-note}
-## O que vem a seguir
-O modelo de features define **o que pode ser construído** (*problem space*). A seção seguinte — [Especificação e derivação do produto](#especificação-e-derivação-do-produto) — trata de **como transformar essas escolhas em artefatos concretos**, comparando especificações **anotativas** (como no PLUSS) com abordagens **composicionais** (via *Configuration Knowledge*).
-:::
+- **Modelo vazio (*Void Feature Model*):** regras contraditórias que tornam impossível gerar qualquer produto válido.
+- **Features mortas (*Dead Features*):** features que nunca podem ser escolhidas porque entram em conflito com outras regras.
+- **Falsas opcionais (*False Optional*):** features marcadas como opcionais, mas que acabam obrigatórias por causa de dependências indiretas.
 
 ### Especificação e derivação do produto
 
-Depois de validar quais combinações da **Loja Web** são permitidas na árvore de features, o próximo passo é ligar cada escolha do **espaço de problemas** aos artefatos do **espaço de soluções**, começando pelos requisitos e casos de uso [@czarnecki2000generative, cap. 2; @pohl2005software, cap. 15]. Manter um documento de especificação separado para cada variante válida da loja traz o mesmo problema de clonar código: o Produto 1 ganha um passo extra (`B6`) por ativar `Preferências`, o passo `B4` muda de texto entre documentos ao tratar `Bônus` e os passos `B1` e `B2` variam conforme a presença de `Carrinho`. Se uma regra comum mudar, a equipe precisa editar vários arquivos na mão e pode esquecer algum.
+Depois de validar quais combinações da **Loja Web** são permitidas na árvore, o próximo passo é ligar cada escolha do **espaço de problemas** aos artefatos do **espaço de soluções**, começando pelos requisitos e casos de uso [@czarnecki2000generative, cap. 2; @pohl2005software, cap. 15]. Manter uma especificação separada por loja traz o mesmo problema de clonar código: o Produto 1 ganha um passo extra (`B6`) por ativar `Preferências`, o passo `B4` muda de texto ao tratar `Bônus` e os passos `B1` e `B2` variam conforme a presença de `Carrinho`. Se uma regra comum muda, é preciso editar vários arquivos na mão.
 
-Na Engenharia de Domínio, duas abordagens evitam essa duplicação [@apel2013feature, cap. 4]:
+Na Engenharia de Domínio, duas abordagens resolvem isso [@apel2013feature, cap. 4]:
 
-Na **abordagem anotativa**, um único documento guarda o fluxo comum junto com as variações marcadas por condições. Na notação **PLUSS**, proposta por Eriksson, Börstler e Borg [-@eriksson2005pluss], os passos variáveis do caso de uso recebem marcações ligadas às features da árvore, como `[Carrinho]`, `[não Carrinho]` e `[Preferências]`. Para derivar um produto, basta manter os passos das *features* selecionadas na configuração e apagar o resto. Isso evita arquivos duplicados, mas causa **entrelaçamento** (*tangling*): muitas condições misturadas no mesmo cenário prejudicam a leitura [@bonifacio2009modeling; @apel2013feature, cap. 5].
+Na **abordagem anotativa**, um único documento guarda o fluxo comum e todas as variações marcadas por condições. Na notação **PLUSS**, de Eriksson, Börstler e Borg [-@eriksson2005pluss], os passos variáveis recebem marcações ligadas às features da árvore, como `[Carrinho]`, `[não Carrinho]` e `[Preferências]`. Na derivação, mantêm-se os passos das *features* escolhidas e corta-se o resto. Isso evita duplicar arquivos, mas gera **entrelaçamento** (*tangling*): muitas condições misturadas no mesmo cenário dificultam a leitura [@bonifacio2009modeling; @apel2013feature, cap. 5].
 
-Na **abordagem composicional**, o fluxo comum fica separado em um módulo base, e cada variação vai para um *advice* à parte (`ADV01`, `ADV02`, `ADV03`) [@bonifacio2009modeling]. A ligação entre as escolhas da árvore e esses módulos é feita pelo **conhecimento de configuração** (*Configuration Knowledge*) [@czarnecki2000generative, cap. 2 e 5], uma tabela que avalia expressões sobre as *features* para definir quais peças entram no produto: `Loja web` puxa os cenários comuns, `Preferências` inclui `ADV03`, `Carrinho ∧ Bônus` aplica `ADV02` e `¬(Carrinho ∧ Bônus)` aplica `ADV01` [@bonifacio2009modeling].
+Na **abordagem composicional**, o fluxo comum fica em um módulo base limpo, e cada variação vai para um *advice* separado (`ADV01`, `ADV02`, `ADV03`) [@bonifacio2009modeling]. A ponte entre a árvore e esses módulos é o **conhecimento de configuração** (*Configuration Knowledge*) [@czarnecki2000generative, cap. 2 e 5], uma tabela que avalia expressões sobre as *features*: `Loja web` puxa os cenários comuns, `Preferências` inclui `ADV03`, `Carrinho ∧ Bônus` aplica `ADV02` e `¬(Carrinho ∧ Bônus)` aplica `ADV01` [@bonifacio2009modeling].
 
 | Critério | Abordagem Anotativa (PLUSS) | Abordagem Composicional (*Advices*) |
 |:---|:---|:---|
-| Organização da base | Documento único com condições nos passos | Módulo base comum e módulos de variação |
+| Organização da base | Documento único com condições nos passos | Módulo base comum e variações separadas |
 | Como o produto sai | Corta trechos de *features* não escolhidas | Junta módulos via *Configuration Knowledge* |
 | Leitura e manutenção | Piora com entrelaçamento (*tangling*) | Arquivos limpos; exige seguir a tabela de regras |
 
 : Comparação entre especificação anotativa e composicional. Fontes: [@eriksson2005pluss; @bonifacio2009modeling; @apel2013feature, cap. 4]. {#tbl-anotativa-composicional tbl-colwidths="[22,39,39]"}
 
-Nos dois casos, a derivação na **Engenharia de Aplicação** segue uma regra direta: **o produto é gerado, não editado** [@pohl2005software, cap. 15; @czarnecki2000generative, cap. 5]. Depois que a seleção de *features* do cliente passa pela validação do modelo, a plataforma cruza os ativos do domínio com o *Configuration Knowledge* e monta o produto. Assim como em um *bytecode* compilado, se surgir um erro, ninguém abre o produto gerado para consertar na mão: a correção vai na base do domínio e os produtos da linha são gerados de novo.
+Nos dois casos, a regra na **Engenharia de Aplicação** é direta: **o produto é gerado, não editado** [@pohl2005software, cap. 15; @czarnecki2000generative, cap. 5]. A plataforma cruza as *features* validadas do cliente com o *Configuration Knowledge* e monta o produto. Como em um *bytecode* compilado, se surgir um erro, ninguém edita o produto gerado na mão: a correção vai na base do domínio e os produtos são gerados de novo.
 
 ### Implementação da variabilidade I: parametrização e compilação condicional
 
@@ -297,133 +251,123 @@ Montar um produto vira só empilhar os decoradores escolhidos, sem mexer na `Loj
 
 ## Exemplo aplicado
 
-Para sair da teoria e ver tudo funcionando junto, o notebook deste tópico constrói em Python a família **Loja Web** de ponta a ponta, conectando o modelo de *features* à derivação de produtos com o padrão *Decorator*.
+O notebook deste tópico constrói em Python a família **Loja Web** de ponta a ponta, ligando o modelo de *features* à derivação por *Decorator*:
 
-1. **Implementação correta:** primeiro definimos um validador (`validar_configuracao`) que funciona como um "porteiro" do modelo de *features*. Ele testa todas as $2^6 = 64$ combinações possíveis, comprova matematicamente os **56 produtos válidos** do modelo básico ($7 \times 2 \times 2 \times 2$) e bloqueia combinações proibidas — como lojas sem nenhum método de envio ou que ativam `Bonus` sem `Carrinho` (caso em que restam 42 produtos válidos). Em seguida, o núcleo comum fica isolado em `LojaBase` (cálculo de subtotal, imposto padrão de 5% e frete), enquanto cada variação opcional vira um decorador empilhável (`CarrinhoDecorator`, `PreferenciasDecorator` e `BonusDecorator`). Uma fábrica (`derivar_loja`) valida a escolha do cliente e monta três lojas concretas (`Loja Básica`, `Loja Express` e `Loja VIP`) sem escrever um único `if` específico de cliente dentro do núcleo.
-2. **A violação:** o notebook mostra dois erros comuns na prática. Primeiro, instanciar `LojaBase` e decoradores diretamente sem passar pelo validador — o que permite criar uma loja sem envio (que só falha na mão do usuário) ou dar bônus sem carrinho. Depois, simula o antipadrão *clone-and-own* com cópias separadas da classe da loja (`LojaCloneA`, `LojaCloneB` e `LojaCloneC`).
-3. **Consequência mensurável:** ao simular uma mudança simples em uma regra comum — reajustar o imposto padrão de 5% para 8% em 5 lojas —, na LPS basta alterar **1 único ponto** (`LojaBase.TAXA_IMPOSTO`) e regenerar os produtos sem nenhuma divergência. Nos clones, são necessárias **5 alterações manuais**; ao esquecer apenas um clone (`LojaCloneC`), o sistema passa a cobrar errado em produção de forma silenciosa.
+1. **Implementação correta:** o validador `validar_configuracao` testa as $2^6 = 64$ combinações, comprova os **56 produtos válidos** do modelo básico ($7 \times 2 \times 2 \times 2$) e bloqueia configurações proibidas, como lojas sem envio ou com `Bonus` sem `Carrinho` (restando 42 produtos válidos). O núcleo comum fica em `LojaBase` (subtotal, imposto de 5% e frete), e cada opção vira um decorador (`CarrinhoDecorator`, `PreferenciasDecorator`, `BonusDecorator`). A fábrica `derivar_loja` valida a configuração e monta três lojas (`Loja Básica`, `Loja Express` e `Loja VIP`) sem `if`s de cliente no núcleo.
+2. **A violação:** o notebook demonstra dois erros: instanciar `LojaBase` e decoradores sem passar pelo validador (criando loja sem envio ou com bônus sem carrinho) e clonar a classe em `LojaCloneA`, `LojaCloneB` e `LojaCloneC`.
+3. **Consequência mensurável:** ao reajustar o imposto padrão de 5% para 8% em 5 lojas, na LPS basta alterar **1 ponto** (`LojaBase.TAXA_IMPOSTO`) e regenerar a família. Nos clones, são **5 edições manuais**: esquecer apenas `LojaCloneC` faz o sistema cobrar errado em produção de forma silenciosa.
 
 ::: {.callout-note}
 ## Exemplo executável
-O código completo, comentado passo a passo para rodar direto no navegador, está em [notebook.ipynb](notebook.ipynb) (adicione aqui o link público do Google Colab após testar em ambiente limpo).
+O notebook deste tópico está em [notebook.ipynb](notebook.ipynb) e pode ser aberto direto no [Google Colab](https://colab.research.google.com/github/IFPE-BeloJardim-ES/guia-arquitetura-de-software/blob/main/content/07-arquitetura-dominio-linhas-de-produto-reutilizacao/notebook.ipynb).
 :::
 
 ## Trade-offs, quando usar e quando não usar
 
-Estruturar uma LPS troca **investimento inicial elevado** (*upfront investment*) na Engenharia de Domínio pela **redução do custo marginal** por produto derivado [@clements2001software, cap. 3; @pohl2005software, cap. 1].
+Estruturar uma LPS troca **investimento inicial alto** (*upfront investment*) na Engenharia de Domínio por **custo marginal menor** a cada produto derivado [@clements2001software, cap. 3; @pohl2005software, cap. 1].
 
-A análise empírica de Krüger e Berger [-@kruger2020empirical], combinando 26 entrevistas industriais e uma revisão sistemática de 57 estudos, confirma que plataformas demandam maior esforço inicial, reduzem custos de reuso no longo prazo e elevam a qualidade do código. Contudo, mostra também que propagar mudanças na plataforma pode ser mais caro do que o esperado devido a dependências entre variantes, que plataformas podem apoiar inovação e que, na prática, *clone-and-own* e plataforma frequentemente coexistem ou evoluem de forma híbrida.
+O estudo empírico de Krüger e Berger [-@kruger2020empirical], com 26 entrevistas na indústria e revisão de 57 artigos, mostra que plataformas custam mais no início, barateiam o reuso no longo prazo e melhoram a qualidade do código. Por outro lado, propagar mudanças na plataforma pode sair mais caro que o previsto quando há dependências entre variantes, e na prática *clone-and-own* e plataforma costumam coexistir.
 
 {{< include _trade-offs.md >}}
 
 ### Quando vale a pena usar
 
-- Há **muitas variantes ativas** (dezenas de clientes, planos ou dispositivos) compartilhando um núcleo comum [@clements2001software, cap. 1].
+- Há **muitas variantes ativas** compartilhando um núcleo comum [@clements2001software, cap. 1].
 - O domínio é **conhecido e estável**, permitindo delimitar o que varia [@pohl2005software, cap. 1-2].
-- Correções e regras comuns precisam **propagar rápido e com consistência** para toda a família.
+- Correções comuns precisam **propagar rápido** para toda a família.
 
 ### Quando evitar (prefira *clone-and-own* ou sistema único)
 
-- Existem **poucas variantes** (2–3 produtos), sem perspectiva de crescimento da família [@kruger2020empirical].
-- O domínio está em **descoberta rápida** (MVP inicial), onde fixar pontos de variação cedo gera retrabalho.
+- Existem **poucas variantes** (2–3 produtos) sem previsão de crescimento [@kruger2020empirical].
+- O domínio está em **descoberta rápida** (MVP), onde fixar pontos de variação cedo gera retrabalho.
 - O prazo inicial não comporta construir a plataforma antes da primeira entrega.
 
 ### Sinais de que a escolha deu errado
 
-- Produtos derivados passam a exigir **edição manual pós-geração** com frequência.
-- Acúmulo de *feature flags* mortas ou diretivas `#ifdef` quebrando variantes pouco testadas [@apel2013feature, cap. 5 e 10].
-- Manter e coordenar a plataforma passa a custar mais do que evoluir os produtos isoladamente [@kruger2020empirical; @capilla2013systems, cap. 8].
+- Produtos derivados exigem **edição manual pós-geração** com frequência.
+- Acúmulo de *feature flags* mortas ou `#ifdef` quebrando variantes pouco testadas [@apel2013feature, cap. 5 e 10].
+- Manter a plataforma custa mais que evoluir os produtos separados [@kruger2020empirical; @capilla2013systems, cap. 8].
 
 ::: {.callout-note}
 ## Slides deste tópico
-A apresentação estará disponível em [`slides.qmd`](slides.qmd) após a consolidação final do texto.
+A apresentação está disponível em [`slides.qmd`](slides.qmd).
 :::
 
 ## Exercícios de fixação
 
 ### Questão 1: Relações no Modelo de Features
 
-A feature mandatória `Envio` possui filhas em grupo `OR` (`Econômico`, `Rápido`, `Exterior`). Qual regra governa a seleção dessas opções em um produto derivado?
+A feature obrigatória `Envio` possui filhas em grupo `OR` (`Econômico`, `Rápido`, `Exterior`). Qual regra vale na derivação?
 
-A) Deve-se selecionar exatamente uma das modalidades.
-B) A feature `Envio` pode ser omitida se nenhuma for marcada.
-C) `Envio` é obrigatória e deve-se escolher ao menos uma modalidade, admitindo múltiplas opções simultâneas.
-D) Todas as opções do grupo devem ser incluídas juntas.
+A) Escolher exatamente uma modalidade.
+B) Omitir `Envio` se nenhuma modalidade for marcada.
+C) Incluir `Envio` e escolher pelo menos uma modalidade, podendo combinar mais de uma.
+D) Incluir todas as modalidades juntas.
 
 <details>
 <summary>Gabarito e Explicação</summary>
 
-Resposta: C
-
-Por ser mandatória, `Envio` deve constar em todo produto válido. O grupo `OR` exige ao menos uma subfeature ativa, admitindo uma, duas ou as três simultâneas.
+Resposta: C — `Envio` é obrigatória em todo produto válido, e o grupo `OR` exige ao menos uma opção ativa (uma, duas ou as três).
 </details>
 
 ### Questão 2: Restrições Transversais e SAT Solvers
 
-Ao validar um modelo de features em um SAT Solver, o que caracteriza uma *Feature Morta* (*Dead Feature*)?
+Na validação por SAT Solver, o que é uma *Feature Morta* (*Dead Feature*)?
 
-A) Funcionalidade desativada via *feature flag*.
-B) Feature que, por conflito em regras ou restrições transversais, nunca poderá compor um produto válido.
-C) Feature cujo código ainda não foi integrado ao repositório.
-D) Feature mandatória cuja presença torna a fórmula insatisfatível.
+A) Funcionalidade desligada por *feature flag*.
+B) Feature que, por conflito entre regras ou restrições, nunca pode entrar em nenhum produto válido.
+C) Feature ainda não integrada ao repositório.
+D) Feature obrigatória que torna o modelo vazio.
 
 <details>
 <summary>Gabarito e Explicação</summary>
 
-Resposta: B
-
-Features mortas surgem quando contradições lógicas impedem sua seleção em qualquer configuração válida de produto.
+Resposta: B — Contradições lógicas impedem que a feature seja escolhida em qualquer configuração válida.
 </details>
 
 ### Questão 3: Implementação de Variabilidade
 
-Qual é a vantagem de implementar features opcionais com o padrão *Decorator* frente à compilação condicional (`#ifdef`)?
+Qual é a vantagem de usar o padrão *Decorator* para features opcionais em vez de compilação condicional (`#ifdef`)?
 
-A) Eliminar a criação de classes adicionais.
-B) Reduzir o tamanho do binário gerado.
-C) Isolar variações em classes coesas, evitando o entrelaçamento (*tangling*) de diretivas no código.
-D) Permitir alterar a herança da classe base dinamicamente.
+A) Evitar criar classes novas.
+B) Gerar um binário menor.
+C) Isolar cada variação em sua própria classe, evitando o entrelaçamento (*tangling*) de diretivas no código base.
+D) Mudar a superclasse em tempo de compilação.
 
 <details>
 <summary>Gabarito e Explicação</summary>
 
-Resposta: C
-
-Diretivas `#ifdef` poluem o código (*tangling*). O padrão *Decorator* localiza a variação em classes isoladas com interface idêntica ao núcleo.
+Resposta: C — Diretivas `#ifdef` misturam variações no mesmo arquivo (*tangling*), enquanto o *Decorator* isola cada opção em uma classe separada.
 </details>
 
 ### Questão 4: Derivação e Antipadrões
 
-Em LPS, que problema decorre de realizar ajustes manuais no código de um produto já derivado?
+Qual é o problema de editar na mão o código de um produto já derivado na LPS?
 
-A) Quebrar a amarração das *feature flags*.
-B) Violar o princípio de que produtos são gerados e não editados, regredindo ao *clone-and-own*.
-C) Falha de tipos no momento da compilação.
-D) Impedir testes unitários na variante.
+A) Desligar as *feature flags*.
+B) Quebrar a regra de que produtos são gerados e não editados, voltando ao *clone-and-own*.
+C) Impedir a compilação da classe base.
+D) Bloquear testes unitários no produto.
 
 <details>
 <summary>Gabarito e Explicação</summary>
 
-Resposta: B
-
-Produtos devem ser gerados automaticamente. Ajustes manuais fragmentam a base e trazem de volta a manutenção divergente do *clone-and-own*.
+Resposta: B — Editar o produto gerado quebra a regeneração automática a partir do domínio e recria a manutenção divergente do *clone-and-own*.
 </details>
 
 ### Questão 5: Critérios de Decisão e Trade-offs
 
-A implantação de uma LPS exige alto esforço inicial. Em qual situação sua adoção é contraindicada?
+Quando a adoção de uma LPS **não** é recomendada?
 
-A) Famílias com dezenas de variantes estáveis e núcleo compartilhado.
-B) Sistemas em que manutenções no núcleo devem propagar para todos os produtos.
-C) Protótipos rápidos ou MVPs com domínio instável e poucas variantes previstas.
-D) Plataformas que suportam múltiplos provedores externos.
+A) Famílias com dezenas de variantes estáveis e núcleo comum.
+B) Sistemas onde correções precisam propagar rápido para toda a família.
+C) Protótipos ou MVPs com domínio instável e poucas variantes previstas.
+D) Plataformas com múltiplos clientes e módulos opcionais.
 
 <details>
 <summary>Gabarito e Explicação</summary>
 
-Resposta: C
-
-O investimento inicial em plataforma só compensa quando diluído em muitas variantes. Em MVPs com domínio instável, o custo supera os ganhos de reuso.
+Resposta: C — O custo inicial da plataforma só se paga com muitas variantes; em MVPs instáveis, vale mais começar simples.
 </details>
 
 ## Referências
