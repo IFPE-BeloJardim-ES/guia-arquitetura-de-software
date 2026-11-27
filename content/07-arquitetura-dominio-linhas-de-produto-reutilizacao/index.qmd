@@ -216,20 +216,23 @@ O modelo de features define **o que pode ser construído** (*problem space*). A 
 
 ### Especificação e derivação do produto
 
-A variabilidade também aparece nos requisitos e cenários de uso [@pohl2005software, cap. 4]. Manter uma especificação separada por cliente — por exemplo, um passo extra de bônus no Produto 1, redação alterada na confirmação do Produto 2 e fluxos distintos com ou sem carrinho — reproduz o *clone-and-own* na documentação. Duas abordagens resolvem isso [@apel2013feature, cap. 3; @pohl2005software, cap. 3]:
+Depois de validar quais combinações da **Loja Web** são permitidas na árvore de features, o próximo passo é ligar cada escolha do **espaço de problemas** aos artefatos do **espaço de soluções**, começando pelos requisitos e casos de uso [@czarnecki2000generative, cap. 2; @pohl2005software, cap. 15]. Manter um documento de especificação separado para cada variante válida da loja traz o mesmo problema de clonar código: o Produto 1 ganha um passo extra (`B6`) por ativar `Preferências`, o passo `B4` muda de texto entre documentos ao tratar `Bônus` e os passos `B1` e `B2` variam conforme a presença de `Carrinho`. Se uma regra comum mudar, a equipe precisa editar vários arquivos na mão e pode esquecer algum.
 
-1. **Anotativa:** mantém uma base única com todas as variações marcadas por condições. Na notação **PLUSS**, proposta por Eriksson, Börstler e Borg [-@eriksson2005pluss], passos de casos de uso recebem marcações como `[Carrinho]`, `[não Carrinho]` e `[Preferências]`. A derivação filtra apenas os trechos ativos; o ganho é o reuso centralizado, mas o custo é o **entrelaçamento** (*tangling*), que mistura várias variações no mesmo cenário.
-2. **Composicional:** isola o núcleo comum e encapsula cada variação em um **advice** separado (`ADV01`, `ADV02`, `ADV03`), encaixado na base conforme regras de **Configuration Knowledge** [@bonifacio2009modeling; @czarnecki2000generative, cap. 5]. Na Loja Web, a tabela define que `Loja web` inclui os cenários comuns, `Preferências` aplica `ADV03`, `Carrinho ∧ Bônus` aplica `ADV02`, e `¬(Carrinho ∧ Bônus)` aplica `ADV01`.
+Na Engenharia de Domínio, duas abordagens evitam essa duplicação [@apel2013feature, cap. 4]:
 
-| Critério | Anotativa | Composicional |
+Na **abordagem anotativa**, um único documento guarda o fluxo comum junto com as variações marcadas por condições. Na notação **PLUSS**, proposta por Eriksson, Börstler e Borg [-@eriksson2005pluss], os passos variáveis do caso de uso recebem marcações ligadas às features da árvore, como `[Carrinho]`, `[não Carrinho]` e `[Preferências]`. Para derivar um produto, basta manter os passos das *features* selecionadas na configuração e apagar o resto. Isso evita arquivos duplicados, mas causa **entrelaçamento** (*tangling*): muitas condições misturadas no mesmo cenário prejudicam a leitura [@bonifacio2009modeling; @apel2013feature, cap. 5].
+
+Na **abordagem composicional**, o fluxo comum fica separado em um módulo base, e cada variação vai para um *advice* à parte (`ADV01`, `ADV02`, `ADV03`) [@bonifacio2009modeling]. A ligação entre as escolhas da árvore e esses módulos é feita pelo **conhecimento de configuração** (*Configuration Knowledge*) [@czarnecki2000generative, cap. 2 e 5], uma tabela que avalia expressões sobre as *features* para definir quais peças entram no produto: `Loja web` puxa os cenários comuns, `Preferências` inclui `ADV03`, `Carrinho ∧ Bônus` aplica `ADV02` e `¬(Carrinho ∧ Bônus)` aplica `ADV01` [@bonifacio2009modeling].
+
+| Critério | Abordagem Anotativa (PLUSS) | Abordagem Composicional (*Advices*) |
 |:---|:---|:---|
-| Base | Artefato único com núcleo e variações | Núcleo separado e variações em *advices* |
-| Derivação | Filtragem de trechos desativados | Composição via *Configuration Knowledge* |
-| Legibilidade | Sofre com entrelaçamento (*tangling*) | Variações isoladas; exige gerir pontos de encaixe |
+| Organização da base | Documento único com condições nos passos | Módulo base comum e módulos de variação |
+| Como o produto sai | Corta trechos de *features* não escolhidas | Junta módulos via *Configuration Knowledge* |
+| Leitura e manutenção | Piora com entrelaçamento (*tangling*) | Arquivos limpos; exige seguir a tabela de regras |
 
-: Comparação entre especificação anotativa e composicional. Fontes: [@eriksson2005pluss; @bonifacio2009modeling; @apel2013feature, cap. 3]. {#tbl-anotativa-composicional tbl-colwidths="[22,39,39]"}
+: Comparação entre especificação anotativa e composicional. Fontes: [@eriksson2005pluss; @bonifacio2009modeling; @apel2013feature, cap. 4]. {#tbl-anotativa-composicional tbl-colwidths="[22,39,39]"}
 
-Na Engenharia de Aplicação, vale uma regra rígida: **o produto é gerado, não editado** [@pohl2005software, cap. 14-16]. A ferramenta recebe o modelo de features, os ativos do domínio, o *Configuration Knowledge* e a escolha do cliente para gerar o produto. Editar o artefato gerado equivale a modificar código compilado: encontrou um defeito, corrige-se na fonte e regeneram-se os produtos.
+Nos dois casos, a derivação na **Engenharia de Aplicação** segue uma regra direta: **o produto é gerado, não editado** [@pohl2005software, cap. 15; @czarnecki2000generative, cap. 5]. Depois que a seleção de *features* do cliente passa pela validação do modelo, a plataforma cruza os ativos do domínio com o *Configuration Knowledge* e monta o produto. Assim como em um *bytecode* compilado, se surgir um erro, ninguém abre o produto gerado para consertar na mão: a correção vai na base do domínio e os produtos da linha são gerados de novo.
 
 ### Implementação da variabilidade I: parametrização e compilação condicional
 
