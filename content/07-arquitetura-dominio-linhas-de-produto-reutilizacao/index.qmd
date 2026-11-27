@@ -91,25 +91,57 @@ flowchart LR
 
 ### Modelo de features e variabilidade
 
-O **Modelo de Features**, proposto no método FODA (*Feature-Oriented Domain Analysis*) [@kang1990foda], separa o que é comum do que varia em todo o ciclo de vida — dos requisitos ao código [@apel2013feature, cap. 2; @czarnecki2000generative, cap. 4]. Ele representa a família como uma árvore composta por quatro relações hierárquicas e duas restrições entre ramos (*cross-tree constraints*) que tornam explícito o que é proibido [@capilla2013systems, cap. 2]:
+O **Modelo de Features**, proposto no método FODA (*Feature-Oriented Domain Analysis*) por Kang et al. [-@kang1990foda] e consolidado por Apel et al. [-@apel2013feature, cap. 2], formaliza o que é comum e o que varia na família de sistemas. Ele organiza o **espaço de problemas** (*problem space* — o que o sistema oferece na visão do cliente) antes das decisões do **espaço de soluções** (*solution space* — classes, módulos, diretivas `#ifdef` e esquemas de dados) [@czarnecki2000generative, cap. 4; @pohl2005software, cap. 3].
 
-| Relação | Regra na derivação | Papel |
-|:---|:---|:---|
-| **Obrigatória** | Presente sempre que a feature pai está presente | Núcleo comum |
-| **Opcional** | Pode estar presente ou ausente | Variação individual |
-| **Alternativa (`XOR`)** | Exatamente **1** feature do grupo | Escolha mutuamente exclusiva |
-| **Inclusiva (`OR`)** | Pelo menos **1** feature do grupo | Combinação de opções |
-| **`A requer B`** | Selecionar `A` obriga incluir `B` | Dependência entre ramos |
-| **`A exclui B`** | `A` e `B` não podem coexistir | Incompatibilidade |
+Na prática, o modelo funciona como um contrato entre a **Engenharia de Domínio** (que define as regras válidas da família) e a **Engenharia de Aplicação** (que seleciona as features desejadas para um cliente específico) [@clements2001software, cap. 1; @pohl2005software, cap. 2].
 
-: Relações e restrições em modelos de features. Fontes: [@kang1990foda; @apel2013feature, cap. 2]. {#tbl-relacoes-features tbl-colwidths="[24,46,30]"}
+::: {.callout-note}
+## O que é uma feature?
+Uma **feature** (característica) é uma unidade atômica de requisito ou funcionalidade observável pelo usuário ou cliente do sistema [@kang1990foda; @apel2013feature, cap. 2]. Diferente de um trecho de código, que pode abranger várias classes e arquivos, no modelo de features cada funcionalidade é tratada como uma decisão booleana: incluída ($1$) ou excluída ($0$) na configuração de um produto.
+:::
 
-Como exemplo, considere uma família de **Lojas Web**. Toda loja tem `Envio` (obrigatória), com um grupo `OR` de três modalidades (`Econômico`, `Rápido` e `Exterior`), além de três features opcionais: `Carrinho`, `Bônus` e `Preferências`.
+#### Relações estruturais na árvore
+
+A árvore organiza sub-features conectadas a nós pais sob quatro relações estruturais [@kang1990foda; @apel2013feature, cap. 2; @capilla2013systems, cap. 2]:
+
+| Relação | Notação FODA | Semântica lógica | Regra na derivação |
+|:---|:---:|:---|:---|
+| **Obrigatória (*Mandatory*)** | Círculo preenchido (●) | $Filho \iff Pai$ | Presente sempre que a feature pai estiver ativa. Forma o núcleo comum (*core*). |
+| **Opcional (*Optional*)** | Círculo vazio (○) | $Filho \implies Pai$ | Pode ser incluída ou omitida, desde que o pai esteja selecionado. |
+| **Alternativa (`XOR`)** | Arco aberto cruzando arestas | $\sum Filho_i = 1$ | Exatamente **uma** sub-feature do grupo deve ser selecionada se o pai estiver ativo. |
+| **Inclusiva (`OR`)** | Arco preenchido cruzando arestas | $\sum Filho_i \ge 1$ | Pelo menos **uma** sub-feature do grupo precisa ser selecionada (de 1 a $k$). |
+
+: Relações estruturais em modelos de features. Fontes: [@kang1990foda; @apel2013feature, cap. 2; @capilla2013systems, cap. 2]. {#tbl-relacoes-features tbl-colwidths="[22,18,22,38]"}
+
+#### Restrições transversais (*cross-tree constraints*)
+
+A estrutura em árvore resolve bem as dependências verticais (de pai para filho). Contudo, requisitos de negócio com frequência impõem regras entre ramos separados. Nesses casos, utilizam-se **Restrições Transversais** (*Cross-Tree Constraints* — CTCs), descritas por fórmulas proposicionais [@apel2013feature, cap. 2; @czarnecki2000generative, cap. 4]:
+
+1. **Requer (*Requires*):**  
+   $$A \implies B$$  
+   Escolher a feature $A$ obriga a incluir $B$ no produto, mesmo que estejam em ramos distantes. No nosso exemplo da Loja Web, `Bônus requer Carrinho` ($Bônus \implies Carrinho$), pois bonificações só podem ser creditadas na etapa de compra no carrinho.
+2. **Exclui (*Excludes*):**  
+   $$A \implies \neg B \quad (\text{ou } \neg(A \wedge B))$$  
+   A presença de $A$ torna $B$ incompatível no mesmo produto. Por exemplo, uma política de frete `Exterior` pode excluir modalidades sem rastreamento ou de baixo custo.
+
+::: {.callout-tip}
+## Restrições transversais em excesso indicam acoplamento
+Quando a árvore acumula muitas restrições de *requer* e *exclui* cruzando ramos, isso costuma indicar que as fronteiras dos módulos foram mal delineadas [@capilla2013systems, cap. 2]. Nesses cenários, compensa revisar a arquitetura do domínio antes de passar para a fase de implementação.
+:::
+
+#### O exemplo da Loja Web e a combinatória
+
+Para acompanhar como a variabilidade cresce na prática, considere o modelo da **Loja Web** adotado neste capítulo:
+
+- **Raiz:** `Loja web` (obrigatória).
+- **Módulo de Envio:** Feature obrigatória ligada à raiz, composta por um **Grupo OU Inclusivo (OR)** com 3 modalidades: `Econômico`, `Rápido` e `Exterior`.
+- **Módulos Opcionais:** Três features ligadas à raiz: `Carrinho`, `Bônus` e `Preferências`.
+- **Restrição Transversal:** `Bônus requer Carrinho` ($Bônus \implies Carrinho$).
 
 ```{mermaid}
 %%| label: fig-feature-model-loja
-%%| fig-cap: "Modelo de features da Loja Web: Envio é obrigatória (grupo OR) e Carrinho, Bônus e Preferências são opcionais."
-%%| fig-alt: "Árvore com raiz Loja web ligada à feature obrigatória Envio (com grupo OR para Econômico, Rápido e Exterior) e às features opcionais Carrinho, Bônus e Preferências."
+%%| fig-cap: "Modelo de features da Loja Web: Envio é obrigatória com grupo OR de modalidades; Carrinho, Bônus e Preferências são opcionais; com restrição transversal Bônus requer Carrinho."
+%%| fig-alt: "Árvore de features da Loja Web mostrando a raiz ligada a Envio com grupo OR (Econômico, Rápido, Exterior) e às features opcionais Carrinho, Bônus e Preferências, com linha pontilhada de restrição Bônus requer Carrinho."
 flowchart TD
     classDef root fill:#1e3a5f,stroke:#0f172a,stroke-width:2px,color:#ffffff,font-weight:bold
     classDef mand fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px,color:#1b5e20,font-weight:bold
@@ -136,13 +168,51 @@ flowchart TD
     OR --> RA
     OR --> EX
 
+    BO -.->|"requer (CTC)"| CA
+
     class R root
     class E mand
     class CA,BO,PR opt
     class OR,EC,RA,EX grp
 ```
 
-No grupo `OR` de `Envio`, há $2^3 - 1 = 7$ combinações válidas (sem envio é proibido). Cada feature opcional dobra as possibilidades ($2 \times 2 \times 2$). Assim, apenas **7 features** geram $7 \times 2 \times 2 \times 2 = \mathbf{56}$ **produtos válidos**. Se o domínio ainda adicionar `Bônus requer Carrinho`, qualquer produto com `Bônus` e sem `Carrinho` passa a ser bloqueado na validação, reduzindo o espaço para 42 variantes válidas.
+O total de configurações possíveis é obtido multiplicando as decisões independentes [@apel2013feature, cap. 2]:
+
+1. **Modalidades de Envio (Grupo OR de 3 itens):** Cada modalidade (`Econômico`, `Rápido`, `Exterior`) admite 2 estados (presente ou ausente), gerando $2^3 = 8$ combinações. Como a semântica do grupo `OR` exige ao menos uma opção marcada (nenhum envio é proibido, já que `Envio` é obrigatório), restam:
+   $$2^3 - 1 = \mathbf{7 \text{ combinações válidas de envio}}$$
+2. **Features opcionais independentes:** Cada uma das três opções (`Carrinho`, `Bônus`, `Preferências`) tem 2 estados independentes:
+   $$2 \times 2 \times 2 = \mathbf{8 \text{ combinações}}$$
+3. **Espaço de configuração bruto:** Combinando envio com as features opcionais, temos:
+   $$\text{Total Bruto} = 7 \times 2 \times 2 \times 2 = \mathbf{56 \text{ produtos}}$$
+4. **Poda pela restrição transversal:**  
+   Dessas 56 variantes, `Bônus` está ativo em exatamente metade ($28$ produtos). Nessas 28 lojas, o `Carrinho` é opcional e portanto está ausente em $14$ delas. Como a regra exige `Bônus requer Carrinho`, essas 14 configurações violam o modelo e são descartadas pelo validador:
+   $$\text{Espaço de Produtos Válidos} = 56 - 14 = \mathbf{42 \text{ produtos}}$$
+
+#### Formalização em lógica proposicional e SAT Solvers
+
+Em linhas de produtos reais com dezenas ou centenas de features — como em sistemas automotivos ou no kernel Linux [@kruger2020empirical; @apel2013feature, cap. 2] —, é inviável conferir combinações manualmente. A abordagem padrão consiste em traduzir a árvore e suas restrições em uma fórmula booleana na **Forma Normal Conjuntiva** (CNF — *Conjunctive Normal Form*) [@czarnecki2000generative, cap. 4; @apel2013feature, cap. 2]:
+
+$$\Phi = \bigwedge_{i} C_i$$
+
+Cada cláusula $C_i$ traduz uma regra do modelo da Loja Web:
+
+- **Raiz ativa:** $(\text{LojaWeb})$
+- **Envio obrigatório:** $(\neg \text{Envio} \vee \text{LojaWeb}) \wedge (\neg \text{LojaWeb} \vee \text{Envio})$
+- **Grupo OR de Envio:** $(\neg \text{Envio} \vee \text{Economico} \vee \text{Rapido} \vee \text{Exterior}) \wedge (\neg \text{Economico} \vee \text{Envio}) \wedge (\neg \text{Rapido} \vee \text{Envio}) \wedge (\neg \text{Exterior} \vee \text{Envio})$
+- **Features opcionais:** $(\neg \text{Carrinho} \vee \text{LojaWeb}) \wedge (\neg \text{Bonus} \vee \text{LojaWeb}) \wedge (\neg \text{Preferencias} \vee \text{LojaWeb})$
+- **Restrição Transversal:** $(\neg \text{Bonus} \vee \text{Carrinho})$
+
+Com a árvore descrita em CNF, ferramentas como **FeatureIDE**, **pure::variants** e **Gears** usam algoritmos **SAT Solvers** para validar o modelo antes de gerar qualquer código [@apel2013feature, cap. 2; @capilla2013systems, cap. 2]:
+
+1. **Modelo Vazio (*Void Feature Model*):** Checa se $\Phi$ é insatisfatível. Se for, o modelo tem contradições e nenhum produto válido pode ser gerado.
+2. **Features Mortas (*Dead Features*):** Identifica features que nunca poderão ser selecionadas em nenhum produto devido a regras conflitantes.
+3. **Falsas Opcionais (*False Optional Features*):** Encontra features desenhadas como opcionais, mas que se tornaram obrigatórias em todos os produtos por efeito de outras dependências.
+4. **Validação interativa:** Durante a seleção de features para um cliente, o SAT Solver valida a combinação em tempo real e bloqueia opções incompatíveis.
+
+::: {.callout-note}
+## O que vem a seguir
+O modelo de features define **o que pode ser construído** (*problem space*). A seção seguinte — [Especificação e derivação do produto](#especificação-e-derivação-do-produto) — trata de **como transformar essas escolhas em artefatos concretos**, comparando especificações **anotativas** (como no PLUSS) com abordagens **composicionais** (via *Configuration Knowledge*).
+:::
 
 ### Especificação e derivação do produto
 
