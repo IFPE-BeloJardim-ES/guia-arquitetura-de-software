@@ -218,9 +218,13 @@ Dados reais medidos por Fan et al. [@fan2020twopc, pp. 15-18] em e-commerce (ped
 - Sob alta disputa, o **2PC** tradicional bloqueia *threads* e colapsa (`0,03` de *commit*)
 - O **2PC\*** substitui travas síncronas por bloqueio otimista assíncrono secundário (**SAOL**) e compensação assíncrona
 
-## Matriz de trade-offs {.smaller}
+## Balanço de trade-offs {.smaller}
 
 {{< include _trade-offs.md >}}
+
+::: {.notes}
+A tabela sintetiza os compromissos: o 2PC troca desempenho e disponibilidade por consistência imediata, e a Saga troca consistência imediata por desempenho e disponibilidade, pagando em código de compensação.
+:::
 
 ## Critérios de decisão: quando usar
 
